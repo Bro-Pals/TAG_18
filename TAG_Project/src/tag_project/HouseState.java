@@ -7,6 +7,7 @@ package tag_project;
 
 import bropals.lib.simplegame.animation.Animation;
 import bropals.lib.simplegame.animation.Track;
+import bropals.lib.simplegame.entity.BaseEntity;
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.entity.block.TexturedBlock;
 import bropals.lib.simplegame.gui.Gui;
@@ -38,6 +39,7 @@ public class HouseState extends EntityState {
         if (paused) {
             gui.update(mp.x, mp.y);
         }
+        super.update();
     }
 
     @Override
@@ -46,6 +48,9 @@ public class HouseState extends EntityState {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
         gui.render(o);
+        for (Object be : getGameWorld().getEntities()) {
+            ((BaseEntity)be).render(o);
+        }
     }
 
     @Override
@@ -54,11 +59,13 @@ public class HouseState extends EntityState {
         gui = new Gui();
         initGUI();
         
-        TexturedBlock dogTest = new TexturedBlock(getGameWorld(), 100, 100, 100, 100);
         Animation dogAnimation = new Animation();
         dogAnimation.addTrack(new Track(getAssetManager().getImage("spanielSprites"), 
                 139, 200, 3));
-        dogTest.setAnimation(dogAnimation);
+        
+        AnimatedIsometricEntity dog = new AnimatedIsometricEntity(getGameWorld(), 
+                100, 100, 10, 10, false, IsometricDirection.SOUTH, 
+                null, null, null, null, dogAnimation);
     }
     
     private void initGUI() {
