@@ -5,11 +5,15 @@
  */
 package tag_project;
 
+import bropals.lib.simplegame.animation.Animation;
+import bropals.lib.simplegame.animation.Track;
 import bropals.lib.simplegame.entity.GameWorld;
+import bropals.lib.simplegame.entity.block.TexturedBlock;
 import bropals.lib.simplegame.gui.Gui;
 import bropals.lib.simplegame.gui.GuiGroup;
 import bropals.lib.simplegame.gui.GuiImage;
 import bropals.lib.simplegame.gui.GuiText;
+import bropals.lib.simplegame.state.EntityState;
 import bropals.lib.simplegame.state.GameState;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -21,7 +25,7 @@ import java.awt.event.MouseEvent;
  *
  * @author Jonathon
  */
-public class HouseState extends GameState {
+public class HouseState extends EntityState {
 
     private Gui gui;
     private IsometricGameWorld world;
@@ -49,6 +53,12 @@ public class HouseState extends GameState {
         world = new IsometricGameWorld(this);
         gui = new Gui();
         initGUI();
+        
+        TexturedBlock dogTest = new TexturedBlock(getGameWorld(), 100, 100, 100, 100);
+        Animation dogAnimation = new Animation();
+        dogAnimation.addTrack(new Track(getAssetManager().getImage("spanielSprites"), 
+                139, 200, 3));
+        dogTest.setAnimation(dogAnimation);
     }
     
     private void initGUI() {
