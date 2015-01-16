@@ -10,6 +10,7 @@ import bropals.lib.simplegame.io.PropertiesReader;
 import bropals.lib.simplegame.logger.ErrorLogger;
 import java.io.File;
 import java.util.HashMap;
+import tag_project.BiscuitEntity;
 import tag_project.FurnitureEntity;
 import tag_project.HouseState;
 import tag_project.IsometricDirection;
@@ -105,7 +106,7 @@ public class EntityFactory {
      * @return the created biscuit
      */
     public static IsometricEntity makeBiscuit(AssetManager assetManager, float x, float y) {
-        return null;
+        return new BiscuitEntity(null, x, y);
     }
     
     /**

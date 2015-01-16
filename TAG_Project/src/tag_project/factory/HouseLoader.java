@@ -5,6 +5,7 @@
  */
 package tag_project.factory;
 
+import bropals.lib.simplegame.entity.BaseEntity;
 import bropals.lib.simplegame.io.AssetLoader;
 import bropals.lib.simplegame.io.AssetManager;
 import bropals.lib.simplegame.logger.ErrorLogger;
@@ -15,6 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 import tag_project.HouseState;
 import tag_project.IsometricDirection;
@@ -90,4 +92,15 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                     IsometricDirection.parseDirection(split[3]));
         }
     }
+
+    @Override
+    public void unload(String key) {
+        for (IsometricEntity be : (ArrayList<IsometricEntity>)getAsset(key).getEntities()) {
+            be.removeParent();
+        }
+        getAsset(key).getEntities().clear();
+        super.unload(key);
+    }
+    
+    
 }

@@ -8,12 +8,12 @@ package tag_project;
 import bropals.lib.simplegame.animation.Animation;
 import bropals.lib.simplegame.animation.Track;
 import bropals.lib.simplegame.entity.BaseEntity;
-import bropals.lib.simplegame.entity.GameWorld;
-import bropals.lib.simplegame.entity.block.TexturedBlock;
+import bropals.lib.simplegame.entity.block.BlockEntity;
 import bropals.lib.simplegame.gui.Gui;
 import bropals.lib.simplegame.gui.GuiGroup;
 import bropals.lib.simplegame.gui.GuiImage;
 import bropals.lib.simplegame.gui.GuiText;
+import bropals.lib.simplegame.logger.InfoLogger;
 import bropals.lib.simplegame.state.EntityState;
 import bropals.lib.simplegame.state.GameState;
 import java.awt.Color;
@@ -28,21 +28,24 @@ import tag_project.factory.HouseLoader;
  *
  * @author Jonathon
  */
-public class HouseState extends EntityState {
+public class HouseState extends GameState {
 
     private Gui gui;
     private IsometricGameWorld world;
     private boolean paused = false;
     private GuiText biscuits, furniture;
     private Camera camera;
+    
+    ///Use R to swap rendering modes
+    private boolean developmentRendering = true;
 
     @Override
     public void update() {
         Point mp = getWindow().getMousePosition();
-        if (paused) {
+        if (!paused) {
+            world.updateEntities();
             gui.update(mp.x, mp.y);
         }
-        super.update();
     }
 
     @Override
@@ -50,10 +53,35 @@ public class HouseState extends EntityState {
         Graphics g = (Graphics) o;
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
-        gui.render(o);
-        for (Object be : getGameWorld().getEntities()) {
-            ((BaseEntity) be).render(o);
+        if (!developmentRendering) {
+            for (Object be : world.getEntities()) {
+                ((BaseEntity) be).render(o);
+            }
+        } else {
+            for (Object be : world.getEntities()) {
+                BlockEntity block = ((BlockEntity) be);
+                if (block instanceof FurnitureEntity) {
+                    g.setColor(Color.RED);
+                } else if (block instanceof BiscuitEntity) {
+                    g.setColor(Color.ORANGE);
+                } else if (block instanceof AnimatedIsometricEntity) {
+                    g.setColor(Color.GREEN);
+                } else {
+                    g.setColor(Color.BLUE);
+                }
+                int x = (int)(block.getX()-camera.getX());
+                int y = (int)(block.getY()-camera.getY());
+                int w = (int)block.getWidth();
+                int h = (int)block.getHeight();
+                InfoLogger.println("" + x + ", " + y + ", " + w + ", " + h);
+                g.fillRect(
+                        x, 
+                        y, 
+                        w, h);
+                //g.fillRect(300, 300, 80, 80);
+            }
         }
+        gui.render(o);
     }
 
     @Override
@@ -77,9 +105,10 @@ public class HouseState extends EntityState {
 
         dogAnimation.addTrack(southMove);
 
-        AnimatedIsometricEntity dog = new AnimatedIsometricEntity(getGameWorld(),
-                300, 300, 10, 10, false, IsometricDirection.SOUTH,
+        AnimatedIsometricEntity dog = new AnimatedIsometricEntity(world,
+                300, 300, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
+        InfoLogger.println("" + dog.getX() + ", " + dog.getY() + ", " + dog.getWidth() + ", " + dog.getHeight());
     }
 
     public Camera getCamera() {
@@ -90,6 +119,7 @@ public class HouseState extends EntityState {
      * Reloads the house place. For development purposes.
      */
     private void reloadHousePlan() {
+        getAssetManager().unloadAsset("The House", IsometricGameWorld.class);
         getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
         world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
     }
@@ -123,9 +153,11 @@ public class HouseState extends EntityState {
         if (pressed) {
             if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 getWindow().requestToClose();
-            } //Development controls; will remove
+            } 
+            //Development controls; will remove
             else if (ke.getKeyCode() == KeyEvent.VK_G) {
                 reloadHousePlan();
+                InfoLogger.println("Reloaded house plan");
             } else if (ke.getKeyCode() == KeyEvent.VK_W) {
                 camera.move(0, -100);
             } else if (ke.getKeyCode() == KeyEvent.VK_S) {
@@ -134,6 +166,13 @@ public class HouseState extends EntityState {
                 camera.move(-100, 0);
             } else if (ke.getKeyCode() == KeyEvent.VK_D) {
                 camera.move(100, 0);
+            } else if ( ke.getKeyCode() == KeyEvent.VK_R ) {
+                developmentRendering = !developmentRendering;
+                if (developmentRendering) {
+                    InfoLogger.println("Set to development rendering");
+                } else {
+                    InfoLogger.println("Set to game rendering");
+                }
             }
         }
     }

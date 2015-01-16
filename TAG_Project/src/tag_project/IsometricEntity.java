@@ -7,6 +7,7 @@ package tag_project;
 
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.entity.block.BlockEntity;
+import bropals.lib.simplegame.logger.InfoLogger;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -167,7 +168,7 @@ public class IsometricEntity extends BlockEntity {
         super.setY(y);
         ((IsometricGameWorld)getParent()).reorderEntity(this);
     }
-
+    
     /**
      * Gets what image is being used currently
      * @return the currently used image
@@ -188,7 +189,7 @@ public class IsometricEntity extends BlockEntity {
     @Override
     public void render(Object graphicsObj) {
         Graphics g = (Graphics)graphicsObj;        
-        g.drawImage(using, (int)(0-getCamera().getX()), (int)(-159-getCamera().getY()), null);
+        g.drawImage(using, (int)(getX()-getCamera().getX()), (int)(getY()-159-getCamera().getY()), null);
     }   
     
     public Camera getCamera() {
