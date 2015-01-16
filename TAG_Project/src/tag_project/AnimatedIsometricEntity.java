@@ -7,6 +7,7 @@ package tag_project;
 
 import bropals.lib.simplegame.animation.Animation;
 import bropals.lib.simplegame.entity.GameWorld;
+import bropals.lib.simplegame.logger.InfoLogger;
 import java.awt.image.BufferedImage;
 
 /**

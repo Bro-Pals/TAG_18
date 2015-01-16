@@ -73,7 +73,6 @@ public class HouseState extends GameState {
                 int y = (int)(block.getY()-camera.getY());
                 int w = (int)block.getWidth();
                 int h = (int)block.getHeight();
-                InfoLogger.println("" + x + ", " + y + ", " + w + ", " + h);
                 g.fillRect(
                         x, 
                         y, 
@@ -108,7 +107,6 @@ public class HouseState extends GameState {
         AnimatedIsometricEntity dog = new AnimatedIsometricEntity(world,
                 300, 300, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
-        InfoLogger.println("" + dog.getX() + ", " + dog.getY() + ", " + dog.getWidth() + ", " + dog.getHeight());
     }
 
     public Camera getCamera() {

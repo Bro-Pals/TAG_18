@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * Represents an isometric entity.
+ *
  * @author Jonathon
  */
 public class IsometricEntity extends BlockEntity {
@@ -22,17 +23,17 @@ public class IsometricEntity extends BlockEntity {
     private BufferedImage using = null;
     private final float localWidth;
     private final float localHeight;
-    
+
     public IsometricEntity(GameWorld parent,
             float x, float y, float width, float height,
-            boolean anchored, IsometricDirection facing, 
+            boolean anchored, IsometricDirection facing,
             BufferedImage north, BufferedImage south, BufferedImage east,
             BufferedImage west) {
-        super(parent, x, y, width, height, anchored);
-        this.north=north;
-        this.south=south;
-        this.east=east;
-        this.west=west;
+        super(parent, x, y, 0, 0, anchored);
+        this.north = north;
+        this.south = south;
+        this.east = east;
+        this.west = west;
         setFacing(facing);
         if (facing == IsometricDirection.NORTH || facing == IsometricDirection.SOUTH) {
             localWidth = width;
@@ -41,10 +42,13 @@ public class IsometricEntity extends BlockEntity {
             localWidth = height;
             localHeight = width;
         }
+        setWidth(localWidth);
+        setHeight(localHeight);
     }
 
     /**
      * Gets the raw width of the furniture, unrotated.
+     *
      * @return the raw width of the furniture, unrotated
      */
     public float getLocalWidth() {
@@ -53,6 +57,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Gets the raw height of the furniture, unrotated.
+     *
      * @return the raw height of the furniture, unrotated
      */
     public float getLocalHeight() {
@@ -61,6 +66,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Gets the north drawn image
+     *
      * @return the north drawn image
      */
     public BufferedImage getNorth() {
@@ -69,6 +75,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Sets the north drawn image
+     *
      * @param north the north drawn image
      */
     public void setNorth(BufferedImage north) {
@@ -78,6 +85,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Gets the south drawn image
+     *
      * @return the south drawn image
      */
     public BufferedImage getSouth() {
@@ -86,6 +94,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Sets the south drawn image
+     *
      * @param south the south drawn image
      */
     public void setSouth(BufferedImage south) {
@@ -95,6 +104,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Gets the east drawn image
+     *
      * @return the east drawn image
      */
     public BufferedImage getEast() {
@@ -103,6 +113,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Sets the east drawn image
+     *
      * @param east the east drawn image
      */
     public void setEast(BufferedImage east) {
@@ -112,6 +123,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Gets the west drawn image
+     *
      * @return the west drawn image
      */
     public BufferedImage getWest() {
@@ -120,6 +132,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Sets the west drawn image
+     *
      * @param west the west drawn image
      */
     public void setWest(BufferedImage west) {
@@ -129,6 +142,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Gets the direction this entity is facing
+     *
      * @return the direction this entity is facing
      */
     public IsometricDirection getFacing() {
@@ -137,6 +151,7 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Sets the direction this entity is facing
+     *
      * @param facing the direction this entity is facing
      */
     public void setFacing(IsometricDirection facing) {
@@ -150,27 +165,36 @@ public class IsometricEntity extends BlockEntity {
         }
         revalidateImage();
     }
-    
+
     /**
      * Ensures that this IsometricEntity is using the correct image.
      */
     public void revalidateImage() {
-        switch(facing) {
-            case NORTH: using = north; break;
-            case SOUTH: using = south; break;
-            case EAST: using = east; break;
-            case WEST: using = west; break;
+        switch (facing) {
+            case NORTH:
+                using = north;
+                break;
+            case SOUTH:
+                using = south;
+                break;
+            case EAST:
+                using = east;
+                break;
+            case WEST:
+                using = west;
+                break;
         }
     }
 
     @Override
     public void setY(float y) {
         super.setY(y);
-        ((IsometricGameWorld)getParent()).reorderEntity(this);
+        ((IsometricGameWorld) getParent()).reorderEntity(this);
     }
-    
+
     /**
      * Gets what image is being used currently
+     *
      * @return the currently used image
      */
     public BufferedImage getUsing() {
@@ -179,20 +203,20 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Sets what image this Isometric entity will use to draw
+     *
      * @param using what image is being used
      */
     public void setUsing(BufferedImage using) {
         this.using = using;
     }
-    
 
     @Override
     public void render(Object graphicsObj) {
-        Graphics g = (Graphics)graphicsObj;        
-        g.drawImage(using, (int)(getX()-getCamera().getX()), (int)(getY()-159-getCamera().getY()), null);
-    }   
-    
+        Graphics g = (Graphics) graphicsObj;
+        g.drawImage(using, (int) (getX() - getCamera().getX()), (int) (getY() - 159 - getCamera().getY()), null);
+    }
+
     public Camera getCamera() {
-        return ((HouseState)getParent().getState()).getCamera();
+        return ((HouseState) getParent().getState()).getCamera();
     }
 }
