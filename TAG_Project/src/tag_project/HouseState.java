@@ -33,14 +33,51 @@ public class HouseState extends GameState {
     private Gui gui;
     private IsometricGameWorld world;
     private boolean paused = false;
+    private boolean movingUp, movingDown, movingRight, movingLeft;
     private GuiText biscuits, furniture;
     private Camera camera;
+    
+    /** Super special reference to the player (dog) */
+    private AnimatedIsometricEntity dog;
+    private float DOG_SPEED_DIAG = 2;
+    private float DOG_SPEED = DOG_SPEED_DIAG * (float)Math.sqrt(2);
     
     ///Use R to swap rendering modes
     private boolean developmentRendering = true;
 
     @Override
     public void update() {
+        
+        // handle the key presses for dog moving
+        if (movingUp && !movingDown) {
+            if (dog.getVelocity().getX() == 0)
+                dog.getVelocity().setY(-DOG_SPEED);
+            else
+                dog.getVelocity().setY(-DOG_SPEED_DIAG);
+        } else if (movingDown && !movingUp) {
+            if (dog.getVelocity().getX() == 0)
+                dog.getVelocity().setY(DOG_SPEED);
+            else
+                dog.getVelocity().setY(DOG_SPEED_DIAG);
+        } else if (!movingDown && !movingUp) {
+            dog.getVelocity().setY(0);
+        }
+        if (movingRight && !movingLeft) {
+            if (dog.getVelocity().getY() == 0)
+                dog.getVelocity().setX(-DOG_SPEED);
+            else
+                dog.getVelocity().setX(-DOG_SPEED_DIAG);
+        } else if (movingLeft && !movingRight) {
+            if (dog.getVelocity().getY() == 0)
+                dog.getVelocity().setX(DOG_SPEED);
+            else
+                dog.getVelocity().setX(DOG_SPEED_DIAG);
+        } else if (!movingRight && !movingLeft) {
+            dog.getVelocity().setX(0);
+        }
+        
+        
+        
         Point mp = getWindow().getMousePosition();
         if (!paused) {
             world.updateEntities();
@@ -51,7 +88,7 @@ public class HouseState extends GameState {
     @Override
     public void render(Object o) {
         Graphics g = (Graphics) o;
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
         if (!developmentRendering) {
             for (Object be : world.getEntities()) {
@@ -87,6 +124,10 @@ public class HouseState extends GameState {
 
     @Override
     public void onEnter() {
+        movingUp = false;
+        movingDown = false;
+        movingRight = false;
+        movingLeft = false;
         ((HouseLoader) (getAssetManager().getAssetLoader(IsometricGameWorld.class))).setHouseState(this);
         getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
         world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
@@ -99,17 +140,37 @@ public class HouseState extends GameState {
         Animation dogAnimation = new Animation();
         BufferedImage[] dogImages = new Track(
                 getAssetManager().getImage("spanielSprites"), 139, 200, 3).getImages();
+        getAssetManager().createHorizontialFlipCopy(
+                getAssetManager().getImage("spanielSprites"), "reverseSpanielSprites");
+        BufferedImage[] dogImagesReverse = new Track(
+                getAssetManager().getImage("reverseSpanielSprites"), 139, 200, 3).getImages();
+        
+        Track northMove = new Track(new BufferedImage[]{
+            dogImages[7], dogImages[4], dogImages[5], dogImages[6],
+            dogImages[5], dogImages[4]
+        }, 2);
+        Track eastMove = new Track(new BufferedImage[]{
+            dogImagesReverse[4], dogImagesReverse[7], dogImagesReverse[6], dogImagesReverse[5],
+            dogImagesReverse[6], dogImagesReverse[7]
+        }, 2);
+        
         Track southMove = new Track(new BufferedImage[]{
             dogImages[3], dogImages[0], dogImages[1], dogImages[2],
             dogImages[1], dogImages[0]
         }, 2);
+        Track westMove = new Track(new BufferedImage[]{
+            dogImagesReverse[0], dogImagesReverse[3], dogImagesReverse[2], dogImagesReverse[1],
+            dogImagesReverse[2], dogImagesReverse[3]
+        }, 2);
 
+        dogAnimation.addTrack(northMove);
         dogAnimation.addTrack(southMove);
+        dogAnimation.addTrack(eastMove);
+        dogAnimation.addTrack(westMove);
 
-        AnimatedIsometricEntity dog = new AnimatedIsometricEntity(world,
+        dog = new AnimatedIsometricEntity(world,
                 300, 300, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
-        dog.getVelocity().setValues(0, 1.6);
     }
 
     public Camera getCamera() {
@@ -151,10 +212,17 @@ public class HouseState extends GameState {
 
     @Override
     public void key(KeyEvent ke, boolean pressed) {
-        if (pressed) {
+        switch(ke.getKeyCode()) {
+            case KeyEvent.VK_UP: movingUp = pressed; break;
+            case KeyEvent.VK_DOWN: movingDown = pressed; break;
+            case KeyEvent.VK_RIGHT: movingRight = pressed; break;
+            case KeyEvent.VK_LEFT: movingLeft = pressed; break;
+        }
+        
+        if (pressed) {            
             if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 getWindow().requestToClose();
-            } 
+            }
             //Development controls; will remove
             else if (ke.getKeyCode() == KeyEvent.VK_G) {
                 reloadHousePlan();
