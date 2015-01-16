@@ -107,6 +107,7 @@ public class HouseState extends GameState {
         AnimatedIsometricEntity dog = new AnimatedIsometricEntity(world,
                 300, 300, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
+        dog.getVelocity().setValues(0, 1.6);
     }
 
     public Camera getCamera() {

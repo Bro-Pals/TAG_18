@@ -213,7 +213,15 @@ public class IsometricEntity extends BlockEntity {
     @Override
     public void render(Object graphicsObj) {
         Graphics g = (Graphics) graphicsObj;
-        g.drawImage(using, (int) (getX() - getCamera().getX()), (int) (getY() - 159 - getCamera().getY()), null);
+        //80 y -> +40y -70x
+        //80 x -> +40y +70x
+        
+        float renderX = 70 * ((getY()/80) - (getX()/80));
+        float renderY = 40 * ((getX()/80) + (getY()/80));
+        InfoLogger.println("renderX: " + renderX + "  renderY: " + renderY);
+        InfoLogger.println("x: " + getX() + "  y: " + getY());
+        g.drawImage(using, (int) (renderX - getCamera().getX()), 
+                (int) (renderY - getCamera().getY()), null);
     }
 
     public Camera getCamera() {
