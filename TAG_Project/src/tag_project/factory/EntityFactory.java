@@ -11,6 +11,7 @@ import bropals.lib.simplegame.logger.ErrorLogger;
 import java.io.File;
 import java.util.HashMap;
 import tag_project.BiscuitEntity;
+import tag_project.DecorationEntity;
 import tag_project.FurnitureEntity;
 import tag_project.HouseState;
 import tag_project.IsometricDirection;
@@ -119,6 +120,20 @@ public class EntityFactory {
      * @return the created wall
      */
     public static IsometricEntity makeWall(AssetManager assetManager, float x, float y, float w, float h) {
+        return null;
+    }
+    
+    /**
+     * Makes a wall
+     * @param assetManager the asset manager
+     * @param x the x position of the center of the decor
+     * @param y the y position of the center of the decor
+     * @param w the wall width
+     * @param h the wall height
+     * @param imageKey they key of the image to use for the decoration
+     * @return the created decor
+     */
+    public static DecorationEntity makeDecoration(AssetManager assetManager, float x, float y, float w, float h, String imageKey) {
         return null;
     }
 }

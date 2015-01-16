@@ -81,8 +81,16 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
             return EntityFactory.makeWall(assetManager,
                     Float.parseFloat(split[1]),
                     Float.parseFloat(split[2]),
+                    Float.parseFloat(split[3]),
+                    Float.parseFloat(split[4])
+            );
+        } else if (split[0].equals("Decoration")) { 
+            return EntityFactory.makeDecoration(assetManager,
                     Float.parseFloat(split[1]),
-                    Float.parseFloat(split[2])
+                    Float.parseFloat(split[2]),
+                    Float.parseFloat(split[3]),
+                    Float.parseFloat(split[4]),
+                    split[5]
             );
         } else {
             return EntityFactory.makeFurniture(

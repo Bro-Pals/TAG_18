@@ -66,6 +66,8 @@ public class HouseState extends GameState {
                     g.setColor(Color.ORANGE);
                 } else if (block instanceof AnimatedIsometricEntity) {
                     g.setColor(Color.GREEN);
+                } else if (block instanceof DecorationEntity) {
+                    g.setColor(Color.WHITE);
                 } else {
                     g.setColor(Color.BLUE);
                 }
