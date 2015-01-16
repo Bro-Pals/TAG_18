@@ -21,6 +21,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -60,11 +61,17 @@ public class HouseState extends EntityState {
         initGUI();
         
         Animation dogAnimation = new Animation();
-        dogAnimation.addTrack(new Track(getAssetManager().getImage("spanielSprites"), 
-                139, 200, 3));
+        BufferedImage[] dogImages = new Track(
+                getAssetManager().getImage("spanielSprites"), 139, 200, 3).getImages();
+        Track southMove = new Track(new BufferedImage[]{
+            dogImages[3], dogImages[0], dogImages[1], dogImages[2], 
+            dogImages[1], dogImages[0]
+        }, 2);
+        
+        dogAnimation.addTrack(southMove);
         
         AnimatedIsometricEntity dog = new AnimatedIsometricEntity(getGameWorld(), 
-                100, 100, 10, 10, false, IsometricDirection.SOUTH, 
+                300, 300, 10, 10, false, IsometricDirection.SOUTH, 
                 null, null, null, null, dogAnimation);
     }
     

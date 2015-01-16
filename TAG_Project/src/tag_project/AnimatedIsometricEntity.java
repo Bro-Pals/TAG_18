@@ -32,7 +32,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         switch(getFacing()) {
             case NORTH: // animation track 0
                 break;
-            case SOUTH: // animation track 1
+            case SOUTH: // animation track 1 (0 for now)
+                if (animation.getCurrentTrackIndex() != 0)
+                    animation.setTrack(0); // change to the south animaton
                 
                 if (getSouth() != animation.getCurrentImage())
                     setSouth(animation.getCurrentImage());
