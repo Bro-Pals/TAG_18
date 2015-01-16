@@ -1,0 +1,15 @@
+bropals.lib.simplegame
+bropals.lib.simplegame.animation
+bropals.lib.simplegame.entity
+bropals.lib.simplegame.entity.block
+bropals.lib.simplegame.entity.component
+bropals.lib.simplegame.gui
+bropals.lib.simplegame.io
+bropals.lib.simplegame.leveldesigner
+bropals.lib.simplegame.logger
+bropals.lib.simplegame.math
+bropals.lib.simplegame.networking
+bropals.lib.simplegame.sound
+bropals.lib.simplegame.state
+bropals.lib.simplegame.test
+bropals.lib.simplegame.util
