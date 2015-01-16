@@ -30,10 +30,9 @@ public class TAGProject {
         }
         GameStateRunner runner = new GameStateRunner(
                 new GameWindow("Gary Wenceworth XVIII wants to take revenge on his owner by defacing (eating) all the furniture in the house. The teenage son of his master is trying to stop him (he is gigantic compared to gary)", 
-                        800, 600, fs),
-                new HouseState()
-        );
+                        800, 600, fs));
         runner.getAssetManager().loadImagesInDirectories("assets/img", true);
+        runner.setState(new HouseState());
         runner.loop();
     }
     
