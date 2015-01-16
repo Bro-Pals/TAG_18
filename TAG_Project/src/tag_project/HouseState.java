@@ -24,7 +24,7 @@ import java.awt.event.MouseEvent;
 public class HouseState extends GameState {
 
     private Gui gui;
-    private GameWorld<IsometricEntity> world;
+    private IsometricGameWorld world;
     private boolean paused = false;
     private GuiText biscuits, furniture;
     
@@ -46,7 +46,7 @@ public class HouseState extends GameState {
 
     @Override
     public void onEnter() {
-        world = new GameWorld<>(this);
+        world = new IsometricGameWorld(this);
         gui = new Gui();
         initGUI();
     }
@@ -59,7 +59,7 @@ public class HouseState extends GameState {
         biscuits = new GuiText("0", 70, 20, 80, 40, false);
         GuiImage furnitureIcon = new GuiImage(150, 20, 40, 40, 
             getAssetManager().getImage("furnitureIcon"));
-        furniture = new GuiText("0", 140, 20, 80, 40, false);
+        furniture = new GuiText("0", 200, 20, 80, 40, false);
         
         main.addElement(biscuitIcon);
         main.addElement(biscuits);

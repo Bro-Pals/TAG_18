@@ -7,6 +7,7 @@ package tag_project;
 
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.entity.block.BlockEntity;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 /**
@@ -110,6 +111,25 @@ public class IsometricEntity extends BlockEntity {
     public void setFacing(IsometricDirection facing) {
         this.facing = facing;
     }
+
+    @Override
+    public void setY(float y) {
+        super.setY(y);
+        ((IsometricGameWorld)getParent()).reorderEntity(this);
+    }
     
     
+
+    @Override
+    public void render(Object graphicsObj) {
+        Graphics g = (Graphics)graphicsObj;
+        BufferedImage using = null;
+        switch(facing) {
+            case NORTH: using = north; break;
+            case SOUTH: using = south; break;
+            case EAST: using = east; break;
+            case WEST: using = west; break;
+        }
+        g.drawImage(using, 0, -159, null);
+    }    
 }
