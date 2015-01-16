@@ -11,4 +11,17 @@ package tag_project;
  */
 public enum IsometricDirection {
     NORTH, SOUTH, EAST, WEST;
+    
+    public static IsometricDirection parseDirection(String str) {
+        if (str.equals("north")) {
+            return NORTH;
+        } else if (str.equals("south")) {
+            return SOUTH;
+        } else if (str.equals("east")) {
+            return EAST;
+        } else if (str.equals("west")) {
+            return WEST;
+        }
+        return null;
+    }
 }

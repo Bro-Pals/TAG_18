@@ -1,0 +1,14 @@
+name=Bed
+size=short
+defaceable=true
+moveunderable=false
+width=160
+height=160
+northImageNormal= 
+southImageNormal= 
+westImageNormal= 
+eastImageNormal= 
+northImageDefaced= 
+southImageDefaced= 
+westImageDefaced= 
+eastImageDefaced= 
