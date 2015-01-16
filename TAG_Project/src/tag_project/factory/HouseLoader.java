@@ -51,7 +51,10 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
-                igw.addEntity(parseLine(line));
+                IsometricEntity ie = parseLine(line);
+                if (ie != null) {
+                    igw.addEntity(ie);
+                }
             }
             reader.close();
             reader = new BufferedReader(new FileReader(new File("assets/data/biscuits.data")));
@@ -59,9 +62,11 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                 igw.addEntity(parseBiscuit(line));
             }
             reader.close();
-            InfoLogger.println("Loaded house plan: " + key);
+            InfoLogger.println("Loaded house plan: " + key + " " + System.currentTimeMillis());
         } catch (IOException e) {
             ErrorLogger.println("Unable to load house plan " + key);
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException adasdaas) {
+            ErrorLogger.println("That line is not formatted correctly! (" + adasdaas + ")");
         }
         add(key, igw);
     }
@@ -77,15 +82,19 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
 
     private IsometricEntity parseLine(String line) {
         String[] split = line.split(Pattern.quote(" "));
+        IsometricEntity ie = null;
+        if (split[0].equals("Comment")) {
+            return ie;
+        }
         if (split[0].equals("Wall")) {
-            return EntityFactory.makeWall(assetManager,
+            ie = EntityFactory.makeWall(assetManager,
                     Float.parseFloat(split[1]),
                     Float.parseFloat(split[2]),
                     Float.parseFloat(split[3]),
                     Float.parseFloat(split[4])
             );
-        } else if (split[0].equals("Decoration")) { 
-            return EntityFactory.makeDecoration(assetManager,
+        } else if (split[0].equals("Decoration")) {
+            ie = EntityFactory.makeDecoration(assetManager,
                     Float.parseFloat(split[1]),
                     Float.parseFloat(split[2]),
                     Float.parseFloat(split[3]),
@@ -93,22 +102,31 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                     split[5]
             );
         } else {
-            return EntityFactory.makeFurniture(
+            ie = EntityFactory.makeFurniture(
                     split[0],
                     Float.parseFloat(split[1]),
                     Float.parseFloat(split[2]),
                     IsometricDirection.parseDirection(split[3]));
         }
+
+        if (ie.getWidth() % 80 != 0 || ie.getHeight() % 80 != 0) {
+            ErrorLogger.println("Size not divisible by 80:");
+            ErrorLogger.println(line);
+        }
+        if (ie.getX() % 80 != 0 || ie.getY() % 80 != 0) {
+            ErrorLogger.println("Position not divisible by 80:");
+            ErrorLogger.println(line);
+        }
+        return ie;
     }
 
     @Override
     public void unload(String key) {
-        for (IsometricEntity be : (ArrayList<IsometricEntity>)getAsset(key).getEntities()) {
+        for (IsometricEntity be : (ArrayList<IsometricEntity>) getAsset(key).getEntities()) {
             be.removeParent();
         }
         getAsset(key).getEntities().clear();
         super.unload(key);
     }
-    
-    
+
 }

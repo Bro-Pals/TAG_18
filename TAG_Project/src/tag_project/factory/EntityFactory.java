@@ -120,7 +120,10 @@ public class EntityFactory {
      * @return the created wall
      */
     public static IsometricEntity makeWall(AssetManager assetManager, float x, float y, float w, float h) {
-        return null;
+        return new IsometricEntity(null, x, y, w, h, 
+                true, 
+                IsometricDirection.SOUTH, null,
+                assetManager.getImage("wallSprite"), null, null);
     }
     
     /**
@@ -134,6 +137,7 @@ public class EntityFactory {
      * @return the created decor
      */
     public static DecorationEntity makeDecoration(AssetManager assetManager, float x, float y, float w, float h, String imageKey) {
-        return null;
+        return new DecorationEntity(null, x, y, w, h, 
+                        assetManager.getImage(imageKey));
     }
 }

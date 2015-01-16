@@ -1,0 +1,54 @@
+Comment Laying out the doorways and the floors
+Decoration 80 80 1120 560 Hardfloor //Laundry room floor
+Decoration 1280 80 1200 1200 Hardfloor //Bedroom 2 floor
+Decoration 2560 80 1200 1200 Hardfloor //Bedroom 1 floor
+Decoration 3840 80 2400 1600 Hardfloor //Kitchen/Dining floor
+Decoration 1280 1360 2480 320 Hardfloor //Hallway by bedrooms floor
+Decoration 2880 1760 1120 560 Hardfloor //Bathroom floor
+Decoration 1280 1760 1520 560 Hardfloor //Study floor
+Decoration 4080 1760 640 640 Hardfloor //Den floor component 1
+Decoration 640 2400 4080 800 Hardfloor //Den floor component 2
+Decoration 80 720 1120 1680 Hardfloor //Den floor component 3
+Decoration -1360 480 1360 1360 Hardfloor //Garage floor
+Decoration 800 640 160 80 Hardfloor //Doorway to laundry
+Decoration 1760 1280 160 80 Hardfloor //Doorway to bedroom 2
+Decoration 3040 1280 160 80 Hardfloor //Doorway to bedroom 1
+Decoration 3760 1440 80 160 Hardfloor //Doorway from hallway to dining room
+Decoration 3280 1680 160 80 Hardfloor //Doorway from hallway to bathroom
+Decoration 1600 1680 160 80 Hardfloor //Doorway from hallway to study
+Decoration 2320 2320 160 80 Hardfloor //Doorway from den to study
+Decoration 4240 1680 160 80 Hardfloor //Doorway from dining room to den
+Decoration 1280 1440 80 160 Hardfloor //Doorway from den component 3 to hallway
+Decoration 0 1280 80 160 Hardfloor //Doorway from den component 3 to garage
+Comment Need to make the walls now
+Wall 0 0 6240 80 //Over the laundry room
+Wall 0 80 80 560 //Left side of the laundry room
+Wall 0 640 800 80
+Wall 960 640 320 80
+Wall 1200 80 80 560
+Wall 1200 720 80 1760
+Wall 1280 1280 480 80
+Wall 1920 1280 1120 80
+Wall 3200 1280 560 80 //Wall on the bottom of bedroom 1; right of door
+Wall 3760 80 80 1360
+Wall 6240 0 80 1760 //Wall to the right of the dining room / kitchen
+Wall 4400 1680 1840 80
+Wall 2480 80 80 1200 //Wall in between the two bedrooms
+Wall 1280 1680 320 80 //Wall above the study; left of doorway
+Wall 1760 1680 1520 80 //Wall above the study; right of doorway
+Wall 1280 2320 1040 80 //Wall under the study; left of doorway
+Wall 2480 2320 1600 80 //Wall under the study; right of doorway
+Wall 2800 1760 80 560 //Wall between the study and the bathroom
+Wall 3440 1680 800 80
+Wall 3760 1600 80 80
+Wall 4000 1760 80 560 //Right side of the bathroom
+Wall 4720 1760 80 1520 //Right side of den component 1
+Wall 640 3200 4080 80 //Bottom side of den component 2
+Wall 560 2400 80 880 //Left side of den component 2
+Wall 0 2400 560 80 //Bottom side of den component 3
+Wall 0 1440 80 960 //Wall under the garage doorway
+Wall 0 720 80 560 //Wall above the garage doorway
+Wall -1360 400 1360 80 //Wall above the garage
+Wall -1360 1840 1360 80 //Wall under the garage
+Wall -1440 400 80 1520 //Wall on the left side of the garage
+Comment need to do the furniture now

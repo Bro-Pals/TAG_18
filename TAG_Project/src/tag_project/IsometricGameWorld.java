@@ -20,15 +20,23 @@ public class IsometricGameWorld extends GameWorld<IsometricEntity> {
 
     @Override
     public void addEntity(IsometricEntity entity) {
+       /*
         if (!getEntities().isEmpty()) {
             for (int i=getEntities().size()-1; i>=0; i--) {
                 if (getEntities().get(i).getY() >= entity.getY()) {
                     getEntities().add(i, entity);
+                    return;
                 }
             }
+            //should be at the back then
+            super.addEntity(entity);
         } else {
             super.addEntity(entity);
         }
+        */
+        
+        //Temporary
+        super.addEntity(entity);
     }
     
     public void reorderEntity(IsometricEntity entity) {
