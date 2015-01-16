@@ -1,0 +1,14 @@
+name=DryingMachine
+size=short
+defaceable=false
+moveunderable=false
+width=80
+height=80
+northImageNormal= 
+southImageNormal= 
+westImageNormal= 
+eastImageNormal= 
+northImageDefaced= 
+southImageDefaced= 
+westImageDefaced= 
+eastImageDefaced= 

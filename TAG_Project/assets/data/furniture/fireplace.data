@@ -1,0 +1,14 @@
+name=Fireplace
+size=tall
+defaceable=false
+moveunderable=false
+width=160
+height=80
+northImageNormal= 
+southImageNormal= 
+westImageNormal= 
+eastImageNormal= 
+northImageDefaced= 
+southImageDefaced= 
+westImageDefaced= 
+eastImageDefaced= 

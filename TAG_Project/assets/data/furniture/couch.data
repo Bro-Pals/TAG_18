@@ -1,0 +1,14 @@
+name=Couch
+size=tall
+defaceable=true
+moveunderable=false
+width=240
+height=80
+northImageNormal= 
+southImageNormal= 
+westImageNormal= 
+eastImageNormal= 
+northImageDefaced= 
+southImageDefaced= 
+westImageDefaced= 
+eastImageDefaced= 

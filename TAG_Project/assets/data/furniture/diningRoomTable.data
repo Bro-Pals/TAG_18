@@ -1,0 +1,14 @@
+name=DiningRoomTable
+size=short
+defaceable=false
+moveunderable=true
+width=240
+height=160
+northImageNormal= 
+southImageNormal= 
+westImageNormal= 
+eastImageNormal= 
+northImageDefaced= 
+southImageDefaced= 
+westImageDefaced= 
+eastImageDefaced= 

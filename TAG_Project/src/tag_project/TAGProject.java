@@ -8,6 +8,8 @@ package tag_project;
 import bropals.lib.simplegame.GameStateRunner;
 import bropals.lib.simplegame.GameWindow;
 import javax.swing.JOptionPane;
+import tag_project.factory.EntityFactory;
+import tag_project.factory.HouseLoader;
 
 /**
  *
@@ -31,9 +33,17 @@ public class TAGProject {
         GameStateRunner runner = new GameStateRunner(
                 new GameWindow("Gary Wenceworth XVIII wants to take revenge on his owner by defacing (eating) all the furniture in the house. The teenage son of his master is trying to stop him (he is gigantic compared to gary)", 
                         800, 600, fs));
+        ///Loaded the assets
         runner.getAssetManager().loadImagesInDirectories("assets/img", true);
+        ///Need to initialize data
+        initData(runner);
+        
         runner.setState(new HouseState());
         runner.loop();
     }
     
+    private static void initData(GameStateRunner runner) {
+        EntityFactory.loadFurnitureData(runner.getAssetManager());
+        runner.getAssetManager().addAssetLoader(new HouseLoader(runner.getAssetManager()), IsometricGameWorld.class);
+    }
 }
