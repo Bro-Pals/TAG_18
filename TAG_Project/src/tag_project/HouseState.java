@@ -56,10 +56,10 @@ public class HouseState extends GameState {
         
         GuiImage biscuitIcon = new GuiImage(20, 20, 40, 40, 
             getAssetManager().getImage("biscuitIcon"));
-        biscuits = new GuiText("0", 70, 20, 0, 0, false);
-        GuiImage furnitureIcon = new GuiImage(90, 20, 40, 40, 
+        biscuits = new GuiText("0", 70, 20, 80, 40, false);
+        GuiImage furnitureIcon = new GuiImage(150, 20, 40, 40, 
             getAssetManager().getImage("furnitureIcon"));
-        furniture = new GuiText("0", 140, 20, 0, 0, false);
+        furniture = new GuiText("0", 140, 20, 80, 40, false);
         
         main.addElement(biscuitIcon);
         main.addElement(biscuits);
