@@ -1,8 +1,8 @@
-name=Bookcase
+name=TowelRack
 size=tall
 defaceable=true
 moveunderable=false
-width=320
+width=80
 height=80
 northImageNormal= 
 southImageNormal= 

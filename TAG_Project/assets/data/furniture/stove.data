@@ -1,8 +1,8 @@
-name=Bookcase
+name=Stove
 size=tall
-defaceable=true
+defaceable=false
 moveunderable=false
-width=320
+width=80
 height=80
 northImageNormal= 
 southImageNormal= 

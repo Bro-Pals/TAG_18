@@ -1,8 +1,8 @@
-name=Bookcase
-size=tall
-defaceable=true
+name=Toilet
+size=short
+defaceable=false
 moveunderable=false
-width=320
+width=80
 height=80
 northImageNormal= 
 southImageNormal= 

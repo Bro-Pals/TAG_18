@@ -88,7 +88,7 @@ public class HouseState extends GameState {
     @Override
     public void render(Object o) {
         Graphics g = (Graphics) o;
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
         if (!developmentRendering) {
             for (Object be : world.getEntities()) {

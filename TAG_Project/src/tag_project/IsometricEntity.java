@@ -189,7 +189,9 @@ public class IsometricEntity extends BlockEntity {
     @Override
     public void setY(float y) {
         super.setY(y);
-        ((IsometricGameWorld) getParent()).reorderEntity(this);
+        if (getParent() != null) {
+            ((IsometricGameWorld) getParent()).reorderEntity(this);
+        }
     }
 
     /**

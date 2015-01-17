@@ -1,9 +1,9 @@
-name=Bookcase
+name=OfficeDesk
 size=tall
-defaceable=true
+defaceable=false
 moveunderable=false
-width=320
-height=80
+width=240
+height=160
 northImageNormal= 
 southImageNormal= 
 westImageNormal= 

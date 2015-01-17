@@ -93,6 +93,14 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                     Float.parseFloat(split[3]),
                     Float.parseFloat(split[4])
             );
+            if (ie.getWidth() % 80 != 0 || ie.getHeight() % 80 != 0) {
+                ErrorLogger.println("Size not divisible by 80:");
+                ErrorLogger.println(line);
+            }
+            if (ie.getX() % 80 != 0 || ie.getY() % 80 != 0) {
+                ErrorLogger.println("Position not divisible by 80:");
+                ErrorLogger.println(line);
+            }
         } else if (split[0].equals("Decoration")) {
             ie = EntityFactory.makeDecoration(assetManager,
                     Float.parseFloat(split[1]),
@@ -101,21 +109,20 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                     Float.parseFloat(split[4]),
                     split[5]
             );
+            if (ie.getWidth() % 80 != 0 || ie.getHeight() % 80 != 0) {
+                ErrorLogger.println("Size not divisible by 80:");
+                ErrorLogger.println(line);
+            }
+            if (ie.getX() % 80 != 0 || ie.getY() % 80 != 0) {
+                ErrorLogger.println("Position not divisible by 80:");
+                ErrorLogger.println(line);
+            }
         } else {
             ie = EntityFactory.makeFurniture(
                     split[0],
                     Float.parseFloat(split[1]),
                     Float.parseFloat(split[2]),
                     IsometricDirection.parseDirection(split[3]));
-        }
-
-        if (ie.getWidth() % 80 != 0 || ie.getHeight() % 80 != 0) {
-            ErrorLogger.println("Size not divisible by 80:");
-            ErrorLogger.println(line);
-        }
-        if (ie.getX() % 80 != 0 || ie.getY() % 80 != 0) {
-            ErrorLogger.println("Position not divisible by 80:");
-            ErrorLogger.println(line);
         }
         return ie;
     }
