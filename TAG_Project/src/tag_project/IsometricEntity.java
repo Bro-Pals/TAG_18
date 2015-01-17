@@ -253,8 +253,8 @@ public class IsometricEntity extends BlockEntity {
             float bottomRightX = renderCoordX - 
                     (float)((Math.sin(ISO_ANGLE) * getWidth()));
             float bottomRightY = renderCoordY + 
-                    (float)(Math.sin(ISO_ANGLE) * getHeight());
-                   // (float)( Math.cos(ISO_ANGLE) * getHeight());
+                    (float)(Math.cos(ISO_ANGLE) * getHeight())
+                   + (float)(Math.cos(ISO_ANGLE) * getWidth());
             imagePosX = (int)(bottomRightX - getCamera().getX());
             imagePosY = (int)(bottomRightY - drawnImage.getHeight() - getCamera().getY());
         }   
