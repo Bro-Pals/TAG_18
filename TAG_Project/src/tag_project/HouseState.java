@@ -344,6 +344,8 @@ public class HouseState extends GameState {
     }
     
     public void handleTearKeyInput(KeyEvent ke) {
+        if (furnitureTearManager.isTearing())
+            return;
         if (couldTear != null) {
             if (ke.getKeyCode() == KeyEvent.VK_X) {
                 furnitureTearManager.startTearing(couldTear);
