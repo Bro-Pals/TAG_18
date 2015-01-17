@@ -16,6 +16,7 @@ public class DecorationEntity extends IsometricEntity {
 
     public DecorationEntity(GameWorld parent, float x, float y, float width, float height, BufferedImage south) {
         super(parent, x, y, width, height, true, IsometricDirection.SOUTH, null, south, null, null);
+        setCollidable(false);
     }
     
 }

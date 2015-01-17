@@ -8,7 +8,9 @@ package tag_project;
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.entity.block.BlockEntity;
 import bropals.lib.simplegame.logger.InfoLogger;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -20,9 +22,11 @@ public class IsometricEntity extends BlockEntity {
 
     private BufferedImage north, south, east, west;
     private IsometricDirection facing;
-    private BufferedImage using = null;
+    private BufferedImage using = null, drawnImage = null;;
     private final float localWidth;
     private final float localHeight;
+    private float renderX, renderY;
+    private final float ISO_ANGLE = (float)Math.atan(69.5/40);
 
     public IsometricEntity(GameWorld parent,
             float x, float y, float width, float height,
@@ -34,7 +38,6 @@ public class IsometricEntity extends BlockEntity {
         this.south = south;
         this.east = east;
         this.west = west;
-        setFacing(facing);
         if (facing == IsometricDirection.NORTH || facing == IsometricDirection.SOUTH) {
             localWidth = width;
             localHeight = height;
@@ -44,6 +47,7 @@ public class IsometricEntity extends BlockEntity {
         }
         setWidth(localWidth);
         setHeight(localHeight);
+        setFacing(facing);
     }
 
     /**
@@ -184,6 +188,8 @@ public class IsometricEntity extends BlockEntity {
                 using = west;
                 break;
         }
+        if (!(this instanceof AnimatedIsometricEntity))
+            rebuildDrawnImage();
     }
 
     @Override
@@ -215,16 +221,60 @@ public class IsometricEntity extends BlockEntity {
         Graphics g = (Graphics) graphicsObj;
         //80 y -> +40y -70x
         //80 x -> +40y +70x
-        
-        float renderX = 70 * ((getY()/80) - (getX()/80));
-        float renderY = 40 * ((getX()/80) + (getY()/80));
-        InfoLogger.println("renderX: " + renderX + "  renderY: " + renderY);
-        InfoLogger.println("x: " + getX() + "  y: " + getY());
+
+        if (using == null) {
+            //System.out.println("No good image to find");
+            return;
+        }
+        renderX = (70 * ((getY()/80) - (getX()/80))) - (using.getWidth()/2);
+        renderY = (40 * ((getX()/80) + (getY()/80))) - using.getHeight();
+        //InfoLogger.println("renderX: " + renderX + "  renderY: " + renderY);
+       // InfoLogger.println("x: " + getX() + "  y: " + getY());
         g.drawImage(using, (int) (renderX - getCamera().getX()), 
                 (int) (renderY - getCamera().getY()), null);
+        g.setColor(Color.RED);
+        int cornerPosX = (int)(renderX - 3 - getCamera().getX() + (using.getWidth()/2));
+        int cornerPosY = (int)(renderY - 3 - getCamera().getY() + using.getHeight());
+        g.fillRect(cornerPosX, cornerPosY, 6, 6);
+        g.drawString("(" + getX() + ", " + getY() + ")", cornerPosX + 10, cornerPosY);
     }
 
+    private void rebuildDrawnImage() {
+        /*
+        if (getLocalWidth() == 0 || getLocalHeight() == 0) {
+            InfoLogger.println("This ain't no good size");
+            return; // :(
+        }
+        float width = (float)((getLocalHeight()* Math.cos(ISO_ANGLE)) + 
+            (getLocalWidth() * Math.cos(ISO_ANGLE)));
+        float height = 120 + (float)((getLocalHeight() * Math.sin(ISO_ANGLE)) + 
+            (getLocalWidth() * Math.sin(ISO_ANGLE)));
+        //System.out.println("Width: " + width + "  Height: " + height);
+        drawnImage = new BufferedImage((int)width, (int)height, BufferedImage.TRANSLUCENT);
+        Graphics2D g2 = (Graphics2D) drawnImage.getGraphics();
+        float basePointX = (float)(Math.cos(ISO_ANGLE) * getWidth());
+        float basePointY = height;
+        for (float w=getWidth(); w > 0; w-=80) {
+            for (float h=getHeight(); h > 0; h-=80) {
+                float xPos = basePointX - (69.5f * ((w/80) - (h/80)));
+                float yPos = basePointY - (40f * ((w/80) + (h/80)));
+                g2.drawImage(using, (int)(xPos + 69.5), 
+                        (int)(yPos + 200), null);
+            }
+        }
+        System.out.println("Rebuilt an image of size: " + width + ", " + height);
+                */
+    }
+    
     public Camera getCamera() {
         return ((HouseState) getParent().getState()).getCamera();
+    }
+    
+    public float getRenderX() {
+        return renderX;
+    }
+    
+    public float getRenderY() {
+        return renderY;
     }
 }

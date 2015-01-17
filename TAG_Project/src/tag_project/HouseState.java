@@ -39,7 +39,7 @@ public class HouseState extends GameState {
     
     /** Super special reference to the player (dog) */
     private AnimatedIsometricEntity dog;
-    private float DOG_SPEED_DIAG = 2;
+    private float DOG_SPEED_DIAG = 8;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float)Math.sqrt(2);
     
     ///Use R to swap rendering modes
@@ -87,6 +87,14 @@ public class HouseState extends GameState {
 
     @Override
     public void render(Object o) {
+        // move camera over the dog
+        if (!developmentRendering) {
+            camera.set(dog.getRenderX() - (getWindow().getScreenWidth()/2), 
+                dog.getRenderY() - (getWindow().getScreenHeight()/2));
+        } else {
+            camera.set(dog.getX() - (getWindow().getScreenWidth()/2), 
+                    dog.getY() - (getWindow().getScreenHeight()/2));
+        }
         Graphics g = (Graphics) o;
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
@@ -182,7 +190,7 @@ public class HouseState extends GameState {
         dogAnimation.addTrack(westStand); // 7
 
         dog = new AnimatedIsometricEntity(world,
-                150, 150, 80, 80, false, IsometricDirection.SOUTH,
+                100, 100, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
     }
 
@@ -254,6 +262,7 @@ public class HouseState extends GameState {
                     InfoLogger.println("Set to development rendering");
                 } else {
                     InfoLogger.println("Set to game rendering");
+                    
                 }
             }
         }
