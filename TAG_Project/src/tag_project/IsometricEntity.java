@@ -190,7 +190,8 @@ public class IsometricEntity extends BlockEntity {
                 using = west;
                 break;
         }
-        if (!(this instanceof AnimatedIsometricEntity)) {
+        if (!(this instanceof AnimatedIsometricEntity) &&
+                !(this instanceof FurnitureEntity)) {
             rebuildDrawnImage();
         } else {
             drawnImage = using;
@@ -229,15 +230,34 @@ public class IsometricEntity extends BlockEntity {
         //80 y -> +40y -70x
         //80 x -> +40y +70x
 
-        if (drawnImage == null) {
+        if (drawnImage == null && !(this instanceof FurnitureEntity)) {
             rebuildDrawnImage();
             System.out.println("drawImage is now " + drawnImage);
             return;
         }
+        if (drawnImage == null) {
+            revalidateImage();
+            drawnImage = using;
+        }
+        if (drawnImage == null)
+            return; // we give up on u drawnImage
         renderCoordX = ((float)69.5 * ((getY()/80) - (getX()/80)));
         renderCoordY = (40 * ((getX()/80) + (getY()/80)));
-        int imagePosX = (int) (renderCoordX - (Math.sin(ISO_ANGLE) * getWidth()) - getCamera().getX());
-        int imagePosY = (int) (renderCoordY - getCamera().getY() - 120);
+        int imagePosX = 0;
+        int imagePosY = 0;
+        if (!(this instanceof FurnitureEntity)) {
+            imagePosX = (int) (renderCoordX - (Math.sin(ISO_ANGLE) * getWidth()) - getCamera().getX());
+            imagePosY = (int) (renderCoordY - getCamera().getY() - 120);
+        } else {
+            // find teh bottom right of the image
+            float bottomRightX = renderCoordX - 
+                    (float)((Math.sin(ISO_ANGLE) * getWidth()));
+            float bottomRightY = renderCoordY + 
+                    (float)(Math.sin(ISO_ANGLE) * getHeight());
+                   // (float)( Math.cos(ISO_ANGLE) * getHeight());
+            imagePosX = (int)(bottomRightX - getCamera().getX());
+            imagePosY = (int)(bottomRightY - drawnImage.getHeight() - getCamera().getY());
+        }   
         g.drawImage(drawnImage, imagePosX, imagePosY , null);
        
         g.setColor(Color.RED);
@@ -248,8 +268,10 @@ public class IsometricEntity extends BlockEntity {
         // display it's world coordinates
         g.drawString("(" + getX() + ", " + getY() + ")", cornerPosX + 10, cornerPosY);
         // draw a box around it
-        g.drawRect(imagePosX, imagePosY, (int)drawnImage.getWidth(), 
-                (int)drawnImage.getHeight());
+        if (drawnImage != null) {
+            g.drawRect(imagePosX, imagePosY, (int)drawnImage.getWidth(), 
+                    (int)drawnImage.getHeight());
+        }
     }
 
     

@@ -56,27 +56,27 @@ Comment
 Comment Laundry Room
 Cabinet 360 120 south //Cabinet top left
 Cabinet 860 120 south //Cabinet top left
-WashingMachine 120 280 east
-DryingMachine 120 440 east
+WashingMachine 120 280 west
+DryingMachine 120 440 west
 Comment
 Comment Bedroom 1
 Bed 3120 240 south
 NightStand 3280 120 south
-Dresser 2600 760 east
-ToyBox 3680 760 west
+Dresser 2600 760 west
+ToyBox 3680 760 east
 Comment
 Comment Bedroom 2
 Bed 1880 240 south
 NightStand 2040 120 south
-Dresser 1320 760 east
+Dresser 1320 760 west
 Dresser 2440 760 east
 Comment
 Comment Dining room / kitchen
 DiningRoomTable 4400 960 east
-Chair 4240 880 east
-Chair 4240 1040 east
-Chair 4560 880 west
-Chair 4560 1040 west
+Chair 4240 880 west
+Chair 4240 1040 west
+Chair 4560 880 east
+Chair 4560 1040 east
 Counter 4680 120 south
 Counter 4760 120 south
 Stove 4840 120 south
@@ -93,12 +93,12 @@ Counter 5560 120 south
 Comment
 Comment furniture for the bathroom now
 Sink 3080 1800 south
-Toilet 2920 2160 east
+Toilet 2920 2160 west
 Shower 3920 2240 north
-TowelRack 3880 1960 west
+TowelRack 3880 1960 east
 Comment
 Comment Furniture for the study
-Bookcase 1320 2040 east
+Bookcase 1320 2040 west
 Bookcase 1800 2280 north
 OfficeChair 2360 1960 north
 OfficeDesk 2360 1840 south
@@ -106,13 +106,13 @@ Comment
 Comment Just need to arrange the den now...
 TV 2920 2440 south
 Couch 2920 2980 north
-Couch 3200 2720 west
+Couch 3200 2720 east
 Bookcase 3680 3160 north
 Bookcase 2200 3160 north
-Fireplace 4640 2400 west
-Bookcase 4680 2880 west
+Fireplace 4640 2400 east
+Bookcase 4680 2880 east
 LazyBoy 4360 2200 south
-Fireplace 1120 1560 west
-Couch 320 1560 east
+Fireplace 1120 1560 east
+Couch 320 1560 west
 Couch 680 1200 south
-CoffeeTable 680 1560 west
+CoffeeTable 680 1560 east

@@ -43,7 +43,7 @@ public class HouseState extends GameState {
      * Super special reference to the player (dog)
      */
     private AnimatedIsometricEntity dog;
-    private float DOG_SPEED_DIAG = 8;
+    private float DOG_SPEED_DIAG = 28;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
     //How far do you need to be from a piece of furniture's center to tear it?
     private float TEAR_DISTANCE = 40;

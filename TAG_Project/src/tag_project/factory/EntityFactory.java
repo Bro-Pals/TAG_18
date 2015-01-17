@@ -8,6 +8,7 @@ package tag_project.factory;
 import bropals.lib.simplegame.io.AssetManager;
 import bropals.lib.simplegame.io.PropertiesReader;
 import bropals.lib.simplegame.logger.ErrorLogger;
+import bropals.lib.simplegame.logger.InfoLogger;
 import java.io.File;
 import java.util.HashMap;
 import tag_project.BiscuitEntity;
@@ -38,6 +39,7 @@ public class EntityFactory {
         PropertiesReader pr = new PropertiesReader();
         File[] furniture = new File("assets/data/furniture").listFiles();
         for (File furnitureDataFile : furniture) {
+            InfoLogger.println("Reading furniture data: " + furnitureDataFile.toString());
             pr.readProperties(furnitureDataFile);
             loadedFurniture.put(
                     (String) pr.getProperty("name"),
