@@ -47,6 +47,8 @@ public class IsometricEntity extends BlockEntity {
         }
         setWidth(localWidth);
         setHeight(localHeight);
+        renderX = 0;
+        renderY = 0;
         setFacing(facing);
     }
 
@@ -188,8 +190,11 @@ public class IsometricEntity extends BlockEntity {
                 using = west;
                 break;
         }
-        if (!(this instanceof AnimatedIsometricEntity))
+        if (!(this instanceof AnimatedIsometricEntity)) {
             rebuildDrawnImage();
+        } else {
+            drawnImage = using;
+        }
     }
 
     @Override
@@ -224,48 +229,57 @@ public class IsometricEntity extends BlockEntity {
         //80 y -> +40y -70x
         //80 x -> +40y +70x
 
-        if (using == null) {
-            //System.out.println("No good image to find");
+        if (drawnImage == null) {
+            rebuildDrawnImage();
+            System.out.println("drawImage is now " + drawnImage);
             return;
         }
-        renderX = (70 * ((getY()/80) - (getX()/80))) - (using.getWidth()/2);
-        renderY = (40 * ((getX()/80) + (getY()/80))) - using.getHeight();
+        System.out.println("Y:" + getY());
+        System.out.println("renderX: " + renderX);
+        renderX = ((float)69.5 * ((getY()/80) - (getX()/80))) - 
+                (float)(drawnImage.getWidth() * Math.sin(ISO_ANGLE));
+        renderY = (40 * ((getX()/80) + (getY()/80))) - drawnImage.getHeight();
         //InfoLogger.println("renderX: " + renderX + "  renderY: " + renderY);
        // InfoLogger.println("x: " + getX() + "  y: " + getY());
-        g.drawImage(using, (int) (renderX - getCamera().getX()), 
+        g.drawImage(drawnImage, (int) (renderX - getCamera().getX()), 
                 (int) (renderY - getCamera().getY()), null);
         g.setColor(Color.RED);
-        int cornerPosX = (int)(renderX - 3 - getCamera().getX() + (using.getWidth()/2));
-        int cornerPosY = (int)(renderY - 3 - getCamera().getY() + using.getHeight());
+        int cornerPosX = (int)(renderX - 3 - getCamera().getX() + (float)(drawnImage.getWidth() * Math.sin(ISO_ANGLE)));
+        int cornerPosY = (int)(renderY - 3 - getCamera().getY() + drawnImage.getHeight());
         g.fillRect(cornerPosX, cornerPosY, 6, 6);
         g.drawString("(" + getX() + ", " + getY() + ")", cornerPosX + 10, cornerPosY);
+        g.drawRect((int)renderX - (int)getCamera().getX(), 
+                (int)renderY - (int)getCamera().getY(), (int)drawnImage.getWidth(), (int)drawnImage.getHeight());
     }
 
     private void rebuildDrawnImage() {
-        /*
+        // make a tiled image for isometric drawing
         if (getLocalWidth() == 0 || getLocalHeight() == 0) {
             InfoLogger.println("This ain't no good size");
             return; // :(
         }
-        float width = (float)((getLocalHeight()* Math.cos(ISO_ANGLE)) + 
-            (getLocalWidth() * Math.cos(ISO_ANGLE)));
-        float height = 120 + (float)((getLocalHeight() * Math.sin(ISO_ANGLE)) + 
-            (getLocalWidth() * Math.sin(ISO_ANGLE)));
+        float width = (float)((getHeight()* Math.sin(ISO_ANGLE)) + 
+            (getWidth() * Math.sin(ISO_ANGLE)));
+        float height = 120 + (float)((getHeight() * Math.cos(ISO_ANGLE)) + 
+            (getWidth() * Math.cos(ISO_ANGLE)));
         //System.out.println("Width: " + width + "  Height: " + height);
         drawnImage = new BufferedImage((int)width, (int)height, BufferedImage.TRANSLUCENT);
-        Graphics2D g2 = (Graphics2D) drawnImage.getGraphics();
-        float basePointX = (float)(Math.cos(ISO_ANGLE) * getWidth());
-        float basePointY = height;
-        for (float w=getWidth(); w > 0; w-=80) {
-            for (float h=getHeight(); h > 0; h-=80) {
-                float xPos = basePointX - (69.5f * ((w/80) - (h/80)));
-                float yPos = basePointY - (40f * ((w/80) + (h/80)));
-                g2.drawImage(using, (int)(xPos + 69.5), 
-                        (int)(yPos + 200), null);
+        Graphics2D g2img = (Graphics2D) drawnImage.getGraphics();
+        float basePointX = (float)(Math.sin(ISO_ANGLE) * getWidth());
+        float basePointY = 200f;
+        int numTilesDrawn = 0;
+        for (float h=0; h < (getHeight()/80); h++) {
+            for (float w=0; w < (getWidth()/80); w++) {
+                double xPos = basePointX - (69.5 * w) + (69.5 * h);
+                double yPos = basePointY + (40 * w) + (40 * h);
+                g2img.drawImage(using, (int)(xPos - 69.5), 
+                        (int)(yPos - 200), null);
+                numTilesDrawn++;
             }
         }
-        System.out.println("Rebuilt an image of size: " + width + ", " + height);
-                */
+        System.out.println("Tiles drawn: " + numTilesDrawn);
+        //System.out.println("Rebuilt an image of size: " + width + ", " + height);
+        //System.out.println(drawnImage);
     }
     
     public Camera getCamera() {
