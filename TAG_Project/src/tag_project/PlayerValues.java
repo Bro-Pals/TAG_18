@@ -12,6 +12,7 @@ package tag_project;
 public class PlayerValues {
     
     public int biscuitsCollected = 0;
-    public int furnitureDestoryed = 0;
-    
+    public int furnitureDestroyed = 0;
+    public int biscuitsTotal = 0;
+    public int furnitureTotal = 0;
 }

@@ -102,12 +102,13 @@ public class EntityFactory {
     /**
      * Makes a biscuit
      * @param assetManager the asset manager
+     * @param houseState the house state
      * @param x the x position of the center of the biscuit
      * @param y the y position of the center of the biscuit
      * @return the created biscuit
      */
-    public static IsometricEntity makeBiscuit(AssetManager assetManager, float x, float y) {
-        return new BiscuitEntity(null, x, y);
+    public static IsometricEntity makeBiscuit(AssetManager assetManager, HouseState houseState, float x, float y) {
+        return new BiscuitEntity(null, houseState, x, y);
     }
     
     /**

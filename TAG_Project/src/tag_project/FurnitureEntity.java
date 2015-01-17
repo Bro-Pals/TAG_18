@@ -38,6 +38,10 @@ public class FurnitureEntity extends IsometricEntity {
         }
     }
 
+    public boolean isRippedToShreds() {
+        return defaced;
+    }
+    
     public Size getSize() {
         return size;
     }

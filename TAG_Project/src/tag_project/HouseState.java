@@ -12,9 +12,9 @@ import bropals.lib.simplegame.entity.block.BlockEntity;
 import bropals.lib.simplegame.gui.Gui;
 import bropals.lib.simplegame.gui.GuiGroup;
 import bropals.lib.simplegame.gui.GuiImage;
+import bropals.lib.simplegame.gui.GuiProgressBar;
 import bropals.lib.simplegame.gui.GuiText;
 import bropals.lib.simplegame.logger.InfoLogger;
-import bropals.lib.simplegame.state.EntityState;
 import bropals.lib.simplegame.state.GameState;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,6 +22,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import tag_project.factory.HouseLoader;
 
 /**
@@ -36,50 +37,32 @@ public class HouseState extends GameState {
     private boolean movingUp, movingDown, movingRight, movingLeft;
     private GuiText biscuits, furniture;
     private Camera camera;
-    
-    /** Super special reference to the player (dog) */
+    private PlayerValues playerValues;
+    private FurnitureTearManager furnitureTearManager;
+
+    /**
+     * Super special reference to the player (dog)
+     */
     private AnimatedIsometricEntity dog;
     private float DOG_SPEED_DIAG = 8;
-    private float DOG_SPEED = DOG_SPEED_DIAG * (float)Math.sqrt(2);
-    
+    private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
+    //How far do you need to be from a piece of furniture's center to tear it?
+    private float TEAR_DISTANCE = 50;
+    private FurnitureEntity couldTear = null;
+
     ///Use R to swap rendering modes
     private boolean developmentRendering = true;
+    private final boolean developmentCameraControls = false;
 
     @Override
     public void update() {
-        
-        // handle the key presses for dog moving
-        if (movingUp && !movingDown) {
-            if (dog.getVelocity().getX() == 0)
-                dog.getVelocity().setY(-DOG_SPEED);
-            else
-                dog.getVelocity().setY(-DOG_SPEED_DIAG);
-        } else if (movingDown && !movingUp) {
-            if (dog.getVelocity().getX() == 0)
-                dog.getVelocity().setY(DOG_SPEED);
-            else
-                dog.getVelocity().setY(DOG_SPEED_DIAG);
-        } else if (!movingDown && !movingUp) {
-            dog.getVelocity().setY(0);
-        }
-        if (movingRight && !movingLeft) {
-            if (dog.getVelocity().getY() == 0)
-                dog.getVelocity().setX(-DOG_SPEED);
-            else
-                dog.getVelocity().setX(-DOG_SPEED_DIAG);
-        } else if (movingLeft && !movingRight) {
-            if (dog.getVelocity().getY() == 0)
-                dog.getVelocity().setX(DOG_SPEED);
-            else
-                dog.getVelocity().setX(DOG_SPEED_DIAG);
-        } else if (!movingRight && !movingLeft) {
-            dog.getVelocity().setX(0);
-        }
-        
-        
-        
         Point mp = getWindow().getMousePosition();
         if (!paused) {
+            if (!furnitureTearManager.isTearing()) {
+                updateDogMovement();
+            }
+            centerCameraOnDog();
+            updateTearing();
             world.updateEntities();
             gui.update(mp.x, mp.y);
         }
@@ -87,64 +70,146 @@ public class HouseState extends GameState {
 
     @Override
     public void render(Object o) {
-        // move camera over the dog
-        if (!developmentRendering) {
-            camera.set(dog.getRenderX() - (getWindow().getScreenWidth()/2), 
-                dog.getRenderY() - (getWindow().getScreenHeight()/2));
-        } else {
-            camera.set(dog.getX() - (getWindow().getScreenWidth()/2), 
-                    dog.getY() - (getWindow().getScreenHeight()/2));
-        }
         Graphics g = (Graphics) o;
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
+        clearBackground(g);
         if (!developmentRendering) {
-            for (Object be : world.getEntities()) {
-                ((BaseEntity) be).render(o);
-            }
+            drawInIsometricMode(o);
         } else {
-            for (Object be : world.getEntities()) {
-                BlockEntity block = ((BlockEntity) be);
-                if (block instanceof FurnitureEntity) {
-                    g.setColor(Color.RED);
-                } else if (block instanceof BiscuitEntity) {
-                    g.setColor(Color.ORANGE);
-                } else if (block instanceof AnimatedIsometricEntity) {
-                    g.setColor(Color.GREEN);
-                } else if (block instanceof DecorationEntity) {
-                    g.setColor(Color.WHITE);
-                } else {
-                    g.setColor(Color.BLUE);
-                }
-                int x = (int)(block.getX()-camera.getX());
-                int y = (int)(block.getY()-camera.getY());
-                int w = (int)block.getWidth();
-                int h = (int)block.getHeight();
-                g.fillRect(
-                        x, 
-                        y, 
-                        w, h);
-                //g.fillRect(300, 300, 80, 80);
-            }
+            drawInDevelopmentMode(g);
+        }
+        if (couldTear != null) {
+            drawTearIcon(g);
         }
         gui.render(o);
     }
 
+    private void clearBackground(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
+    }
+
+    private void drawInIsometricMode(Object graphicsObject) {
+        for (Object be : world.getEntities()) {
+            ((BaseEntity) be).render(graphicsObject);
+        }
+    }
+
+    private void drawInDevelopmentMode(Graphics g) {
+        for (Object be : world.getEntities()) {
+            BlockEntity block = ((BlockEntity) be);
+            if (block instanceof FurnitureEntity) {
+                g.setColor(Color.RED);
+            } else if (block instanceof BiscuitEntity) {
+                g.setColor(Color.YELLOW);
+            } else if (block instanceof AnimatedIsometricEntity) {
+                g.setColor(Color.GREEN);
+            } else if (block instanceof DecorationEntity) {
+                g.setColor(Color.WHITE);
+            } else {
+                g.setColor(Color.BLUE);
+            }
+            int x = (int) (block.getX() - camera.getX());
+            int y = (int) (block.getY() - camera.getY());
+            int w = (int) block.getWidth();
+            int h = (int) block.getHeight();
+            g.fillRect(
+                    x,
+                    y,
+                    w, h);
+            //g.fillRect(300, 300, 80, 80);
+        }
+    }
+
     @Override
     public void onEnter() {
+        playerValues = new PlayerValues();
         movingUp = false;
         movingDown = false;
         movingRight = false;
         movingLeft = false;
+        initHousePlan();
+        camera = new Camera();
+        gui = new Gui();
+        initGUI();
+        initTearFeature();
+        initDog();
+    }
+
+    private void initHousePlan() {
         ((HouseLoader) (getAssetManager().getAssetLoader(IsometricGameWorld.class))).setHouseState(this);
         getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
         world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
+    }
 
-        camera = new Camera();
+    private void initTearFeature() {
+        GuiGroup tearGroup = new GuiGroup();
+        GuiProgressBar tearBar = new GuiProgressBar(250, 440, 300, 40, 0, 0);
+        tearGroup.addElement(tearBar);
+        tearGroup.setEnabled(false);
+        GuiText label = new GuiText("Tearing furniture", 350, 440, 0, 0, false);
+        tearGroup.addElement(label);
+        gui.addGroup("tear", tearGroup);
+        furnitureTearManager = new FurnitureTearManager(tearBar, this);
+    }
 
-        gui = new Gui();
-        initGUI();
+    public void biscuitCollected() {
+        playerValues.biscuitsCollected++;
+        biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
+        gui.disable("tear");
+    }
 
+    public boolean isTheDog(BlockEntity blockEntity) {
+        return blockEntity == dog;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    private void updateDogMovement() {
+        if (!developmentCameraControls) {
+            // handle the key presses for dog moving
+            if (movingUp && !movingDown) {
+                if (dog.getVelocity().getX() == 0) {
+                    dog.getVelocity().setY(-DOG_SPEED);
+                } else {
+                    dog.getVelocity().setY(-DOG_SPEED_DIAG);
+                }
+            } else if (movingDown && !movingUp) {
+                if (dog.getVelocity().getX() == 0) {
+                    dog.getVelocity().setY(DOG_SPEED);
+                } else {
+                    dog.getVelocity().setY(DOG_SPEED_DIAG);
+                }
+            } else if (!movingDown && !movingUp) {
+                dog.getVelocity().setY(0);
+            }
+            if (movingRight && !movingLeft) {
+                if (dog.getVelocity().getY() == 0) {
+                    dog.getVelocity().setX(-DOG_SPEED);
+                } else {
+                    dog.getVelocity().setX(-DOG_SPEED_DIAG);
+                }
+            } else if (movingLeft && !movingRight) {
+                if (dog.getVelocity().getY() == 0) {
+                    dog.getVelocity().setX(DOG_SPEED);
+                } else {
+                    dog.getVelocity().setX(DOG_SPEED_DIAG);
+                }
+            } else if (!movingRight && !movingLeft) {
+                dog.getVelocity().setX(0);
+            }
+        }
+    }
+
+    private void updateTearing() {
+        if (furnitureTearManager.isTearing()) {
+            furnitureTearManager.updateTearing();
+        }
+        checkTearTargets();
+    }
+
+    private void initDog() {
         Animation dogAnimation = new Animation();
         BufferedImage[] dogImages = new Track(
                 getAssetManager().getImage("spanielSprites"), 139, 200, 3).getImages();
@@ -152,7 +217,7 @@ public class HouseState extends GameState {
                 getAssetManager().getImage("spanielSprites"), "reverseSpanielSprites");
         BufferedImage[] dogImagesReverse = new Track(
                 getAssetManager().getImage("reverseSpanielSprites"), 139, 200, 3).getImages();
-        
+
         Track northMove = new Track(new BufferedImage[]{
             dogImages[7], dogImages[4], dogImages[5], dogImages[6],
             dogImages[5], dogImages[4]
@@ -165,7 +230,7 @@ public class HouseState extends GameState {
             dogImages[8], dogImages[9]}, 5);
         Track northStand = new Track(new BufferedImage[]{
             dogImagesReverse[11], dogImagesReverse[10]}, 5);
-        
+
         Track southMove = new Track(new BufferedImage[]{
             dogImages[3], dogImages[0], dogImages[1], dogImages[2],
             dogImages[1], dogImages[0]
@@ -183,7 +248,7 @@ public class HouseState extends GameState {
         dogAnimation.addTrack(southMove); // 1
         dogAnimation.addTrack(eastMove); // 2
         dogAnimation.addTrack(westMove); // 3
-        
+
         dogAnimation.addTrack(northStand); // 4
         dogAnimation.addTrack(southStand); // 5
         dogAnimation.addTrack(eastStand); // 6
@@ -194,8 +259,62 @@ public class HouseState extends GameState {
                 null, null, null, null, dogAnimation);
     }
 
-    public Camera getCamera() {
-        return camera;
+    private void centerCameraOnDog() {
+        // move camera over the dog
+        if (!developmentCameraControls) {
+            if (!developmentRendering) {
+                camera.set(dog.getRenderX() - (getWindow().getScreenWidth() / 2),
+                        dog.getRenderY() - (getWindow().getScreenHeight() / 2));
+            } else {
+                camera.set(dog.getX() - (getWindow().getScreenWidth() / 2),
+                        dog.getY() - (getWindow().getScreenHeight() / 2));
+            }
+        }
+    }
+
+    /**
+     * Draws the tear icon. Only call if couldTear != null
+     *
+     * @param g the graphics object to use in drawing
+     */
+    public void drawTearIcon(Graphics g) {
+        if (developmentRendering) {
+            g.setColor(Color.ORANGE);
+            g.fillRect((int) (couldTear.getX() - camera.getX()),
+                    (int) (couldTear.getY() - camera.getY()), 50, 50);
+        } else {
+            //Need to implement
+        }
+    }
+
+    public void checkTearTargets() {
+        for (IsometricEntity ie : world.getEntities()) {
+            if (ie instanceof FurnitureEntity) {
+                FurnitureEntity fe = (FurnitureEntity) ie;
+                if (fe.isDefaceable() && !fe.isRippedToShreds()) {
+                    if (getDistanceBetween(dog, ie) < TEAR_DISTANCE) {
+                        couldTear = fe;
+                        return;
+                    }
+                }
+            }
+        }
+        couldTear = null;
+    }
+
+    public void handleTearKeyInput(KeyEvent ke) {
+        if (couldTear != null) {
+            if (ke.getKeyCode() == KeyEvent.VK_X) {
+                furnitureTearManager.startTearing(couldTear);
+                gui.enable("tear");
+            }
+        }
+    }
+
+    public float getDistanceBetween(IsometricEntity e1, IsometricEntity e2) {
+        float diffX = e1.getCenterX() - e2.getCenterX();
+        float diffY = e1.getCenterY() - e2.getCenterY();
+        return (float) (Math.sqrt((diffX * diffX) + (diffY * diffY)));
     }
 
     /**
@@ -222,6 +341,9 @@ public class HouseState extends GameState {
         main.addElement(furnitureIcon);
         main.addElement(furniture);
 
+        this.biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
+        this.furniture.setText("" + playerValues.furnitureDestroyed + " / " + playerValues.furnitureTotal);
+        
         gui.addGroup("main", main);
         gui.enable("main");
     }
@@ -233,38 +355,69 @@ public class HouseState extends GameState {
 
     @Override
     public void key(KeyEvent ke, boolean pressed) {
-        switch(ke.getKeyCode()) {
-            case KeyEvent.VK_UP: movingUp = pressed; break;
-            case KeyEvent.VK_DOWN: movingDown = pressed; break;
-            case KeyEvent.VK_RIGHT: movingRight = pressed; break;
-            case KeyEvent.VK_LEFT: movingLeft = pressed; break;
+        if (!developmentCameraControls) {
+            handleDogControls(ke, pressed);
         }
-        
-        if (pressed) {            
-            if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                getWindow().requestToClose();
+        if (pressed) {
+            handleCloseKey(ke);
+            handleDevelopmentCameraControls(ke);
+            handleReloadLevelKey(ke);
+            handleRenderSwitchKey(ke);
+            handleTearKeyInput(ke);
+        }
+    }
+
+    private void handleRenderSwitchKey(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_R) {
+            developmentRendering = !developmentRendering;
+            if (developmentRendering) {
+                InfoLogger.println("Set to development rendering");
+            } else {
+                InfoLogger.println("Set to game rendering");
+
             }
-            //Development controls; will remove
-            else if (ke.getKeyCode() == KeyEvent.VK_G) {
-                reloadHousePlan();
-                InfoLogger.println("Reloaded house plan");
-            } else if (ke.getKeyCode() == KeyEvent.VK_W) {
-                camera.move(0, -100);
-            } else if (ke.getKeyCode() == KeyEvent.VK_S) {
-                camera.move(0, 100);
-            } else if (ke.getKeyCode() == KeyEvent.VK_A) {
-                camera.move(-100, 0);
-            } else if (ke.getKeyCode() == KeyEvent.VK_D) {
-                camera.move(100, 0);
-            } else if ( ke.getKeyCode() == KeyEvent.VK_R ) {
-                developmentRendering = !developmentRendering;
-                if (developmentRendering) {
-                    InfoLogger.println("Set to development rendering");
-                } else {
-                    InfoLogger.println("Set to game rendering");
-                    
-                }
-            }
+        }
+    }
+
+    private void handleDevelopmentCameraControls(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_W) {
+            camera.move(0, -100);
+        } else if (ke.getKeyCode() == KeyEvent.VK_S) {
+            camera.move(0, 100);
+        } else if (ke.getKeyCode() == KeyEvent.VK_A) {
+            camera.move(-100, 0);
+        } else if (ke.getKeyCode() == KeyEvent.VK_D) {
+            camera.move(100, 0);
+        }
+    }
+
+    private void handleCloseKey(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            getWindow().requestToClose();
+        }
+    }
+
+    private void handleReloadLevelKey(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_G) {
+            reloadHousePlan();
+            InfoLogger.println("Reloaded house plan");
+        }
+    }
+
+    private void handleDogControls(KeyEvent ke, boolean pressed) {
+        switch (ke.getKeyCode()) {
+            case KeyEvent.VK_UP:
+                movingUp = pressed;
+                break;
+            case KeyEvent.VK_DOWN:
+                movingDown = pressed;
+                break;
+            case KeyEvent.VK_RIGHT:
+                movingRight = pressed;
+                break;
+            case KeyEvent.VK_LEFT:
+                movingLeft = pressed;
+                break;
         }
     }
 
@@ -273,5 +426,27 @@ public class HouseState extends GameState {
         if (pressed) {
             gui.mouseInput(me.getX(), me.getY());
         }
+    }
+
+    public void finishedTearing() {
+        gui.disable("tear");
+        playerValues.furnitureDestroyed++;
+        furniture.setText("" + playerValues.furnitureDestroyed + " / " + playerValues.furnitureTotal);
+    }
+    
+    public void resetProgressAndSetTotals(int biscuits, int furniture) {
+        playerValues.biscuitsTotal = biscuits;
+        playerValues.furnitureTotal = furniture;
+        playerValues.biscuitsCollected = 0;
+        playerValues.furnitureDestroyed = 0;
+    }
+    
+    public void win() {
+        InfoLogger.println("YOU WIN");
+    }
+    
+    public boolean hasWon() {
+        return playerValues.biscuitsCollected == playerValues.biscuitsTotal &&
+               playerValues.furnitureDestroyed == playerValues.furnitureTotal; 
     }
 }

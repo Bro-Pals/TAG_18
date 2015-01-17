@@ -5,7 +5,6 @@
  */
 package tag_project.factory;
 
-import bropals.lib.simplegame.entity.BaseEntity;
 import bropals.lib.simplegame.io.AssetLoader;
 import bropals.lib.simplegame.io.AssetManager;
 import bropals.lib.simplegame.logger.ErrorLogger;
@@ -18,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import tag_project.FurnitureEntity;
 import tag_project.HouseState;
 import tag_project.IsometricDirection;
 import tag_project.IsometricEntity;
@@ -48,10 +48,17 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
     public void loadAsset(String key, InputStream inputStream) {
         IsometricGameWorld igw = new IsometricGameWorld(houseState);
         try {
+            int furnitureTotal = 0;
+            int biscuitsTotal = 0;
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
                 IsometricEntity ie = parseLine(line);
+                if (ie instanceof FurnitureEntity) {
+                    if (((FurnitureEntity)ie).isDefaceable()) {
+                        furnitureTotal++;
+                    }
+                }
                 if (ie != null) {
                     igw.addEntity(ie);
                 }
@@ -60,7 +67,9 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
             reader = new BufferedReader(new FileReader(new File("assets/data/biscuits.data")));
             while ((line = reader.readLine()) != null) {
                 igw.addEntity(parseBiscuit(line));
+                biscuitsTotal++;
             }
+            houseState.resetProgressAndSetTotals(biscuitsTotal, furnitureTotal);
             reader.close();
             InfoLogger.println("Loaded house plan: " + key + " " + System.currentTimeMillis());
         } catch (IOException e) {
@@ -75,6 +84,7 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
         String[] split = line.split(Pattern.quote(" "));
         return EntityFactory.makeBiscuit(
                 assetManager,
+                houseState,
                 Float.parseFloat(split[1]),
                 Float.parseFloat(split[2])
         );
