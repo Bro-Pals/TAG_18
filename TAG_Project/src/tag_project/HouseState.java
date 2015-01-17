@@ -22,11 +22,6 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-<<<<<<< HEAD
-import java.util.ArrayList;
-=======
-import tag_project.factory.EntityFactory;
->>>>>>> 688bab924dbda774cb7bb2624d14f62aee43f4ca
 import tag_project.factory.HouseLoader;
 
 /**
@@ -90,7 +85,6 @@ public class HouseState extends GameState {
     private void clearBackground(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
-<<<<<<< HEAD
     }
 
     private void drawInIsometricMode(Object graphicsObject) {
@@ -112,38 +106,6 @@ public class HouseState extends GameState {
                 g.setColor(Color.WHITE);
             } else {
                 g.setColor(Color.BLUE);
-=======
-        if (!developmentRendering) {
-            for (Object be : world.getEntities()) {
-                ((BaseEntity) be).render(o);
-            }
-        } else {
-            for (Object be : world.getEntities()) {
-                BlockEntity block = ((BlockEntity) be);
-                if (block instanceof FurnitureEntity) {
-                    g.setColor(Color.RED);
-                } else if (block instanceof BiscuitEntity) {
-                    g.setColor(Color.ORANGE);
-                } else if (block instanceof AnimatedIsometricEntity) {
-                    g.setColor(Color.GREEN);
-                } else if (block instanceof DecorationEntity) {
-                    g.setColor(Color.WHITE);
-                } else {
-                    g.setColor(Color.BLUE);
-                }
-                int x = (int)(block.getX()-camera.getX());
-                int y = (int)(block.getY()-camera.getY());
-                int w = (int)block.getWidth();
-                int h = (int)block.getHeight();
-                g.fillRect(
-                        x, 
-                        y, 
-                        w, h);
-                //g.fillRect(300, 300, 80, 80);
-                g.setColor(Color.RED);
-                g.fillRect(x - 3, y- 3, 6, 6);
-                g.drawString("(" + block.getX() + ", " + block.getY() + ")", x+ 10, y);
->>>>>>> 688bab924dbda774cb7bb2624d14f62aee43f4ca
             }
             int x = (int) (block.getX() - camera.getX());
             int y = (int) (block.getY() - camera.getY());
@@ -164,7 +126,6 @@ public class HouseState extends GameState {
         movingDown = false;
         movingRight = false;
         movingLeft = false;
-<<<<<<< HEAD
         initHousePlan();
         camera = new Camera();
         gui = new Gui();
@@ -189,19 +150,6 @@ public class HouseState extends GameState {
         gui.addGroup("tear", tearGroup);
         furnitureTearManager = new FurnitureTearManager(tearBar, this);
     }
-=======
-        //((HouseLoader) (getAssetManager().getAssetLoader(IsometricGameWorld.class))).setHouseState(this);
-        //getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
-        //world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
-        
-        // testing with only showing a few things
-        world = new IsometricGameWorld(this);
-        world.getEntities().clear();
-        BufferedImage floorImg = getAssetManager().getImage("Hardfloor");
-        world.addEntity(new DecorationEntity(world, 0, 0, 160, 160, floorImg));
-        world.addEntity(EntityFactory.makeWall(getAssetManager(), -160, 160, 80, 320));
-        camera = new Camera();
->>>>>>> 688bab924dbda774cb7bb2624d14f62aee43f4ca
 
     public void biscuitCollected() {
         playerValues.biscuitsCollected++;
