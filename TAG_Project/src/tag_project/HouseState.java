@@ -22,6 +22,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import tag_project.factory.EntityFactory;
 import tag_project.factory.HouseLoader;
 
 /**
@@ -125,6 +126,9 @@ public class HouseState extends GameState {
                         y, 
                         w, h);
                 //g.fillRect(300, 300, 80, 80);
+                g.setColor(Color.RED);
+                g.fillRect(x - 3, y- 3, 6, 6);
+                g.drawString("(" + block.getX() + ", " + block.getY() + ")", x+ 10, y);
             }
         }
         gui.render(o);
@@ -136,10 +140,16 @@ public class HouseState extends GameState {
         movingDown = false;
         movingRight = false;
         movingLeft = false;
-        ((HouseLoader) (getAssetManager().getAssetLoader(IsometricGameWorld.class))).setHouseState(this);
-        getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
-        world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
-
+        //((HouseLoader) (getAssetManager().getAssetLoader(IsometricGameWorld.class))).setHouseState(this);
+        //getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
+        //world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
+        
+        // testing with only showing a few things
+        world = new IsometricGameWorld(this);
+        world.getEntities().clear();
+        BufferedImage floorImg = getAssetManager().getImage("Hardfloor");
+        world.addEntity(new DecorationEntity(world, 0, 0, 160, 160, floorImg));
+        world.addEntity(EntityFactory.makeWall(getAssetManager(), -160, 160, 80, 320));
         camera = new Camera();
 
         gui = new Gui();
