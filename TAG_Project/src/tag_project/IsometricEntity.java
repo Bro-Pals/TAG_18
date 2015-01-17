@@ -223,6 +223,10 @@ public class IsometricEntity extends BlockEntity {
     public void setUsing(BufferedImage using) {
         this.using = using;
     }
+    
+    public void setDrawn(BufferedImage drawn) {
+        drawnImage = using;
+    }
 
     @Override
     public void render(Object graphicsObj) {
@@ -236,7 +240,7 @@ public class IsometricEntity extends BlockEntity {
             return;
         }
         if (drawnImage == null) {
-            revalidateImage();
+            this.revalidateImage();
             drawnImage = using;
         }
         if (drawnImage == null)

@@ -101,6 +101,7 @@ public class FurnitureEntity extends IsometricEntity {
                 case EAST: setUsing(defacedEast); break;
                 case WEST: setUsing(defacedWest); break;
             }
+            setDrawn(getUsing());
         }
     }
 
