@@ -46,7 +46,7 @@ public class HouseState extends GameState {
     private float DOG_SPEED_DIAG = 8;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
     //How far do you need to be from a piece of furniture's center to tear it?
-    private float TEAR_DISTANCE = 50;
+    private float TEAR_DISTANCE = 40;
     private FurnitureEntity couldTear = null;
 
     ///Use R to swap rendering modes
@@ -64,6 +64,9 @@ public class HouseState extends GameState {
             updateTearing();
             world.updateEntities();
             gui.update(mp.x, mp.y);
+            if (hasWon()) {
+                win();
+            }
         }
     }
 
@@ -254,7 +257,7 @@ public class HouseState extends GameState {
         dogAnimation.addTrack(westStand); // 7
 
         dog = new AnimatedIsometricEntity(world,
-                100, 100, 80, 80, false, IsometricDirection.SOUTH,
+                -900, 1160,  80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
     }
 
@@ -291,7 +294,7 @@ public class HouseState extends GameState {
             if (ie instanceof FurnitureEntity) {
                 FurnitureEntity fe = (FurnitureEntity) ie;
                 if (fe.isDefaceable() && !fe.isRippedToShreds()) {
-                    if (getDistanceBetween(dog, ie) < TEAR_DISTANCE) {
+                    if (closeEnoughTo(fe)) {
                         couldTear = fe;
                         return;
                     }
@@ -301,6 +304,45 @@ public class HouseState extends GameState {
         couldTear = null;
     }
 
+    private boolean closeEnoughTo(FurnitureEntity fe) {
+        return ((closeEnoughTop(fe) || closeEnoughBottom(fe)) && inXRange(fe)) ||
+                ((closeEnoughRight(fe) || closeEnoughLeft(fe)) && inYRange(fe));
+    }
+    
+    private boolean inXRange(FurnitureEntity fe) {
+        return dog.getCenterX() > fe.getX() && dog.getCenterX() < fe.getX() 
+                + fe.getWidth();
+    }
+    
+    private boolean inYRange(FurnitureEntity fe) {
+        return dog.getCenterY() > fe.getY() && dog.getCenterY() < fe.getY() 
+                + fe.getHeight();
+    }
+    
+    private boolean closeEnoughTop(FurnitureEntity fe) {
+        return abs( dog.getY() - (fe.getY() + fe.getHeight()) ) < TEAR_DISTANCE;
+    }
+    
+    private boolean closeEnoughBottom(FurnitureEntity fe) {
+        return abs( dog.getY()+dog.getHeight() - (fe.getY()) ) < TEAR_DISTANCE;
+    }
+    
+    private boolean closeEnoughLeft(FurnitureEntity fe) {
+        return abs( dog.getX() - (fe.getX() + fe.getWidth()) ) < TEAR_DISTANCE;
+    }
+    
+    private boolean closeEnoughRight(FurnitureEntity fe) {
+        return abs( dog.getX()+dog.getWidth() - (fe.getX()) ) < TEAR_DISTANCE;
+    }
+    
+    private float abs(float v) {
+        if  (v < 0) {
+            return -v;
+        } else {
+            return v;
+        }
+    }
+    
     public void handleTearKeyInput(KeyEvent ke) {
         if (couldTear != null) {
             if (ke.getKeyCode() == KeyEvent.VK_X) {
@@ -363,6 +405,7 @@ public class HouseState extends GameState {
             handleReloadLevelKey(ke);
             handleRenderSwitchKey(ke);
             handleTearKeyInput(ke);
+            handleResetGameKey(ke);
         }
     }
 
@@ -402,7 +445,23 @@ public class HouseState extends GameState {
             InfoLogger.println("Reloaded house plan");
         }
     }
+    
+    private void handleResetGameKey(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_P) {
+            resetPlay();
+            InfoLogger.println("Reset game ");
+        }
+    }
 
+    public void resetPlay() {
+        reloadHousePlan();
+        dog.setX(-900);
+        dog.setY(1160);
+        world.addEntity(dog);
+        this.biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
+        this.furniture.setText("" + playerValues.furnitureDestroyed + " / " + playerValues.furnitureTotal);
+    }
+    
     private void handleDogControls(KeyEvent ke, boolean pressed) {
         switch (ke.getKeyCode()) {
             case KeyEvent.VK_UP:
