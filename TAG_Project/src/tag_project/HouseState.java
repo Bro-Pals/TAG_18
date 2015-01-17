@@ -228,7 +228,7 @@ public class HouseState extends GameState {
         Track eastStand = new Track(new BufferedImage[]{
             dogImages[8], dogImages[9]}, 5);
         Track northStand = new Track(new BufferedImage[]{
-            dogImagesReverse[11], dogImagesReverse[10]}, 5);
+            dogImagesReverse[11], dogImagesReverse[10]}, 15);
 
         Track southMove = new Track(new BufferedImage[]{
             dogImages[3], dogImages[0], dogImages[1], dogImages[2],
@@ -239,9 +239,9 @@ public class HouseState extends GameState {
             dogImagesReverse[2], dogImagesReverse[3]
         }, 2);
         Track southStand = new Track(new BufferedImage[]{
-            dogImages[8], dogImages[9]}, 5);
+            dogImages[11], dogImages[10]}, 5);
         Track westStand = new Track(new BufferedImage[]{
-            dogImagesReverse[9], dogImagesReverse[8]}, 5);
+            dogImagesReverse[9], dogImagesReverse[8]}, 15);
 
         dogAnimation.addTrack(northMove); // 0
         dogAnimation.addTrack(southMove); // 1
