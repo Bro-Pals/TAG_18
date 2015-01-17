@@ -88,6 +88,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     setWest(animation.getCurrentImage());
                 break;
         }
+        System.out.println(getFacing());
         super.update();
     }
     
