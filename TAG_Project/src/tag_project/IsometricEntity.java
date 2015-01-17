@@ -25,7 +25,7 @@ public class IsometricEntity extends BlockEntity {
     private BufferedImage using = null, drawnImage = null;;
     private final float localWidth;
     private final float localHeight;
-    private float renderX, renderY;
+    private float renderCoordX, renderCoordY;
     private final float ISO_ANGLE = (float)Math.atan(69.5/40);
 
     public IsometricEntity(GameWorld parent,
@@ -47,8 +47,8 @@ public class IsometricEntity extends BlockEntity {
         }
         setWidth(localWidth);
         setHeight(localHeight);
-        renderX = 0;
-        renderY = 0;
+        renderCoordX = 0;
+        renderCoordY = 0;
         setFacing(facing);
     }
 
@@ -234,24 +234,25 @@ public class IsometricEntity extends BlockEntity {
             System.out.println("drawImage is now " + drawnImage);
             return;
         }
-        System.out.println("Y:" + getY());
-        System.out.println("renderX: " + renderX);
-        renderX = ((float)69.5 * ((getY()/80) - (getX()/80))) - 
-                (float)(drawnImage.getWidth() * Math.sin(ISO_ANGLE));
-        renderY = (40 * ((getX()/80) + (getY()/80))) - drawnImage.getHeight();
-        //InfoLogger.println("renderX: " + renderX + "  renderY: " + renderY);
-       // InfoLogger.println("x: " + getX() + "  y: " + getY());
-        g.drawImage(drawnImage, (int) (renderX - getCamera().getX()), 
-                (int) (renderY - getCamera().getY()), null);
+        renderCoordX = ((float)69.5 * ((getY()/80) - (getX()/80)));
+        renderCoordY = (40 * ((getX()/80) + (getY()/80)));
+        int imagePosX = (int) (renderCoordX - (Math.sin(ISO_ANGLE) * getWidth()) - getCamera().getX());
+        int imagePosY = (int) (renderCoordY - getCamera().getY() - 120);
+        g.drawImage(drawnImage, imagePosX, imagePosY , null);
+       
         g.setColor(Color.RED);
-        int cornerPosX = (int)(renderX - 3 - getCamera().getX() + (float)(drawnImage.getWidth() * Math.sin(ISO_ANGLE)));
-        int cornerPosY = (int)(renderY - 3 - getCamera().getY() + drawnImage.getHeight());
+        int cornerPosX = (int)(renderCoordX - getCamera().getX()); // render coord local (0, 0) (NOT image coordinate)
+        int cornerPosY = (int)(renderCoordY - getCamera().getY());
+        // draw the renderCoord local (0, 0) point
         g.fillRect(cornerPosX, cornerPosY, 6, 6);
+        // display it's world coordinates
         g.drawString("(" + getX() + ", " + getY() + ")", cornerPosX + 10, cornerPosY);
-        g.drawRect((int)renderX - (int)getCamera().getX(), 
-                (int)renderY - (int)getCamera().getY(), (int)drawnImage.getWidth(), (int)drawnImage.getHeight());
+        // draw a box around it
+        g.drawRect(imagePosX, imagePosY, (int)drawnImage.getWidth(), 
+                (int)drawnImage.getHeight());
     }
 
+    
     private void rebuildDrawnImage() {
         // make a tiled image for isometric drawing
         if (getLocalWidth() == 0 || getLocalHeight() == 0) {
@@ -286,11 +287,11 @@ public class IsometricEntity extends BlockEntity {
         return ((HouseState) getParent().getState()).getCamera();
     }
     
-    public float getRenderX() {
-        return renderX;
+    public float getRenderCoordX() {
+        return renderCoordX;
     }
     
-    public float getRenderY() {
-        return renderY;
+    public float getRenderCoordY() {
+        return renderCoordY;
     }
 }

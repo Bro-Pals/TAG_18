@@ -262,8 +262,8 @@ public class HouseState extends GameState {
         // move camera over the dog
         if (!developmentCameraControls) {
             if (!developmentRendering) {
-                camera.set(dog.getRenderX() - (getWindow().getScreenWidth() / 2),
-                        dog.getRenderY() - (getWindow().getScreenHeight() / 2));
+                camera.set(dog.getRenderCoordX() - (getWindow().getScreenWidth() / 2),
+                        dog.getRenderCoordY() - (getWindow().getScreenHeight() / 2));
             } else {
                 camera.set(dog.getX() - (getWindow().getScreenWidth() / 2),
                         dog.getY() - (getWindow().getScreenHeight() / 2));
