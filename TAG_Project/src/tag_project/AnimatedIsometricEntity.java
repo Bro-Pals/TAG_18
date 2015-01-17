@@ -40,32 +40,50 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         } else if (getVelocity().getX() < 0) {
             setFacing(IsometricDirection.EAST);
         }
+        boolean notMoving = getVelocity().getX() == 0 && 
+                getVelocity().getY() == 0;
         switch(getFacing()) {
             case NORTH: // animation track 0
-                if (animation.getCurrentTrackIndex() != 0)
-                    animation.setTrack(0); // change to the north animaton
-                
+                if (notMoving) {
+                    if (animation.getCurrentTrackIndex() != 4)
+                        animation.setTrack(4); // change to the north animaton
+                } else {
+                    if (animation.getCurrentTrackIndex() != 0)
+                        animation.setTrack(0); // change to the north animaton
+                }
                 if (getNorth() != animation.getCurrentImage())
                     setNorth(animation.getCurrentImage());
                 break;
             case SOUTH: // animation track 1 (0 for now)
-                if (animation.getCurrentTrackIndex() != 1)
-                    animation.setTrack(1); // change to the south animaton
-                
+                if (notMoving) {
+                    if (animation.getCurrentTrackIndex() != 5)
+                        animation.setTrack(5);
+                } else {
+                    if (animation.getCurrentTrackIndex() != 1)
+                        animation.setTrack(1);
+                }
                 if (getSouth() != animation.getCurrentImage())
                     setSouth(animation.getCurrentImage());
                 break;
             case EAST: // animation track 2
-                if (animation.getCurrentTrackIndex() != 2)
-                    animation.setTrack(2); // change to the south animaton
-                
+                if (notMoving) {
+                    if (animation.getCurrentTrackIndex() != 6)
+                        animation.setTrack(6);
+                } else {
+                    if (animation.getCurrentTrackIndex() != 2)
+                        animation.setTrack(2);
+                }
                 if (getEast() != animation.getCurrentImage())
                     setEast(animation.getCurrentImage());
                 break;
             case WEST: // animation track 3
-                if (animation.getCurrentTrackIndex() != 3)
-                    animation.setTrack(3); // change to the south animaton
-                
+                if (notMoving) {
+                    if (animation.getCurrentTrackIndex() != 7)
+                        animation.setTrack(7);
+                } else {
+                    if (animation.getCurrentTrackIndex() != 3)
+                        animation.setTrack(3);
+                }
                 if (getWest() != animation.getCurrentImage())
                     setWest(animation.getCurrentImage());
                 break;
