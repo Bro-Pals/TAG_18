@@ -39,7 +39,7 @@ public class HouseState extends GameState {
     
     /** Super special reference to the player (dog) */
     private AnimatedIsometricEntity dog;
-    private float DOG_SPEED_DIAG = 2;
+    private float DOG_SPEED_DIAG = 8;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float)Math.sqrt(2);
     
     ///Use R to swap rendering modes
@@ -87,6 +87,14 @@ public class HouseState extends GameState {
 
     @Override
     public void render(Object o) {
+        // move camera over the dog
+        if (!developmentRendering) {
+            camera.set(dog.getRenderX() - (getWindow().getScreenWidth()/2), 
+                dog.getRenderY() - (getWindow().getScreenHeight()/2));
+        } else {
+            camera.set(dog.getX() - (getWindow().getScreenWidth()/2), 
+                    dog.getY() - (getWindow().getScreenHeight()/2));
+        }
         Graphics g = (Graphics) o;
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWindow().getScreenWidth(), getWindow().getScreenHeight());
@@ -153,6 +161,10 @@ public class HouseState extends GameState {
             dogImagesReverse[4], dogImagesReverse[7], dogImagesReverse[6], dogImagesReverse[5],
             dogImagesReverse[6], dogImagesReverse[7]
         }, 2);
+        Track eastStand = new Track(new BufferedImage[]{
+            dogImages[8], dogImages[9]}, 5);
+        Track northStand = new Track(new BufferedImage[]{
+            dogImagesReverse[11], dogImagesReverse[10]}, 5);
         
         Track southMove = new Track(new BufferedImage[]{
             dogImages[3], dogImages[0], dogImages[1], dogImages[2],
@@ -162,14 +174,23 @@ public class HouseState extends GameState {
             dogImagesReverse[0], dogImagesReverse[3], dogImagesReverse[2], dogImagesReverse[1],
             dogImagesReverse[2], dogImagesReverse[3]
         }, 2);
+        Track southStand = new Track(new BufferedImage[]{
+            dogImages[8], dogImages[9]}, 5);
+        Track westStand = new Track(new BufferedImage[]{
+            dogImagesReverse[9], dogImagesReverse[8]}, 5);
 
-        dogAnimation.addTrack(northMove);
-        dogAnimation.addTrack(southMove);
-        dogAnimation.addTrack(eastMove);
-        dogAnimation.addTrack(westMove);
+        dogAnimation.addTrack(northMove); // 0
+        dogAnimation.addTrack(southMove); // 1
+        dogAnimation.addTrack(eastMove); // 2
+        dogAnimation.addTrack(westMove); // 3
+        
+        dogAnimation.addTrack(northStand); // 4
+        dogAnimation.addTrack(southStand); // 5
+        dogAnimation.addTrack(eastStand); // 6
+        dogAnimation.addTrack(westStand); // 7
 
         dog = new AnimatedIsometricEntity(world,
-                300, 300, 80, 80, false, IsometricDirection.SOUTH,
+                100, 100, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
     }
 
@@ -241,6 +262,7 @@ public class HouseState extends GameState {
                     InfoLogger.println("Set to development rendering");
                 } else {
                     InfoLogger.println("Set to game rendering");
+                    
                 }
             }
         }
