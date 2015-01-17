@@ -1,6 +1,6 @@
 name=Dresser
 size=tall
-defaceable=true
+defaceable=false
 moveunderable=false
 width=240
 height=80

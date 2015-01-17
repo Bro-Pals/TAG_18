@@ -32,4 +32,11 @@ public class BiscuitEntity extends IsometricEntity {
             removeParent();
         }
     }    
+
+    @Override
+    public Camera getCamera() {
+        return houseState.getCamera();
+    }
+    
+    
 }
