@@ -90,8 +90,8 @@ public class HouseState extends GameState {
     public void render(Object o) {
         // move camera over the dog
         if (!developmentRendering) {
-            camera.set(dog.getRenderX() - (getWindow().getScreenWidth()/2), 
-                dog.getRenderY() - (getWindow().getScreenHeight()/2));
+            camera.set(dog.getRenderCoordX() - (getWindow().getScreenWidth()/2), 
+                dog.getRenderCoordY() - (getWindow().getScreenHeight()/2));
         } else {
             camera.set(dog.getX() - (getWindow().getScreenWidth()/2), 
                     dog.getY() - (getWindow().getScreenHeight()/2));
@@ -140,16 +140,18 @@ public class HouseState extends GameState {
         movingDown = false;
         movingRight = false;
         movingLeft = false;
-        //((HouseLoader) (getAssetManager().getAssetLoader(IsometricGameWorld.class))).setHouseState(this);
-        //getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
-        //world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
-        
+        ((HouseLoader) (getAssetManager().getAssetLoader(IsometricGameWorld.class))).setHouseState(this);
+        getAssetManager().loadAsset("assets/data/house.data", "The House", IsometricGameWorld.class);
+        world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
+        /*
         // testing with only showing a few things
         world = new IsometricGameWorld(this);
         world.getEntities().clear();
         BufferedImage floorImg = getAssetManager().getImage("Hardfloor");
-        world.addEntity(new DecorationEntity(world, 0, 0, 160, 160, floorImg));
-        world.addEntity(EntityFactory.makeWall(getAssetManager(), -160, 160, 80, 320));
+        world.addEntity(new DecorationEntity(world, 0, 0, 240, 160, floorImg));
+        world.addEntity(EntityFactory.makeWall(getAssetManager(), -160, 260, 200, 80));
+        */
+        
         camera = new Camera();
 
         gui = new Gui();
