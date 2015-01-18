@@ -18,8 +18,8 @@ import java.awt.image.BufferedImage;
 public class BiscuitEntity extends IsometricEntity {
     
     private HouseState houseState;
-    private Animation biscuitAnimation;
-    
+    private static Animation biscuitAnimation;
+            
     public BiscuitEntity(GameWorld parent, HouseState houseState, float x, float y) {
         super(parent, x, y, 80, 80, true, IsometricDirection.SOUTH, null, 
                 null, 
@@ -27,6 +27,10 @@ public class BiscuitEntity extends IsometricEntity {
         this.houseState=houseState;
         setCollidable(false);
         setZ(-5);
+        
+    }
+
+    public static void initAnim(HouseState houseState) {
         biscuitAnimation = new Animation();
         BufferedImage[] biscuitImages= new Track(houseState.getAssetManager().getImage("biscuitSprites"), 
                     139, 200, 8).getImages();
@@ -38,10 +42,14 @@ public class BiscuitEntity extends IsometricEntity {
                 }, 5));
         biscuitAnimation.setTrack(0);
     }
-
+    
+    public static void updateAnimation() {
+        biscuitAnimation.update();
+    }
+    
     @Override
     public void update() {
-        biscuitAnimation.update();
+        //biscuitAnimation.update();
         setSouth(biscuitAnimation.getCurrentImage());
     }
     

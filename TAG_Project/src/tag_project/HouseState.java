@@ -59,7 +59,7 @@ public class HouseState extends GameState {
     private final boolean developmentCameraControls = false;
 
     private NavigationNode[][] navigationNodes;
-    
+
     @Override
     public void update() {
         Point mp = getWindow().getMousePosition();
@@ -69,8 +69,9 @@ public class HouseState extends GameState {
             }
             centerCameraOnDog();
             updateTearing();
+            BiscuitEntity.updateAnimation();
             world.updateEntities();
-            if (boy != null && dog != null && navigationNodes != null) { 
+            if (boy != null && dog != null && navigationNodes != null) {
                 boy.chase(dog, navigationNodes, BOY_SPEED); // boy chases the dog
             }
             gui.update(mp.x, mp.y);
@@ -102,12 +103,13 @@ public class HouseState extends GameState {
 
     private void drawInIsometricMode(Object graphicsObject) {
         boolean drewDog = false, drewBoy = false;
-        for (int j=0; j<world.getEntities().size(); j++) {
+        for (int j = 0; j < world.getEntities().size(); j++) {
             IsometricEntity be = world.getEntities().get(j);
-            if ( be == dog || be == boy) {
+            if (be == dog || be == boy) {
                 continue; //Don't draw them in this loop
             }
             be.calcRenderCoords();
+         
             if (!drewBoy) {
                 if (!boy.behind(be)) {
                     boy.calcRenderCoords();
@@ -122,7 +124,6 @@ public class HouseState extends GameState {
                     drewDog = true;
                 }
             }
-            
             ((BaseEntity) be).render(graphicsObject);
         }
     }
@@ -159,19 +160,19 @@ public class HouseState extends GameState {
                 } else {
                     g.setColor(Color.BLACK);
                 }
-                g.drawRect((int)(node.getX() - camera.getX()), (int)(node.getY() - camera.getY()),  
-                       (int)node.getWidth(), (int)node.getHeight());
+                g.drawRect((int) (node.getX() - camera.getX()), (int) (node.getY() - camera.getY()),
+                        (int) node.getWidth(), (int) node.getHeight());
             }
         }
         // draw the boy's pathfinding path
         g.setColor(Color.MAGENTA);
         ArrayList<NavigationNode> boyPath = boy.getPath();
         if (boyPath != null) {
-            for (int i=1; i<boyPath.size(); i++) {
-                g.drawLine((int)(boyPath.get(i).getCenterX() - camera.getX()), 
-                        (int)(boyPath.get(i).getCenterY() - camera.getY()), 
-                        (int)(boyPath.get(i-1).getCenterX() - camera.getX()), 
-                        (int)(boyPath.get(i-1).getCenterY() - camera.getY()));
+            for (int i = 1; i < boyPath.size(); i++) {
+                g.drawLine((int) (boyPath.get(i).getCenterX() - camera.getX()),
+                        (int) (boyPath.get(i).getCenterY() - camera.getY()),
+                        (int) (boyPath.get(i - 1).getCenterX() - camera.getX()),
+                        (int) (boyPath.get(i - 1).getCenterY() - camera.getY()));
             }
         }
     }
@@ -202,19 +203,19 @@ public class HouseState extends GameState {
 
     private void initNavigationMesh() {
         int sizeOfNode = 120;
-        int worldWidth = 8640/sizeOfNode; // in nodes
-        int worldHeight = 3280/sizeOfNode;
+        int worldWidth = 8640 / sizeOfNode; // in nodes
+        int worldHeight = 3280 / sizeOfNode;
         navigationNodes = new NavigationNode[worldWidth][worldHeight];
-        for (int x=0; x<worldWidth; x++) {
-            for (int y=0; y<worldHeight; y++) {
-                navigationNodes[x][y] = 
-                    new NavigationNode(world,(x * sizeOfNode) - 1360, 
-                            (y * sizeOfNode), sizeOfNode, x, y);
+        for (int x = 0; x < worldWidth; x++) {
+            for (int y = 0; y < worldHeight; y++) {
+                navigationNodes[x][y]
+                        = new NavigationNode(world, (x * sizeOfNode) - 1360,
+                                (y * sizeOfNode), sizeOfNode, x, y);
             }
         }
         //System.out.println("Number of nodes: " + (worldWidth * worldHeight));
     }
-    
+
     private void initTearFeature() {
         GuiGroup tearGroup = new GuiGroup();
         GuiProgressBar tearBar = new GuiProgressBar(250, 440, 300, 40, 0, 0);
@@ -330,26 +331,26 @@ public class HouseState extends GameState {
         dogAnimation.addTrack(westStand); // 7
 
         dog = new AnimatedIsometricEntity(world,
-                -900, 1160,  80, 80, false, IsometricDirection.SOUTH,
+                -900, 1160, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
     }
 
     private void initBoy() {
         Animation boyAnimation = new Animation();
         BufferedImage[] boyImages = new Track(
-            getAssetManager().getImage("boySprites"), 139, 200).getImages();
+                getAssetManager().getImage("boySprites"), 139, 200).getImages();
         getAssetManager().createHorizontialFlipCopy(
                 getAssetManager().getImage("boySprites"), "reverseBoySprites");
         BufferedImage[] boyImagesReverse = new Track(
                 getAssetManager().getImage("reverseBoySprites"), 139, 200, 3).getImages();
-        
+
         Track boyRunSouth = new Track(new BufferedImage[]{
             boyImages[0], boyImages[1], boyImages[0], boyImages[2]
         }, 3);
         Track boyRunWest = new Track(new BufferedImage[]{
             boyImagesReverse[2], boyImagesReverse[1], boyImagesReverse[2], boyImagesReverse[0]
         }, 3);
-        
+
         Track boyRunNorth = new Track(new BufferedImage[]{
             boyImages[3], boyImages[4], boyImages[3], boyImages[5]
         }, 3);
@@ -370,13 +371,13 @@ public class HouseState extends GameState {
                 new Track(new BufferedImage[]{boyImagesReverse[2]}, 20)); // stand west
         boyAnimation.addTrack(
                 new Track(new BufferedImage[]{boyImagesReverse[5]}, 20)); // stand east
-        
+
         // gotta change the position to be more fair
         boy = new AnimatedIsometricEntity(world,
                 -900, 900, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, boyAnimation);
     }
-    
+
     private void centerCameraOnDog() {
         // move camera over the dog
         if (!developmentCameraControls) {
@@ -402,9 +403,9 @@ public class HouseState extends GameState {
                     (int) (couldTear.getY() - camera.getY()), 50, 50);
         } else {
             //Need to implement
-            g.drawImage(defaceIconImage, 
-                    (int)(couldTear.getRenderCoordX() - camera.getX() - (defaceIconImage.getWidth()/2)), 
-                    (int)(couldTear.getRenderCoordY() - camera.getY() - (defaceIconImage.getHeight()/2)), null);
+            g.drawImage(defaceIconImage,
+                    (int) (couldTear.getRenderCoordX() - camera.getX() - (defaceIconImage.getWidth() / 2)),
+                    (int) (couldTear.getRenderCoordY() - camera.getY() - (defaceIconImage.getHeight() / 2)), null);
         }
     }
 
@@ -424,47 +425,48 @@ public class HouseState extends GameState {
     }
 
     private boolean closeEnoughTo(FurnitureEntity fe) {
-        return ((closeEnoughTop(fe) || closeEnoughBottom(fe)) && inXRange(fe)) ||
-                ((closeEnoughRight(fe) || closeEnoughLeft(fe)) && inYRange(fe));
+        return ((closeEnoughTop(fe) || closeEnoughBottom(fe)) && inXRange(fe))
+                || ((closeEnoughRight(fe) || closeEnoughLeft(fe)) && inYRange(fe));
     }
-    
+
     private boolean inXRange(FurnitureEntity fe) {
-        return dog.getCenterX() > fe.getX() && dog.getCenterX() < fe.getX() 
+        return dog.getCenterX() > fe.getX() && dog.getCenterX() < fe.getX()
                 + fe.getWidth();
     }
-    
+
     private boolean inYRange(FurnitureEntity fe) {
-        return dog.getCenterY() > fe.getY() && dog.getCenterY() < fe.getY() 
+        return dog.getCenterY() > fe.getY() && dog.getCenterY() < fe.getY()
                 + fe.getHeight();
     }
-    
+
     private boolean closeEnoughTop(FurnitureEntity fe) {
-        return abs( dog.getY() - (fe.getY() + fe.getHeight()) ) < TEAR_DISTANCE;
+        return abs(dog.getY() - (fe.getY() + fe.getHeight())) < TEAR_DISTANCE;
     }
-    
+
     private boolean closeEnoughBottom(FurnitureEntity fe) {
-        return abs( dog.getY()+dog.getHeight() - (fe.getY()) ) < TEAR_DISTANCE;
+        return abs(dog.getY() + dog.getHeight() - (fe.getY())) < TEAR_DISTANCE;
     }
-    
+
     private boolean closeEnoughLeft(FurnitureEntity fe) {
-        return abs( dog.getX() - (fe.getX() + fe.getWidth()) ) < TEAR_DISTANCE;
+        return abs(dog.getX() - (fe.getX() + fe.getWidth())) < TEAR_DISTANCE;
     }
-    
+
     private boolean closeEnoughRight(FurnitureEntity fe) {
-        return abs( dog.getX()+dog.getWidth() - (fe.getX()) ) < TEAR_DISTANCE;
+        return abs(dog.getX() + dog.getWidth() - (fe.getX())) < TEAR_DISTANCE;
     }
-    
+
     private float abs(float v) {
-        if  (v < 0) {
+        if (v < 0) {
             return -v;
         } else {
             return v;
         }
     }
-    
+
     public void handleTearKeyInput(KeyEvent ke) {
-        if (furnitureTearManager.isTearing())
+        if (furnitureTearManager.isTearing()) {
             return;
+        }
         if (couldTear != null) {
             if (ke.getKeyCode() == KeyEvent.VK_X) {
                 furnitureTearManager.startTearing(couldTear);
@@ -501,7 +503,7 @@ public class HouseState extends GameState {
         furniture = new GuiText("0", 200, 29, 80, 30, false);
         GuiImage furnitureBackground = new GuiImage(195, 22, 70, 36,
                 getAssetManager().getImage("counterBackground"));
-        
+
         main.addElement(biscuitIcon);
         main.addElement(biscuitsBackground);
         main.addElement(biscuits);
@@ -511,7 +513,7 @@ public class HouseState extends GameState {
 
         this.biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
         this.furniture.setText("" + playerValues.furnitureDestroyed + " / " + playerValues.furnitureTotal);
-        
+
         gui.addGroup("main", main);
         gui.enable("main");
     }
@@ -524,7 +526,7 @@ public class HouseState extends GameState {
     private void placeBiscuit(float x, float y) {
         BiscuitEntity be = new BiscuitEntity(world, this, x, y);
     }
-    
+
     @Override
     public void key(KeyEvent ke, boolean pressed) {
         if (!developmentCameraControls) {
@@ -540,7 +542,7 @@ public class HouseState extends GameState {
             handleSaveBiscuitsKey(ke);
         }
     }
-    
+
     private void handleSaveBiscuitsKey(KeyEvent ke) {
         if (ke.getKeyCode() == KeyEvent.VK_K) {
             EntityFactory.saveBiscuitsFileWithWorld(world);
@@ -583,7 +585,7 @@ public class HouseState extends GameState {
             InfoLogger.println("Reloaded house plan");
         }
     }
-    
+
     private void handleResetGameKey(KeyEvent ke) {
         if (ke.getKeyCode() == KeyEvent.VK_P) {
             resetPlay();
@@ -599,12 +601,12 @@ public class HouseState extends GameState {
         this.biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
         this.furniture.setText("" + playerValues.furnitureDestroyed + " / " + playerValues.furnitureTotal);
     }
-    
+
     public void interruptTearing() {
         furnitureTearManager.interruptTearing();
         gui.disable("tear");
     }
-    
+
     private void handleDogControls(KeyEvent ke, boolean pressed) {
         switch (ke.getKeyCode()) {
             case KeyEvent.VK_UP:
@@ -631,7 +633,7 @@ public class HouseState extends GameState {
         if (pressed) {
             gui.mouseInput(me.getX(), me.getY());
             if (developmentCameraControls) {
-                placeBiscuit(me.getX()+camera.getX(), me.getY()+camera.getY());
+                placeBiscuit(me.getX() + camera.getX(), me.getY() + camera.getY());
             }
         }
     }
@@ -641,21 +643,21 @@ public class HouseState extends GameState {
         playerValues.furnitureDestroyed++;
         furniture.setText("" + playerValues.furnitureDestroyed + " / " + playerValues.furnitureTotal);
     }
-    
+
     public void resetProgressAndSetTotals(int biscuits, int furniture) {
         playerValues.biscuitsTotal = biscuits;
         playerValues.furnitureTotal = furniture;
         playerValues.biscuitsCollected = 0;
         playerValues.furnitureDestroyed = 0;
     }
-    
+
     public void win() {
         InfoLogger.println("YOU WIN");
     }
-    
+
     public boolean hasWon() {
-        return playerValues.biscuitsCollected == playerValues.biscuitsTotal &&
-               playerValues.furnitureDestroyed == playerValues.furnitureTotal; 
+        return playerValues.biscuitsCollected == playerValues.biscuitsTotal
+                && playerValues.furnitureDestroyed == playerValues.furnitureTotal;
     }
 
     public GameWorld getIsometricWorld() {

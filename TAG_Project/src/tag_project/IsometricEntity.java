@@ -25,13 +25,17 @@ public class IsometricEntity extends BlockEntity {
     private BufferedImage north, south, east, west;
     private IsometricDirection facing;
     private BufferedImage using = null, drawnImage = null;
+
     ;
+    
+    private static BufferedImage shadow, shadowSmall;
+
     private final float localWidth;
     private final float localHeight;
     private float z = 0;
     private float renderCoordX, renderCoordY;
     private final float ISO_ANGLE = (float) Math.atan(69.5 / 40);
-    
+
     private static final float CAMERA_REFERENCE_LINE = -3000; //Y in render coords
 
     public IsometricEntity(GameWorld parent,
@@ -244,7 +248,7 @@ public class IsometricEntity extends BlockEntity {
                 break;
         }
         if (!(this instanceof AnimatedIsometricEntity)
-                && !(this instanceof FurnitureEntity)) {
+                && !(this instanceof FurnitureEntity) && !(this instanceof BiscuitEntity)) {
             rebuildDrawnImage();
         } else {
             drawnImage = using;
@@ -286,15 +290,15 @@ public class IsometricEntity extends BlockEntity {
         renderCoordX = ((float) 69.5 * ((getY() / 80) - (getX() / 80)));
         renderCoordY = (40 * ((getX() / 80) + (getY() / 80)));
     }
-    
+
     public void calcZValue() {
-        if ( this instanceof DecorationEntity ) {
+        if (this instanceof DecorationEntity) {
             z = 5000;
         } else {
-            z = CAMERA_REFERENCE_LINE + (40 * (((getX() + getWidth())/ 80) + ((getY() + getHeight() )/ 80)));
+            z = CAMERA_REFERENCE_LINE + (40 * (((getX() + getWidth()) / 80) + ((getY() + getHeight()) / 80)));
         }
     }
-    
+
     @Override
     public void render(Object graphicsObj) {
         Graphics g = (Graphics) graphicsObj;
@@ -327,14 +331,30 @@ public class IsometricEntity extends BlockEntity {
                     + (float) (Math.cos(ISO_ANGLE) * getWidth());
             imagePosX = (int) (bottomRightX - getCamera().getX());
             imagePosY = (int) (bottomRightY - drawnImage.getHeight() - getCamera().getY());
+            
         }
+        //Don't draw it if it is off the screen
+            int sw = getParent().getState().getWindow().getScreenWidth();
+            int sh = getParent().getState().getWindow().getScreenHeight();
+            if (imagePosX > sw
+                    || imagePosY > sh
+                    || imagePosX < -drawnImage.getWidth()
+                    || imagePosY < -drawnImage.getHeight()) {
+                return;
+            }
         // drawing the shadows
         if (this instanceof AnimatedIsometricEntity) {
-            g.drawImage(getParent().getState().getAssetManager().getImage("shadow"),
-                    (int)imagePosX, (int)imagePosY + 120, null);
+            if (shadow == null) {
+                shadow = getParent().getState().getAssetManager().getImage("shadow");
+            }
+            g.drawImage(shadow,
+                    (int) imagePosX, (int) imagePosY + 120, null);
         } else if (this instanceof BiscuitEntity) {
-            g.drawImage(getParent().getState().getAssetManager().getImage("shadowSmall"),
-                    (int)imagePosX, (int)imagePosY + 120, null);
+            if (shadowSmall == null) {
+                shadowSmall = getParent().getState().getAssetManager().getImage("shadowSmall");
+            }
+            g.drawImage(shadowSmall,
+                    (int) imagePosX, (int) imagePosY + 120, null);
         }
         g.drawImage(drawnImage, imagePosX, imagePosY, null);
 
@@ -345,14 +365,14 @@ public class IsometricEntity extends BlockEntity {
         g.fillRect(cornerPosX, cornerPosY, 6, 6);
         // display it's world coordinates
         g.drawString("(" + getX() + ", " + getY() + ", " + getZ() + ")", cornerPosX + 10, cornerPosY);
-       
+
         /*
-        // draw a box around it
-        if (drawnImage != null) {
-            g.drawRect(imagePosX, imagePosY, (int) drawnImage.getWidth(),
-                    (int) drawnImage.getHeight());
-        }
-        */
+         // draw a box around it
+         if (drawnImage != null) {
+         g.drawRect(imagePosX, imagePosY, (int) drawnImage.getWidth(),
+         (int) drawnImage.getHeight());
+         }
+         */
     }
 
     private void rebuildDrawnImage() {

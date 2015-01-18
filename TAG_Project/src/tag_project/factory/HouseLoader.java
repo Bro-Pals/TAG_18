@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import tag_project.BiscuitEntity;
 import tag_project.FurnitureEntity;
 import tag_project.HouseState;
 import tag_project.IsometricDirection;
@@ -70,6 +71,8 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                 biscuitsTotal++;
             }
             houseState.resetProgressAndSetTotals(biscuitsTotal, furnitureTotal);
+            BiscuitEntity.initAnim(houseState);
+            
             reader.close();
             InfoLogger.println("Loaded house plan: " + key + " " + System.currentTimeMillis());
         } catch (IOException e) {
