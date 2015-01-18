@@ -6,7 +6,9 @@
 package tag_project;
 
 import bropals.lib.simplegame.entity.GameWorld;
+import bropals.lib.simplegame.logger.InfoLogger;
 import bropals.lib.simplegame.state.GameState;
+import java.util.List;
 
 /**
  *
@@ -20,7 +22,7 @@ public class IsometricGameWorld extends GameWorld<IsometricEntity> {
 
     @Override
     public void addEntity(IsometricEntity entity) {
-        
+        /*
         if (entity instanceof FurnitureEntity) {
             if (!getEntities().isEmpty()) {
                 for (int i=getEntities().size()-1; i > 0; i--) {
@@ -52,9 +54,26 @@ public class IsometricGameWorld extends GameWorld<IsometricEntity> {
             //go to back to draw last if it don't belong
             //getEntities().add(entity);
         }
-        
+        */
+        addToWorldWithZSorting(entity);
+    }
+    
+    public void addToWorldWithZSorting(IsometricEntity entity) {
+        List<IsometricEntity> list = getEntities();
+        if (!list.isEmpty()) {
+            IsometricEntity last;
+            for (int i=0; i<list.size(); i++) {
+                last = list.get(i);
+                if (entity.inFrontOf(last) || entity.getZ() == last.getZ()) {
+                    entity.setParent(this);
+                    list.add(i, entity);
+                    return;
+                }
+            }
+        }
         //Temporary
-        super.addEntity(entity);
+        entity.setParent(this);
+        list.add(entity);
     }
     
     public void reorderEntity(IsometricEntity entity) {

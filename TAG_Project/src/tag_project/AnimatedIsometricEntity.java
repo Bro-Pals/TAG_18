@@ -119,6 +119,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     private void calculatePath(NavigationNode end,
             NavigationNode start,
             NavigationNode[][] nodes) {
+        if (start == null || end == null) {
+            return;
+        }
         ArrayList<NavigationNode> openSet = new ArrayList<>();
         openSet.add(start);
         start.setNavParent(null);
@@ -147,13 +150,18 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     lowestF = openSet.get(i);
                 }
             }
+            if (lowestF == null) {
+                return;
+            }
             if (lowestF == end) {
                 System.out.println("Found a path!");
                 // build the path
                 pathToGetThere = new ArrayList<>();
                 nodeOnPathOn = 0; // restart this
                 NavigationNode nodeOn = lowestF.getNavParent();
-                System.out.println("The parent of the final node: " + nodeOn.getNavParent());
+                if (nodeOn == null) {
+                    return;
+                }
                 while (nodeOn.getNavParent() != null) { // start node has no parent
                     pathToGetThere.add(nodeOn);
                     nodeOn = nodeOn.getNavParent();
@@ -247,7 +255,6 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         if (canSee(other)) {
             setVelocityTowards(other.getX(), other.getY(), speed);
             if (distanceBetween(other) < 150) {
-                InfoLogger.println("We just hit the other entity!");
             }
         } else {
             pathfindTo(other, nodes, speed);
@@ -276,6 +283,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     }
     
     public boolean canSee(IsometricEntity other) {
+        if (getParent()==null) {
+            return false;
+        }
         for (int i=0; i<getParent().getEntities().size(); i++) {
             if (getParent().getEntities().get(i) instanceof IsometricEntity) {
                 IsometricEntity isoent = (IsometricEntity)getParent().getEntities().get(i);

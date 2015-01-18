@@ -103,6 +103,9 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                     Float.parseFloat(split[3]),
                     Float.parseFloat(split[4])
             );
+            ie.setZ(Float.parseFloat(split[5]));
+            //The Z value for walls is dependent on its positon in the world
+            
             if (ie.getWidth() % 80 != 0 || ie.getHeight() % 80 != 0) {
                 ErrorLogger.println("Size not divisible by 80:");
                 ErrorLogger.println(line);
@@ -119,6 +122,8 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                     Float.parseFloat(split[4]),
                     split[5]
             );
+            //Decorations should be drawn last
+            ie.setZ(1000);
             if (ie.getWidth() % 80 != 0 || ie.getHeight() % 80 != 0) {
                 ErrorLogger.println("Size not divisible by 80:");
                 ErrorLogger.println(line);
@@ -133,7 +138,9 @@ public class HouseLoader extends AssetLoader<IsometricGameWorld> {
                     Float.parseFloat(split[1]),
                     Float.parseFloat(split[2]),
                     IsometricDirection.parseDirection(split[3]));
+            ie.setZ(Float.parseFloat(split[4]));
         }
+        
         return ie;
     }
 

@@ -27,6 +27,7 @@ public class IsometricEntity extends BlockEntity {
     private BufferedImage using = null, drawnImage = null;;
     private final float localWidth;
     private final float localHeight;
+    private float z = 0;
     private float renderCoordX, renderCoordY;
     private final float ISO_ANGLE = (float)Math.atan(69.5/40);
 
@@ -54,6 +55,42 @@ public class IsometricEntity extends BlockEntity {
         setFacing(facing);
     }
 
+    /**
+     * Sets this entity's Z value
+     * @param z the new Z value
+     */
+    public void setZ(float z) {
+        this.z = z;
+    }
+    
+    /**
+     * Gets this entity's Z value
+     * @return the entity's Z value
+     */
+    public float getZ() {
+        return z;
+    }
+    
+    /**
+     * Returns <code>true</code> if the other entity is behind (has a greater
+     * Z value) than this isometric entity.
+     * @param other the other entity
+     * @return if it is behind
+     */
+    public boolean behind(IsometricEntity other) {
+        return other.getZ() > getZ();
+    }
+    
+    /**
+     * Returns <code>true</code> if the other entity is in front of (has a smaller
+     * Z value) than this isometric entity.
+     * @param other the other entity
+     * @return if it is behind
+     */
+    public boolean inFrontOf(IsometricEntity other) {
+        return other.getZ() < getZ();
+    }
+    
     @Override
     public void collideWith(BlockEntity other) {
         if (!(other instanceof BiscuitEntity)) {
@@ -260,6 +297,7 @@ public class IsometricEntity extends BlockEntity {
             return; // we give up on u drawnImage
         renderCoordX = ((float)69.5 * ((getY()/80) - (getX()/80)));
         renderCoordY = (40 * ((getX()/80) + (getY()/80)));
+        
         int imagePosX = 0;
         int imagePosY = 0;
         if (!(this instanceof FurnitureEntity)) {
@@ -283,7 +321,7 @@ public class IsometricEntity extends BlockEntity {
         // draw the renderCoord local (0, 0) point
         g.fillRect(cornerPosX, cornerPosY, 6, 6);
         // display it's world coordinates
-        g.drawString("(" + getX() + ", " + getY() + ")", cornerPosX + 10, cornerPosY);
+        g.drawString("(" + getX() + ", " + getY() + ", " + getZ() + ")", cornerPosX + 10, cornerPosY);
         // draw a box around it
         if (drawnImage != null) {
             g.drawRect(imagePosX, imagePosY, (int)drawnImage.getWidth(), 
@@ -329,16 +367,6 @@ public class IsometricEntity extends BlockEntity {
     
     public float getRenderCoordY() {
         return renderCoordY;
-    }
-    
-    /**
-     * Gives the distance from the point 50000, 50000
-     * @return depth distance
-     */
-    public float getDepthValue() {
-        //float diffX = 50000 - getX();
-       // float diffY = 50000 - renderY;
-        return getY(); //(float)Math.sqrt((diffX*diffX) + (diffY*diffY));
     }
     
     public void setVelocityTowards(float x, float y, float speed) {

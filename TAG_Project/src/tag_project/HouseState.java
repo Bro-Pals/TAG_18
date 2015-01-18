@@ -52,7 +52,7 @@ public class HouseState extends GameState {
     private FurnitureEntity couldTear = null;
 
     ///Use R to swap rendering modes
-    private boolean developmentRendering = true;
+    private boolean developmentRendering = false;
     private final boolean developmentCameraControls = false;
 
     private NavigationNode[][] navigationNodes;
@@ -67,7 +67,9 @@ public class HouseState extends GameState {
             centerCameraOnDog();
             updateTearing();
             world.updateEntities();
-            boy.chase(dog, navigationNodes, BOY_SPEED); // boy chases the dog
+            if (boy != null && dog != null && navigationNodes != null) { 
+                boy.chase(dog, navigationNodes, BOY_SPEED); // boy chases the dog
+            }
             gui.update(mp.x, mp.y);
             if (hasWon()) {
                 win();
@@ -104,8 +106,8 @@ public class HouseState extends GameState {
                     IsometricEntity thing = (IsometricEntity)world.getEntities().get(i);
                     IsometricEntity otherThing = (IsometricEntity)world.getEntities().get(i+1);
                     
-                    if (thing.getDepthValue() < aie.getDepthValue()
-                            && otherThing.getDepthValue() > aie.getDepthValue()) {
+                    if (thing.getZ() < aie.getZ()
+                            && otherThing.getZ() > aie.getZ()) {
                         aie.render(graphicsObject);
                     }
                 }

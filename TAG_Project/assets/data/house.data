@@ -21,97 +21,97 @@ Decoration 4240 1680 160 80 Hardfloor //Doorway from dining room to den
 Decoration 1280 1440 80 160 Hardfloor //Doorway from den component 3 to hallway
 Decoration 0 1280 80 160 Hardfloor //Doorway from den component 3 to garage
 Comment Need to make the walls now
-Wall 0 0 5840 80 //Over the laundry room
-Wall 0 80 80 560 //Left side of the laundry room
-Wall 0 640 800 80
-Wall 960 640 320 80
-Wall 1200 80 80 560
-Wall 1200 720 80 1760
-Wall 1280 1280 480 80
-Wall 1920 1280 1120 80
-Wall 3200 1280 560 80 //Wall on the bottom of bedroom 1; right of door
-Wall 3760 80 80 1360
-Wall 5840 0 80 1760 //Wall to the right of the dining room / kitchen
-Wall 4400 1680 1440 80
-Wall 2480 80 80 1200 //Wall in between the two bedrooms
-Wall 1280 1680 320 80 //Wall above the study; left of doorway
-Wall 1760 1680 1520 80 //Wall above the study; right of doorway
-Wall 1280 2320 1040 80 //Wall under the study; left of doorway
-Wall 2480 2320 1600 80 //Wall under the study; right of doorway
-Wall 2800 1760 80 560 //Wall between the study and the bathroom
-Wall 3440 1680 800 80
-Wall 3760 1600 80 80
-Wall 4000 1760 80 560 //Right side of the bathroom
-Wall 4720 1760 80 1520 //Right side of den component 1
-Wall 640 3200 4080 80 //Bottom side of den component 2
-Wall 560 2400 80 880 //Left side of den component 2
-Wall 0 2400 560 80 //Bottom side of den component 3
-Wall 0 1440 80 960 //Wall under the garage doorway
-Wall 0 720 80 560 //Wall above the garage doorway
-Wall -1360 400 1360 80 //Wall above the garage
-Wall -1360 1840 1360 80 //Wall under the garage
-Wall -1440 400 80 1520 //Wall on the left side of the garage
+Wall 0 0 5840 80 120 //Over the laundry room
+Wall 0 80 80 560 96 //Left side of the laundry room
+Wall 0 640 800 80 90
+Wall 960 640 320 80 88
+Wall 1200 80 80 560 90
+Wall 1200 720 80 1760 70
+Wall 1280 1280 560 80 0
+Wall 1920 1280 1120 80 0
+Wall 3200 1280 560 80 55 //Wall on the bottom of bedroom 1; right of door
+Wall 3760 80 80 1360 50
+Wall 5840 0 80 1760 0 //Wall to the right of the dining room / kitchen
+Wall 4400 1680 1440 80 50
+Wall 2480 80 80 1200 80 //Wall in between the two bedrooms
+Wall 1280 1680 320 80 0 //Wall above the study; left of doorway
+Wall 1760 1680 1520 80 55 //Wall above the study; right of doorway
+Wall 1280 2320 1040 80 0 //Wall under the study; left of doorway
+Wall 2480 2320 1600 80 50 //Wall under the study; right of doorway
+Wall 2800 1760 80 560 51 //Wall between the study and the bathroom
+Wall 3440 1680 800 80 62
+Wall 3760 1600 80 80 64
+Wall 4000 1760 80 560 60 //Right side of the bathroom
+Wall 4720 1760 80 1520 40 //Right side of den component 1
+Wall 640 3200 4080 80 100 //Bottom side of den component 2
+Wall 560 2400 80 880 0 //Left side of den component 2
+Wall 0 2400 560 80 0 //Bottom side of den component 3
+Wall 0 1440 80 960 0 //Wall under the garage doorway
+Wall 0 720 80 560 89 //Wall above the garage doorway
+Wall -1360 400 1360 80 99 //Wall above the garage
+Wall -1360 1840 1360 80 97 //Wall under the garage
+Wall -1440 400 80 1520 98 //Wall on the left side of the garage
 Comment need to do the furniture now
 Comment
 Comment Laundry Room
-Cabinet 360 120 south //Cabinet top left
-Cabinet 860 120 south //Cabinet top left
-WashingMachine 120 280 west
-DryingMachine 120 440 west
+Cabinet 360 120 south 50 //Cabinet top left
+Cabinet 860 120 south 50 //Cabinet top left
+WashingMachine 120 280 west 50
+DryingMachine 120 440 west 50
 Comment
 Comment Bedroom 1
-Bed 3120 240 south
-NightStand 3280 120 south
-Dresser 2600 760 west
-ToyBox 3680 760 east
+Bed 3120 240 south 60
+NightStand 3280 120 south 30
+Dresser 2600 760 west 40
+ToyBox 3680 760 east 70
 Comment
 Comment Bedroom 2
-Bed 1880 240 south
-NightStand 2040 120 south
-Dresser 1320 760 west
-Dresser 2440 760 east
+Bed 1880 240 south 70
+NightStand 2040 120 south 67
+Dresser 1320 760 west 40
+Dresser 2440 760 east 85
 Comment
 Comment Dining room / kitchen
-DiningRoomTable 4400 960 west
-Chair 4240 880 west
-Chair 4240 1040 west
-Chair 4560 880 east
-Chair 4560 1040 east
-Counter 4680 120 south
-Counter 4760 120 south
-Stove 4840 120 south
-Counter 4920 120 south
-Counter 5000 120 south
-Counter 5080 120 south
-Counter 5160 120 south
-Refrigerator 5240 120 south
-Counter 5320 120 south
-Counter 5400 120 south
-Counter 5480 120 south
-Counter 5560 120 south
+DiningRoomTable 4400 960 west 20
+Chair 4240 880 west 40
+Chair 4240 1040 west 40
+Chair 4560 880 east 40
+Chair 4560 1040 east 40
+Counter 4680 120 south 41
+Counter 4760 120 south 40
+Stove 4840 120 south 39
+Counter 4920 120 south 38
+Counter 5000 120 south 37
+Counter 5080 120 south 36
+Counter 5160 120 south 35
+Refrigerator 5240 120 south 34
+Counter 5320 120 south 33
+Counter 5400 120 south 32
+Counter 5480 120 south 31
+Counter 5560 120 south 30
 Comment
 Comment furniture for the bathroom now
-Sink 3080 1800 south
-Toilet 2920 2160 east
-Shower 3920 2240 north
-TowelRack 3880 1960 east
+Sink 3080 1800 south 0
+Toilet 2920 2160 east 0
+Shower 3920 2240 north 65
+TowelRack 3880 1960 east 65
 Comment
 Comment Furniture for the study
-Bookcase 1320 2040 west
-Bookcase 1800 2280 north
-OfficeChair 2360 1960 north
-OfficeDesk 2360 1840 south
+Bookcase 1320 2040 west 0
+Bookcase 1800 2280 north 0
+OfficeChair 2360 1960 north 0
+OfficeDesk 2360 1840 south 0
 Comment
 Comment Just need to arrange the den now...
-TV 2920 2440 south
-Couch 2920 2980 north
-Couch 3200 2720 east
-Bookcase 3680 3160 north
-Bookcase 2200 3160 north
-Fireplace 4640 2400 east
-Bookcase 4680 2880 east
-LazyBoy 4360 2200 south
-Fireplace 1120 1560 east
-Couch 320 1560 west
-Couch 680 1200 south
-CoffeeTable 680 1560 east
+TV 2920 2440 south 0
+Couch 2920 2980 north 0
+Couch 3200 2720 east 0
+Bookcase 3680 3160 north 120
+Bookcase 2200 3160 north 120
+Fireplace 4640 2400 east 50
+Bookcase 4680 2880 east 50
+LazyBoy 4360 2200 south 0
+Fireplace 1120 1560 east 100
+Couch 320 1560 west 0
+Couch 680 1200 south 0
+CoffeeTable 680 1560 east 0
