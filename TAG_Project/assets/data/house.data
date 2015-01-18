@@ -72,7 +72,7 @@ Dresser 1320 760 west
 Dresser 2440 760 east
 Comment
 Comment Dining room / kitchen
-DiningRoomTable 4400 960 east
+DiningRoomTable 4400 960 west
 Chair 4240 880 west
 Chair 4240 1040 west
 Chair 4560 880 east
@@ -85,7 +85,6 @@ Counter 5000 120 south
 Counter 5080 120 south
 Counter 5160 120 south
 Refrigerator 5240 120 south
-Counter 5240 120 south
 Counter 5320 120 south
 Counter 5400 120 south
 Counter 5480 120 south
