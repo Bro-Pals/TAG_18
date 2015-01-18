@@ -21,7 +21,8 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     private Animation animation;
     private NavigationNode goal;
     private ArrayList<NavigationNode> pathToGetThere;
-    private int nodeOnPathOn;
+    private int nodeOnPathOn, pathFindTimerOn;
+    private final int PATHFIND_TIME_LIMIT = 30; // once every 30 frames
             
     public AnimatedIsometricEntity(GameWorld parent, float x, float y, float width, 
             float height, boolean anchored, IsometricDirection facing, 
@@ -32,11 +33,13 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         animation.setTrack(0);
         setFacing(IsometricDirection.NORTH);
         nodeOnPathOn = 0;
+        pathFindTimerOn = 0;
     }
     
     @Override
     public void update() {
         animation.update();
+        pathFindTimerOn--; // update the timer for path finding
         if (getVelocity().getY() > 0 && getVelocity().getY() > getVelocity().getX()) {
             setFacing(IsometricDirection.SOUTH);   
         } else if (getVelocity().getY() < 0 && getVelocity().getY() < getVelocity().getX()) {
@@ -102,7 +105,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             return;
         System.out.println("Going to follow our path now");
         NavigationNode nodeOn = pathToGetThere.get(nodeOnPathOn);
-        if (distanceBetween(nodeOn.getCenterX(), nodeOn.getCenterY()) < 10) {
+        if (distanceBetween(nodeOn.getCenterX(), nodeOn.getCenterY()) < 15) {
             nodeOnPathOn++;
         } else {
             setVelocityTowards(nodeOn.getCenterX(), nodeOn.getCenterY(), speed);
@@ -119,6 +122,10 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     private void calculatePath(NavigationNode end,
             NavigationNode start,
             NavigationNode[][] nodes) {
+        if (pathToGetThere != null && pathFindTimerOn > 0) {
+            return; // need to wait for the timer to let you do it again
+        }
+        pathFindTimerOn = PATHFIND_TIME_LIMIT; // reset timer
         ArrayList<NavigationNode> openSet = new ArrayList<>();
         openSet.add(start);
         start.setNavParent(null);
@@ -155,7 +162,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                 NavigationNode nodeOn = lowestF.getNavParent();
                 System.out.println("The parent of the final node: " + nodeOn.getNavParent());
                 while (nodeOn.getNavParent() != null) { // start node has no parent
-                    pathToGetThere.add(nodeOn);
+                    pathToGetThere.add(0, nodeOn);
                     nodeOn = nodeOn.getNavParent();
                 }
                 System.out.println("*******");
@@ -245,7 +252,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
      */
     public void chase(IsometricEntity other, NavigationNode[][] nodes, float speed) {
         if (canSee(other)) {
-            setVelocityTowards(other.getX(), other.getY(), speed);
+            setVelocityTowards(other.getCenterX(), other.getCenterY(), speed);
             if (distanceBetween(other) < 150) {
                 InfoLogger.println("We just hit the other entity!");
             }
