@@ -11,7 +11,7 @@ Decoration 640 2400 4080 800 Hardfloor //Den floor component 2
 Decoration 80 720 1120 1680 Hardfloor //Den floor component 3
 Decoration -1360 480 1360 1360 Hardfloor //Garage floor
 Decoration 800 640 160 80 Hardfloor //Doorway to laundry
-Decoration 1760 1280 160 80 Hardfloor //Doorway to bedroom 2
+Decoration 1840 1280 160 80 Hardfloor //Doorway to bedroom 2
 Decoration 3040 1280 160 80 Hardfloor //Doorway to bedroom 1
 Decoration 3760 1440 80 160 Hardfloor //Doorway from hallway to dining room
 Decoration 3280 1680 160 80 Hardfloor //Doorway from hallway to bathroom
@@ -27,8 +27,8 @@ Wall 0 640 800 80 90
 Wall 960 640 320 80 88
 Wall 1200 80 80 560 90
 Wall 1200 720 80 1760 70
-Wall 1280 1280 560 80 0
-Wall 1920 1280 1120 80 0
+Wall 1280 1280 560 80 40
+Wall 2000 1280 1040 80 10
 Wall 3200 1280 560 80 55 //Wall on the bottom of bedroom 1; right of door
 Wall 3760 80 80 1360 50
 Wall 5840 0 80 1760 0 //Wall to the right of the dining room / kitchen
@@ -44,13 +44,13 @@ Wall 3760 1600 80 80 64
 Wall 4000 1760 80 560 60 //Right side of the bathroom
 Wall 4720 1760 80 1520 40 //Right side of den component 1
 Wall 640 3200 4080 80 100 //Bottom side of den component 2
-Wall 560 2400 80 880 0 //Left side of den component 2
-Wall 0 2400 560 80 0 //Bottom side of den component 3
-Wall 0 1440 80 960 0 //Wall under the garage doorway
+Wall 560 2400 80 880 110 //Left side of den component 2
+Wall 0 2400 560 80 111 //Bottom side of den component 3
+Wall 0 1440 80 960 114 //Wall under the garage doorway
 Wall 0 720 80 560 89 //Wall above the garage doorway
-Wall -1360 400 1360 80 99 //Wall above the garage
-Wall -1360 1840 1360 80 97 //Wall under the garage
-Wall -1440 400 80 1520 98 //Wall on the left side of the garage
+Wall -1360 400 1360 80 113 //Wall above the garage
+Wall -1360 1840 1360 80 115 //Wall under the garage
+Wall -1440 400 80 1520 150 //Wall on the left side of the garage
 Comment need to do the furniture now
 Comment
 Comment Laundry Room

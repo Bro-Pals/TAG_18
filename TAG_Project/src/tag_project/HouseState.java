@@ -100,17 +100,12 @@ public class HouseState extends GameState {
     private void drawInIsometricMode(Object graphicsObject) {
         for (int j=0; j<world.getEntities().size(); j++) {
             IsometricEntity be = world.getEntities().get(j);
+            be.calcRenderCoords();
             if (be == dog || be == boy) {
                 AnimatedIsometricEntity aie = (AnimatedIsometricEntity)be;
-                for (int i=0; i<world.getEntities().size()-1; i++) {
-                    IsometricEntity thing = (IsometricEntity)world.getEntities().get(i);
-                    IsometricEntity otherThing = (IsometricEntity)world.getEntities().get(i+1);
-                    
-                    if (thing.getZ() < aie.getZ()
-                            && otherThing.getZ() > aie.getZ()) {
-                        aie.render(graphicsObject);
-                    }
-                }
+                
+                aie.render(graphicsObject);
+                
             } else {
                 ((BaseEntity) be).render(graphicsObject);
             }

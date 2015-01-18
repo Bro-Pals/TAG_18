@@ -29,6 +29,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             BufferedImage north, BufferedImage south, BufferedImage east, 
             BufferedImage west, Animation anim) {
         super(parent, x, y, width, height, anchored, facing, north, south, east, west);
+        setZ(200);
         this.animation = anim; // the animation
         animation.setTrack(0);
         setFacing(IsometricDirection.NORTH);
