@@ -159,11 +159,12 @@ public class HouseState extends GameState {
             for (NavigationNode node : nodes) {
                 if (node.getMoveCost() > 10) {
                     g.setColor(Color.RED);
+                    g.drawRect((int) (node.getX() - camera.getX()), (int) (node.getY() - camera.getY()),
+                        (int) node.getWidth(), (int) node.getHeight());
                 } else {
                     g.setColor(Color.BLACK);
                 }
-                g.drawRect((int) (node.getX() - camera.getX()), (int) (node.getY() - camera.getY()),
-                        (int) node.getWidth(), (int) node.getHeight());
+                
             }
         }
         // draw the boy's pathfinding path
@@ -543,7 +544,7 @@ public class HouseState extends GameState {
             handleCloseKey(ke);
 //            handleDevelopmentCameraControls(ke);
 //            handleReloadLevelKey(ke);
-//            handleRenderSwitchKey(ke);
+            handleRenderSwitchKey(ke);
             handleTearKeyInput(ke);
 //            handleResetGameKey(ke);
 //            handleSaveBiscuitsKey(ke);

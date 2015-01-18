@@ -25,7 +25,8 @@ public class NavigationNode extends BlockEntity {
         super(null, x, y, size, size, true);
         moveCost = 1;
         for (int i=0; i<forWorld.getEntities().size(); i++) {
-            if (forWorld.getEntities().get(i) instanceof DecorationEntity)
+            if (forWorld.getEntities().get(i) instanceof DecorationEntity ||
+                 forWorld.getEntities().get(i) instanceof BiscuitEntity   )
                 continue; // don't care about those
             
             if (forWorld.getEntities().get(i) instanceof IsometricEntity) {
