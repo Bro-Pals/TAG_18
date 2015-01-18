@@ -11,6 +11,8 @@ import bropals.lib.simplegame.logger.InfoLogger;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -207,6 +209,7 @@ public class IsometricEntity extends BlockEntity {
         }
     }
 
+    /*
     @Override
     public void setY(float y) {
         super.setY(y);
@@ -214,7 +217,8 @@ public class IsometricEntity extends BlockEntity {
             ((IsometricGameWorld) getParent()).reorderEntity(this);
         }
     }
-
+    */
+    
     /**
      * Gets what image is being used currently
      *
@@ -313,9 +317,6 @@ public class IsometricEntity extends BlockEntity {
                 numTilesDrawn++;
             }
         }
-        System.out.println("Tiles drawn: " + numTilesDrawn);
-        //System.out.println("Rebuilt an image of size: " + width + ", " + height);
-        //System.out.println(drawnImage);
     }
     
     public Camera getCamera() {
@@ -328,5 +329,27 @@ public class IsometricEntity extends BlockEntity {
     
     public float getRenderCoordY() {
         return renderCoordY;
+    }
+    
+    /**
+     * Gives the distance from the point 50000, 50000
+     * @return depth distance
+     */
+    public float getDepthValue() {
+        //float diffX = 50000 - getX();
+       // float diffY = 50000 - renderY;
+        return getY(); //(float)Math.sqrt((diffX*diffX) + (diffY*diffY));
+    }
+    
+    public void setVelocityTowards(float x, float y, float speed) {
+        float diffX = x - getX();
+        float diffY = y - getY();
+        getVelocity().setValues(diffX, diffY);
+        getVelocity().normalizeLocal();
+        getVelocity().scaleLocal(speed);
+    }
+    
+    public Rectangle2D.Float toRect() {
+        return new Rectangle.Float(getX(), getY(), getWidth(), getHeight());
     }
 }
