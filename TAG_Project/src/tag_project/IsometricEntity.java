@@ -24,12 +24,15 @@ public class IsometricEntity extends BlockEntity {
 
     private BufferedImage north, south, east, west;
     private IsometricDirection facing;
-    private BufferedImage using = null, drawnImage = null;;
+    private BufferedImage using = null, drawnImage = null;
+    ;
     private final float localWidth;
     private final float localHeight;
     private float z = 0;
     private float renderCoordX, renderCoordY;
-    private final float ISO_ANGLE = (float)Math.atan(69.5/40);
+    private final float ISO_ANGLE = (float) Math.atan(69.5 / 40);
+    
+    private static final float CAMERA_REFERENCE_LINE = -3000; //Y in render coords
 
     public IsometricEntity(GameWorld parent,
             float x, float y, float width, float height,
@@ -57,48 +60,50 @@ public class IsometricEntity extends BlockEntity {
 
     /**
      * Sets this entity's Z value
+     *
      * @param z the new Z value
      */
     public void setZ(float z) {
         this.z = z;
     }
-    
+
     /**
      * Gets this entity's Z value
+     *
      * @return the entity's Z value
      */
     public float getZ() {
         return z;
     }
-    
+
     /**
-     * Returns <code>true</code> if the other entity is behind (has a greater
-     * Z value) than this isometric entity.
+     * Returns <code>true</code> if the other entity is behind (has a greater Z
+     * value) than this isometric entity.
+     *
      * @param other the other entity
      * @return if it is behind
      */
     public boolean behind(IsometricEntity other) {
         return other.getZ() > getZ();
     }
-    
+
     /**
-     * Returns <code>true</code> if the other entity is in front of (has a smaller
-     * Z value) than this isometric entity.
+     * Returns <code>true</code> if the other entity is in front of (has a
+     * smaller Z value) than this isometric entity.
+     *
      * @param other the other entity
      * @return if it is behind
      */
     public boolean inFrontOf(IsometricEntity other) {
         return other.getZ() < getZ();
     }
-    
+
     @Override
     public void collideWith(BlockEntity other) {
         if (!(other instanceof BiscuitEntity)) {
             super.collideWith(other);
         }
     }
-    
-    
 
     /**
      * Gets the raw width of the furniture, unrotated.
@@ -238,8 +243,8 @@ public class IsometricEntity extends BlockEntity {
                 using = west;
                 break;
         }
-        if (!(this instanceof AnimatedIsometricEntity) &&
-                !(this instanceof FurnitureEntity)) {
+        if (!(this instanceof AnimatedIsometricEntity)
+                && !(this instanceof FurnitureEntity)) {
             rebuildDrawnImage();
         } else {
             drawnImage = using;
@@ -247,15 +252,14 @@ public class IsometricEntity extends BlockEntity {
     }
 
     /*
-    @Override
-    public void setY(float y) {
-        super.setY(y);
-        if (getParent() != null) {
-            ((IsometricGameWorld) getParent()).reorderEntity(this);
-        }
-    }
-    */
-    
+     @Override
+     public void setY(float y) {
+     super.setY(y);
+     if (getParent() != null) {
+     ((IsometricGameWorld) getParent()).reorderEntity(this);
+     }
+     }
+     */
     /**
      * Gets what image is being used currently
      *
@@ -273,9 +277,22 @@ public class IsometricEntity extends BlockEntity {
     public void setUsing(BufferedImage using) {
         this.using = using;
     }
-    
+
     public void setDrawn(BufferedImage drawn) {
         drawnImage = using;
+    }
+
+    public void calcRenderCoords() {
+        renderCoordX = ((float) 69.5 * ((getY() / 80) - (getX() / 80)));
+        renderCoordY = (40 * ((getX() / 80) + (getY() / 80)));
+    }
+    
+    public void calcZValue() {
+        if ( this instanceof DecorationEntity ) {
+            z = 5000;
+        } else {
+            z = CAMERA_REFERENCE_LINE + (40 * (((getX() + getWidth())/ 80) + ((getY() + getHeight() )/ 80)));
+        }
     }
 
     @Override
@@ -293,11 +310,9 @@ public class IsometricEntity extends BlockEntity {
             this.revalidateImage();
             drawnImage = using;
         }
-        if (drawnImage == null)
+        if (drawnImage == null) {
             return; // we give up on u drawnImage
-        renderCoordX = ((float)69.5 * ((getY()/80) - (getX()/80)));
-        renderCoordY = (40 * ((getX()/80) + (getY()/80)));
-        
+        }
         int imagePosX = 0;
         int imagePosY = 0;
         if (!(this instanceof FurnitureEntity)) {
@@ -305,70 +320,69 @@ public class IsometricEntity extends BlockEntity {
             imagePosY = (int) (renderCoordY - getCamera().getY() - 120);
         } else {
             // find teh bottom right of the image
-            float bottomRightX = renderCoordX - 
-                    (float)((Math.sin(ISO_ANGLE) * getWidth()));
-            float bottomRightY = renderCoordY + 
-                    (float)(Math.cos(ISO_ANGLE) * getHeight())
-                   + (float)(Math.cos(ISO_ANGLE) * getWidth());
-            imagePosX = (int)(bottomRightX - getCamera().getX());
-            imagePosY = (int)(bottomRightY - drawnImage.getHeight() - getCamera().getY());
-        }   
-        g.drawImage(drawnImage, imagePosX, imagePosY , null);
-       
+            float bottomRightX = renderCoordX
+                    - (float) ((Math.sin(ISO_ANGLE) * getWidth()));
+            float bottomRightY = renderCoordY
+                    + (float) (Math.cos(ISO_ANGLE) * getHeight())
+                    + (float) (Math.cos(ISO_ANGLE) * getWidth());
+            imagePosX = (int) (bottomRightX - getCamera().getX());
+            imagePosY = (int) (bottomRightY - drawnImage.getHeight() - getCamera().getY());
+        }
+        g.drawImage(drawnImage, imagePosX, imagePosY, null);
+
         g.setColor(Color.RED);
-        int cornerPosX = (int)(renderCoordX - getCamera().getX()); // render coord local (0, 0) (NOT image coordinate)
-        int cornerPosY = (int)(renderCoordY - getCamera().getY());
+        int cornerPosX = (int) (renderCoordX - getCamera().getX()); // render coord local (0, 0) (NOT image coordinate)
+        int cornerPosY = (int) (renderCoordY - getCamera().getY());
         // draw the renderCoord local (0, 0) point
         g.fillRect(cornerPosX, cornerPosY, 6, 6);
         // display it's world coordinates
         g.drawString("(" + getX() + ", " + getY() + ", " + getZ() + ")", cornerPosX + 10, cornerPosY);
         // draw a box around it
         if (drawnImage != null) {
-            g.drawRect(imagePosX, imagePosY, (int)drawnImage.getWidth(), 
-                    (int)drawnImage.getHeight());
+            g.drawRect(imagePosX, imagePosY, (int) drawnImage.getWidth(),
+                    (int) drawnImage.getHeight());
         }
     }
 
-    
     private void rebuildDrawnImage() {
         // make a tiled image for isometric drawing
         if (getLocalWidth() == 0 || getLocalHeight() == 0) {
             InfoLogger.println("This ain't no good size");
             return; // :(
         }
-        float width = (float)((getHeight()* Math.sin(ISO_ANGLE)) + 
-            (getWidth() * Math.sin(ISO_ANGLE)));
-        float height = 120 + (float)((getHeight() * Math.cos(ISO_ANGLE)) + 
-            (getWidth() * Math.cos(ISO_ANGLE)));
+        float width = (float) ((getHeight() * Math.sin(ISO_ANGLE))
+                + (getWidth() * Math.sin(ISO_ANGLE)));
+        float height = 120 + (float) ((getHeight() * Math.cos(ISO_ANGLE))
+                + (getWidth() * Math.cos(ISO_ANGLE)));
         //System.out.println("Width: " + width + "  Height: " + height);
-        drawnImage = new BufferedImage((int)width, (int)height, BufferedImage.TRANSLUCENT);
+        drawnImage = new BufferedImage((int) width, (int) height, BufferedImage.TRANSLUCENT);
         Graphics2D g2img = (Graphics2D) drawnImage.getGraphics();
-        float basePointX = (float)(Math.sin(ISO_ANGLE) * getWidth());
+        float basePointX = (float) (Math.sin(ISO_ANGLE) * getWidth());
         float basePointY = 200f;
         int numTilesDrawn = 0;
-        for (float h=0; h < (getHeight()/80); h++) {
-            for (float w=0; w < (getWidth()/80); w++) {
+        for (float h = 0; h < (getHeight() / 80); h++) {
+            for (float w = 0; w < (getWidth() / 80); w++) {
                 double xPos = basePointX - (69.5 * w) + (69.5 * h);
                 double yPos = basePointY + (40 * w) + (40 * h);
-                g2img.drawImage(using, (int)(xPos - 69.5), 
-                        (int)(yPos - 200), null);
+                g2img.drawImage(using, (int) (xPos - 69.5),
+                        (int) (yPos - 200), null);
                 numTilesDrawn++;
             }
         }
     }
-    
+
     public Camera getCamera() {
         return ((HouseState) getParent().getState()).getCamera();
     }
-    
+
     public float getRenderCoordX() {
         return renderCoordX;
     }
-    
+
     public float getRenderCoordY() {
         return renderCoordY;
     }
-    
+
     public void setVelocityTowards(float x, float y, float speed) {
         float diffX = x - getCenterX();
         float diffY = y - getCenterY();
@@ -376,8 +390,8 @@ public class IsometricEntity extends BlockEntity {
         getVelocity().normalizeLocal();
         getVelocity().scaleLocal(speed);
     }
-    
+
     public Rectangle toRect() {
-        return new Rectangle((int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
+        return new Rectangle((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
     }
 }
