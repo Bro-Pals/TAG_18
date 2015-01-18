@@ -9,7 +9,7 @@ Decoration 1280 1760 1520 560 Hardfloor //Study floor
 Decoration 4080 1760 640 640 Hardfloor //Den floor component 1
 Decoration 640 2400 4080 800 Hardfloor //Den floor component 2
 Decoration 80 720 1120 1680 Hardfloor //Den floor component 3
-Decoration -1360 480 1360 1360 Hardfloor //Garage floor
+Decoration -1360 480 1360 1360 Concretefloor //Garage floor
 Decoration 800 640 160 80 Hardfloor //Doorway to laundry
 Decoration 1840 1280 160 80 Hardfloor //Doorway to bedroom 2
 Decoration 3040 1280 160 80 Hardfloor //Doorway to bedroom 1
