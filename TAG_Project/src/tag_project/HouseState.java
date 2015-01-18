@@ -190,7 +190,7 @@ public class HouseState extends GameState {
     }
 
     private void initNavigationMesh() {
-        int sizeOfNode = 80;
+        int sizeOfNode = 120;
         int worldWidth = 8640/sizeOfNode; // in nodes
         int worldHeight = 3280/sizeOfNode;
         navigationNodes = new NavigationNode[worldWidth][worldHeight];

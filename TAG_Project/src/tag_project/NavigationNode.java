@@ -8,6 +8,8 @@ package tag_project;
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.entity.block.BlockEntity;
 import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -28,7 +30,7 @@ public class NavigationNode extends BlockEntity {
             
             if (forWorld.getEntities().get(i) instanceof IsometricEntity) {
                 IsometricEntity iso = (IsometricEntity) forWorld.getEntities().get(i);
-                if (iso.toRect().intersects(toRect())) {
+                if (iso.toRect().intersects(toRect())) { // if the intersection is more than 2/3 the size
                     moveCost = 10000000;
                     return;
                 }
@@ -36,6 +38,8 @@ public class NavigationNode extends BlockEntity {
         }
         gVal = 0; // initially
         navParent = null;
+        this.xGrid = xGrid;
+        this.yGrid = yGrid;
     }
 
     public int getXGrid() {

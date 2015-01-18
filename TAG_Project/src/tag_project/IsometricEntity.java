@@ -370,14 +370,14 @@ public class IsometricEntity extends BlockEntity {
     }
     
     public void setVelocityTowards(float x, float y, float speed) {
-        float diffX = x - getX();
-        float diffY = y - getY();
+        float diffX = x - getCenterX();
+        float diffY = y - getCenterY();
         getVelocity().setValues(diffX, diffY);
         getVelocity().normalizeLocal();
         getVelocity().scaleLocal(speed);
     }
     
-    public Rectangle2D.Float toRect() {
-        return new Rectangle.Float(getX(), getY(), getWidth(), getHeight());
+    public Rectangle toRect() {
+        return new Rectangle((int)getX(), (int)getY(), (int)getWidth(), (int)getHeight());
     }
 }
