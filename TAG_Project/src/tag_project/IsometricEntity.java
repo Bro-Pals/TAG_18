@@ -346,7 +346,7 @@ public class IsometricEntity extends BlockEntity {
         float diffY = y - getY();
         getVelocity().setValues(diffX, diffY);
         getVelocity().normalizeLocal();
-        getVelocity().scale(speed); // return to old magnitude
+        getVelocity().scaleLocal(speed);
     }
     
     public Rectangle2D.Float toRect() {

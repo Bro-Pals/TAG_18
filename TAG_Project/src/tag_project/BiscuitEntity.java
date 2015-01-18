@@ -22,6 +22,7 @@ public class BiscuitEntity extends IsometricEntity {
                 null, 
                 null, null);
         this.houseState=houseState;
+        setCollidable(false);
         setSouth(houseState.getAssetManager().getImage("biscuitSprite"));
     }
 

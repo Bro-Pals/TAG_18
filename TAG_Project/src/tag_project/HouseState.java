@@ -22,6 +22,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import tag_project.factory.HouseLoader;
 
 /**
@@ -45,7 +46,7 @@ public class HouseState extends GameState {
     private AnimatedIsometricEntity dog, boy;
     private float DOG_SPEED_DIAG = 28;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
-    private float BOY_SPEED = DOG_SPEED_DIAG * 0.9f;
+    private float BOY_SPEED = DOG_SPEED * 0.4f;
     //How far do you need to be from a piece of furniture's center to tear it?
     private float TEAR_DISTANCE = 40;
     private FurnitureEntity couldTear = null;
@@ -54,7 +55,7 @@ public class HouseState extends GameState {
     private boolean developmentRendering = true;
     private final boolean developmentCameraControls = false;
 
-    private NavigationNode[] navigationNodes;
+    private NavigationNode[][] navigationNodes;
     
     @Override
     public void update() {
@@ -138,15 +139,28 @@ public class HouseState extends GameState {
                     w, h);
             //g.fillRect(300, 300, 80, 80);
         }
-        
-        for (NavigationNode node : navigationNodes) {
-            if (node.getMoveCost() > 10) {
-                g.setColor(Color.RED);
-            } else {
-                g.setColor(Color.BLACK);
+        // draw the nodes
+        for (NavigationNode[] nodes : navigationNodes) {
+            for (NavigationNode node : nodes) {
+                if (node.getMoveCost() > 10) {
+                    g.setColor(Color.RED);
+                } else {
+                    g.setColor(Color.BLACK);
+                }
+                g.drawRect((int)(node.getX() - camera.getX()), (int)(node.getY() - camera.getY()),  
+                       (int)node.getWidth(), (int)node.getHeight());
             }
-            g.drawRect((int)(node.getX() - camera.getX()), (int)(node.getY() - camera.getY()),  
-                   (int)node.getWidth(), (int)node.getHeight());
+        }
+        // draw the boy's pathfinding path
+        g.setColor(Color.MAGENTA);
+        ArrayList<NavigationNode> boyPath = boy.getPath();
+        if (boyPath != null) {
+            for (int i=1; i<boyPath.size(); i++) {
+                g.drawLine((int)(boyPath.get(i).getCenterX() - camera.getX()), 
+                        (int)(boyPath.get(i).getCenterY() - camera.getY()), 
+                        (int)(boyPath.get(i-1).getCenterX() - camera.getX()), 
+                        (int)(boyPath.get(i-1).getCenterY() - camera.getY()));
+            }
         }
     }
 
@@ -175,16 +189,17 @@ public class HouseState extends GameState {
 
     private void initNavigationMesh() {
         int sizeOfNode = 80;
-        int worldWidth = 9000/sizeOfNode; // in nodes
-        int worldHeight = 9000 /sizeOfNode;
-        navigationNodes = new NavigationNode[worldWidth * worldHeight];
+        int worldWidth = 8640/sizeOfNode; // in nodes
+        int worldHeight = 3280/sizeOfNode;
+        navigationNodes = new NavigationNode[worldWidth][worldHeight];
         for (int x=0; x<worldWidth; x++) {
             for (int y=0; y<worldHeight; y++) {
-                navigationNodes[(x * worldHeight) + y] = 
-                    new NavigationNode(world,(x * sizeOfNode) - 3000, 
-                            (y * sizeOfNode) - 3000, sizeOfNode);
+                navigationNodes[x][y] = 
+                    new NavigationNode(world,(x * sizeOfNode) - 1360, 
+                            (y * sizeOfNode), sizeOfNode, x, y);
             }
         }
+        System.out.println("Number of nodes: " + (worldWidth * worldHeight));
     }
     
     private void initTearFeature() {

@@ -15,10 +15,11 @@ import java.awt.Rectangle;
  */
 public class NavigationNode extends BlockEntity {
     
-    private float gVal, fVal, moveCost;
+    private float gVal, moveCost, hVal;
+    private int xGrid, yGrid; // the position in the giant array
     private NavigationNode navParent;
     
-    public NavigationNode(GameWorld forWorld, float x, float y, float size) {
+    public NavigationNode(GameWorld forWorld, float x, float y, float size, int xGrid, int yGrid) {
         super(null, x, y, size, size, true);
         moveCost = 1;
         for (int i=0; i<forWorld.getEntities().size(); i++) {
@@ -34,10 +35,17 @@ public class NavigationNode extends BlockEntity {
             }
         }
         gVal = 0; // initially
-        fVal = 0; // initially
         navParent = null;
     }
 
+    public int getXGrid() {
+        return xGrid;
+    }
+    
+    public int getYGrid() {
+        return yGrid;
+    }
+    
     @Override
     public void setX(float x) {
         // no
@@ -48,20 +56,36 @@ public class NavigationNode extends BlockEntity {
         // no
     }
     
+    /**
+     * Set the heuristic estimation value
+     * @param hv The heuristic estimation value
+     */
+    public void sethVal(float hv) {
+        hVal = hv;
+    }
+    
+    public float gethVal() {
+        return hVal;
+    }
+    
     public float getgVal() {
         return gVal;
     }
 
+    /**
+     * Set the TOTAL distance needed to travel to get to this node
+     * @param gVal The total distance needed to travel her
+     */
     public void setgVal(float gVal) {
         this.gVal = gVal;
     }
 
+    /**
+     * The combined value of this node
+     * @return This node's g and h value added together, giving the value.
+     */
     public float getfVal() {
-        return fVal;
-    }
-
-    public void setfVal(float fVal) {
-        this.fVal = fVal;
+        return gVal + hVal;
     }
 
     public float getMoveCost() {
