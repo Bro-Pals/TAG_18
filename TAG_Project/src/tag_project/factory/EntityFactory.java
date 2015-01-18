@@ -5,6 +5,8 @@
  */
 package tag_project.factory;
 
+import bropals.lib.simplegame.animation.Animation;
+import bropals.lib.simplegame.animation.Track;
 import bropals.lib.simplegame.io.AssetManager;
 import bropals.lib.simplegame.io.PropertiesReader;
 import bropals.lib.simplegame.logger.ErrorLogger;
@@ -24,7 +26,7 @@ import tag_project.Size;
  * @author Jonathon
  */
 public class EntityFactory {
-
+    
     private final static HashMap<String, FurnitureEntity> loadedFurniture
             = new HashMap<>();
 
