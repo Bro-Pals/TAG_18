@@ -39,6 +39,7 @@ public class HouseState extends GameState {
     private Camera camera;
     private PlayerValues playerValues;
     private FurnitureTearManager furnitureTearManager;
+    private BufferedImage defaceIconImage;
 
     /**
      * Super special reference to the player (dog)
@@ -176,6 +177,7 @@ public class HouseState extends GameState {
         initTearFeature();
         initDog();
         initBoy();
+        defaceIconImage = getAssetManager().getImage("defaceIcon");
     }
 
     private void initHousePlan() {
@@ -204,7 +206,7 @@ public class HouseState extends GameState {
         GuiProgressBar tearBar = new GuiProgressBar(250, 440, 300, 40, 0, 0);
         tearGroup.addElement(tearBar);
         tearGroup.setEnabled(false);
-        GuiText label = new GuiText("Tearing furniture", 350, 440, 0, 0, false);
+        GuiText label = new GuiText("Defacing furniture", 350, 440, 0, 0, false);
         tearGroup.addElement(label);
         gui.addGroup("tear", tearGroup);
         furnitureTearManager = new FurnitureTearManager(tearBar, this);
@@ -385,6 +387,11 @@ public class HouseState extends GameState {
                     (int) (couldTear.getY() - camera.getY()), 50, 50);
         } else {
             //Need to implement
+            InfoLogger.println("draw deface icon");
+            InfoLogger.println(couldTear.getRenderCoordX() + ", " + couldTear.getRenderCoordY());
+            g.drawImage(defaceIconImage, 
+                    (int)(couldTear.getRenderCoordX() - camera.getX() - (defaceIconImage.getWidth()/2)), 
+                    (int)(couldTear.getRenderCoordY() - camera.getY() - (defaceIconImage.getHeight()/2)), null);
         }
     }
 
@@ -473,14 +480,20 @@ public class HouseState extends GameState {
 
         GuiImage biscuitIcon = new GuiImage(20, 20, 40, 40,
                 getAssetManager().getImage("biscuitIcon"));
-        biscuits = new GuiText("0", 70, 20, 80, 40, false);
+        biscuits = new GuiText("0", 70, 29, 80, 30, false);
+        GuiImage biscuitsBackground = new GuiImage(65, 22, 70, 36,
+                getAssetManager().getImage("counterBackground"));
         GuiImage furnitureIcon = new GuiImage(150, 20, 40, 40,
                 getAssetManager().getImage("furnitureIcon"));
-        furniture = new GuiText("0", 200, 20, 80, 40, false);
-
+        furniture = new GuiText("0", 200, 29, 80, 30, false);
+        GuiImage furnitureBackground = new GuiImage(195, 22, 70, 36,
+                getAssetManager().getImage("counterBackground"));
+        
         main.addElement(biscuitIcon);
+        main.addElement(biscuitsBackground);
         main.addElement(biscuits);
         main.addElement(furnitureIcon);
+        main.addElement(furnitureBackground);
         main.addElement(furniture);
 
         this.biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);

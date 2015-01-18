@@ -328,6 +328,14 @@ public class IsometricEntity extends BlockEntity {
             imagePosX = (int) (bottomRightX - getCamera().getX());
             imagePosY = (int) (bottomRightY - drawnImage.getHeight() - getCamera().getY());
         }
+        // drawing the shadows
+        if (this instanceof AnimatedIsometricEntity) {
+            g.drawImage(getParent().getState().getAssetManager().getImage("shadow"),
+                    (int)imagePosX, (int)imagePosY + 120, null);
+        } else if (this instanceof BiscuitEntity) {
+            g.drawImage(getParent().getState().getAssetManager().getImage("shadowSmall"),
+                    (int)imagePosX, (int)imagePosY + 120, null);
+        }
         g.drawImage(drawnImage, imagePosX, imagePosY, null);
 
         g.setColor(Color.RED);
@@ -337,11 +345,14 @@ public class IsometricEntity extends BlockEntity {
         g.fillRect(cornerPosX, cornerPosY, 6, 6);
         // display it's world coordinates
         g.drawString("(" + getX() + ", " + getY() + ", " + getZ() + ")", cornerPosX + 10, cornerPosY);
+       
+        /*
         // draw a box around it
         if (drawnImage != null) {
             g.drawRect(imagePosX, imagePosY, (int) drawnImage.getWidth(),
                     (int) drawnImage.getHeight());
         }
+        */
     }
 
     private void rebuildDrawnImage() {
