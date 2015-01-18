@@ -30,7 +30,7 @@ public class WinState extends GameState {
 
     @Override
     public void onEnter() {
-        win = getAssetManager().getImage("winScreen");
+        win = getAssetManager().getImage("winBackground");
     }
 
     @Override

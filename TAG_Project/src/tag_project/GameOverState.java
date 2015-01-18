@@ -6,6 +6,7 @@
 package tag_project;
 
 import bropals.lib.simplegame.gui.GuiGroup;
+import bropals.lib.simplegame.gui.GuiImage;
 import bropals.lib.simplegame.state.GameState;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -39,6 +40,7 @@ public class GameOverState extends GameState {
     public void onEnter() {
         gui = new GuiGroup();
         font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+        gui.addElement(new GuiImage(0, 0, 800, 600, getImage("gameOverBackground")));
     }
 
     @Override
