@@ -18,6 +18,7 @@ import bropals.lib.simplegame.gui.GuiText;
 import bropals.lib.simplegame.logger.InfoLogger;
 import bropals.lib.simplegame.state.GameState;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -42,7 +43,8 @@ public class HouseState extends GameState {
     private PlayerValues playerValues;
     private FurnitureTearManager furnitureTearManager;
     private BufferedImage defaceIconImage;
-
+    private Font font;
+    
     /**
      * Super special reference to the player (dog)
      */
@@ -221,7 +223,8 @@ public class HouseState extends GameState {
         GuiProgressBar tearBar = new GuiProgressBar(250, 440, 300, 40, 0, 0);
         tearGroup.addElement(tearBar);
         tearGroup.setEnabled(false);
-        GuiText label = new GuiText("Defacing furniture", 350, 440, 0, 0, false);
+        GuiText label = new GuiText("Defacing furniture", 310, 440, 0, 0, false);
+        label.setFont(font);
         tearGroup.addElement(label);
         gui.addGroup("tear", tearGroup);
         furnitureTearManager = new FurnitureTearManager(tearBar, this);
@@ -492,15 +495,19 @@ public class HouseState extends GameState {
 
     private void initGUI() {
         GuiGroup main = new GuiGroup();
+        
+        font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
 
         GuiImage biscuitIcon = new GuiImage(20, 20, 40, 40,
                 getAssetManager().getImage("biscuitIcon"));
-        biscuits = new GuiText("0", 70, 29, 80, 30, false);
+        biscuits = new GuiText("0", 70, 22, 80, 30, false);
+        biscuits.setFont(font);
         GuiImage biscuitsBackground = new GuiImage(65, 22, 70, 36,
                 getAssetManager().getImage("counterBackground"));
         GuiImage furnitureIcon = new GuiImage(150, 20, 40, 40,
                 getAssetManager().getImage("furnitureIcon"));
-        furniture = new GuiText("0", 200, 29, 80, 30, false);
+        furniture = new GuiText("0", 200, 22, 80, 30, false);
+        furniture.setFont(font);
         GuiImage furnitureBackground = new GuiImage(195, 22, 70, 36,
                 getAssetManager().getImage("counterBackground"));
 
@@ -534,12 +541,12 @@ public class HouseState extends GameState {
         }
         if (pressed) {
             handleCloseKey(ke);
-            handleDevelopmentCameraControls(ke);
-            handleReloadLevelKey(ke);
-            handleRenderSwitchKey(ke);
+//            handleDevelopmentCameraControls(ke);
+//            handleReloadLevelKey(ke);
+//            handleRenderSwitchKey(ke);
             handleTearKeyInput(ke);
-            handleResetGameKey(ke);
-            handleSaveBiscuitsKey(ke);
+//            handleResetGameKey(ke);
+//            handleSaveBiscuitsKey(ke);
         }
     }
 
@@ -575,7 +582,11 @@ public class HouseState extends GameState {
 
     private void handleCloseKey(KeyEvent ke) {
         if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            getWindow().requestToClose();
+//            getWindow().requestToClose();
+            getGameStateRunner().setState(new GameOverState(
+                    playerValues.biscuitsCollected,
+                    playerValues.furnitureDestroyed
+            ));
         }
     }
 
@@ -632,9 +643,9 @@ public class HouseState extends GameState {
     public void mouse(MouseEvent me, boolean pressed) {
         if (pressed) {
             gui.mouseInput(me.getX(), me.getY());
-            if (developmentCameraControls) {
-                placeBiscuit(me.getX() + camera.getX(), me.getY() + camera.getY());
-            }
+//            if (developmentCameraControls) {
+//                placeBiscuit(me.getX() + camera.getX(), me.getY() + camera.getY());
+//            }
         }
     }
 
