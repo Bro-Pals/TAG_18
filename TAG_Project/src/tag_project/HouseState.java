@@ -75,7 +75,6 @@ public class HouseState extends GameState {
             if (hasWon()) {
                 win();
             }
-            InfoLogger.println("" + dog.getZ());
         }
     }
 
@@ -107,13 +106,6 @@ public class HouseState extends GameState {
                 continue; //Don't draw them in this loop
             }
             be.calcRenderCoords();
-            if (!drewDog) {
-                if (!dog.behind(be)) {
-                    dog.calcRenderCoords();
-                    dog.render(graphicsObject);
-                    drewDog = true;
-                }
-            }
             if (!drewBoy) {
                 if (!boy.behind(be)) {
                     boy.calcRenderCoords();
@@ -121,6 +113,14 @@ public class HouseState extends GameState {
                     drewBoy = true;
                 }
             }
+            if (!drewDog) {
+                if (!dog.behind(be)) {
+                    dog.calcRenderCoords();
+                    dog.render(graphicsObject);
+                    drewDog = true;
+                }
+            }
+            
             ((BaseEntity) be).render(graphicsObject);
         }
     }
@@ -239,7 +239,7 @@ public class HouseState extends GameState {
     }
 
     private void updateDogMovement() {
-        if (!developmentCameraControls) {
+        if (!developmentCameraControls && !furnitureTearManager.isTearing()) {
             // handle the key presses for dog moving
             if (movingUp && !movingDown) {
                 if (dog.getVelocity().getX() == 0) {
@@ -399,8 +399,6 @@ public class HouseState extends GameState {
                     (int) (couldTear.getY() - camera.getY()), 50, 50);
         } else {
             //Need to implement
-            InfoLogger.println("draw deface icon");
-            InfoLogger.println(couldTear.getRenderCoordX() + ", " + couldTear.getRenderCoordY());
             g.drawImage(defaceIconImage, 
                     (int)(couldTear.getRenderCoordX() - camera.getX() - (defaceIconImage.getWidth()/2)), 
                     (int)(couldTear.getRenderCoordY() - camera.getY() - (defaceIconImage.getHeight()/2)), null);
@@ -588,19 +586,28 @@ public class HouseState extends GameState {
         this.furniture.setText("" + playerValues.furnitureDestroyed + " / " + playerValues.furnitureTotal);
     }
     
+    public void interruptTearing() {
+        furnitureTearManager.interruptTearing();
+        gui.disable("tear");
+    }
+    
     private void handleDogControls(KeyEvent ke, boolean pressed) {
         switch (ke.getKeyCode()) {
             case KeyEvent.VK_UP:
                 movingUp = pressed;
+                interruptTearing();
                 break;
             case KeyEvent.VK_DOWN:
                 movingDown = pressed;
+                interruptTearing();
                 break;
             case KeyEvent.VK_RIGHT:
                 movingRight = pressed;
+                interruptTearing();
                 break;
             case KeyEvent.VK_LEFT:
                 movingLeft = pressed;
+                interruptTearing();
                 break;
         }
     }

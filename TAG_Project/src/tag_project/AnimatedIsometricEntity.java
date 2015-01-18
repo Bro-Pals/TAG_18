@@ -8,6 +8,7 @@ package tag_project;
 import bropals.lib.simplegame.animation.Animation;
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.logger.ErrorLogger;
+import bropals.lib.simplegame.logger.InfoLogger;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     private int nodeOnPathOn, pathFindTimerOn;
     private final int PATHFIND_TIME_LIMIT = 30; // once every 30 frames
             
+    private final float Z_AFFECT_DISTANCE = 60;
+    
     public AnimatedIsometricEntity(GameWorld parent, float x, float y, float width, 
             float height, boolean anchored, IsometricDirection facing, 
             BufferedImage north, BufferedImage south, BufferedImage east, 
@@ -103,28 +106,57 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     
     private void updateZValue() {
         List<IsometricEntity> list = (List<IsometricEntity>)getParent().getEntities(); 
-        
-        setZ(50);
+        for (IsometricEntity ie : list) {
+            if ( ie instanceof DecorationEntity || ie instanceof AnimatedIsometricEntity || ie instanceof BiscuitEntity) {
+                continue;
+            }
+            //Find something that is west of (positive X) from the dog
+            float dis = 9999;
+            if (rangeCheck( (dis = westOfDis(ie)) ) && inYRange(ie)) {
+                setZ(ie.getZ()+1);
+            } else if (rangeCheck( (dis = eastOfDis(ie)) ) && inYRange(ie)) {
+                setZ(ie.getZ()-1);
+            }
+            else if (rangeCheck( (dis = southOfDis(ie))) && inXRange(ie)) {
+                setZ(ie.getZ()-1);
+            } else if (rangeCheck( (dis = northOfDis(ie))) && inXRange(ie)) {
+                setZ(ie.getZ()+1);
+            }
+        }
+    }
+    
+    private boolean inYRange(IsometricEntity ie) {
+        return getY()+getHeight() > ie.getY() && getY() < ie.getY()+ie.getHeight();
+    }
+    
+    private boolean inXRange(IsometricEntity ie) {
+        return getX()+getWidth() > ie.getX() && getX() < ie.getX()+ie.getWidth();
+    }
+    
+    private float westOfDis(IsometricEntity ie) {
+        return ie.getX() - getX() - getWidth();
     }
     
     /**
-     * If other is west of this entity
+     * In range
      * @param ie
      * @return 
      */
-    private boolean westOf(IsometricEntity ie) {
-        return ie.getX() > getX()+getWidth();
+    private boolean rangeCheck(float dis) {
+        return dis >= 0 && dis < Z_AFFECT_DISTANCE;
     }
     
-    /**
-     * If other is east of the this entity
-     * @param ie
-     * @return 
-     */
-    private boolean eastOf(IsometricEntity ie) {
-        return ie.getX()+ie.getWidth() < getX();
+    private float eastOfDis(IsometricEntity ie) {
+        return getX() - ie.getX() - ie.getWidth();
     }
     
+    private float southOfDis(IsometricEntity ie) {
+        return ie.getY()+ie.getHeight()-getY();
+    }   
+    
+    private float northOfDis(IsometricEntity ie) {
+        return getY()+getHeight()-ie.getY();
+    }  
     /**
      * If other is north of this entity
      * @param ie

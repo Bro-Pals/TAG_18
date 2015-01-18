@@ -26,6 +26,7 @@ public class BiscuitEntity extends IsometricEntity {
                 null, null);
         this.houseState=houseState;
         setCollidable(false);
+        setZ(-5);
         biscuitAnimation = new Animation();
         BufferedImage[] biscuitImages= new Track(houseState.getAssetManager().getImage("biscuitSprites"), 
                     139, 200, 8).getImages();

@@ -37,6 +37,11 @@ public class FurnitureTearManager implements CounterFunction {
         tearing = null;
     }
     
+    public void interruptTearing() {
+        tearing = null;
+        guiTearBar.resetProgress();
+    }
+    
     public void startTearing(FurnitureEntity tear) {
         tearing = tear;
         tearCounter.reset();

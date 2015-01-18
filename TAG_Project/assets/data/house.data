@@ -57,7 +57,7 @@ Comment Laundry Room
 Cabinet 360 120 south 50 //Cabinet top left
 Cabinet 860 120 south 50 //Cabinet top left
 WashingMachine 120 280 west 50
-DryingMachine 120 440 west 50
+DryingMachine 120 440 west 40
 Comment
 Comment Bedroom 1
 Bed 3120 240 south 60
@@ -72,11 +72,11 @@ Dresser 1320 760 west 40
 Dresser 2440 760 east 85
 Comment
 Comment Dining room / kitchen
-DiningRoomTable 4400 960 west 20
-Chair 4240 880 west 40
+DiningRoomTable 4400 960 west 30
+Chair 4240 880 west 45
 Chair 4240 1040 west 40
-Chair 4560 880 east 40
-Chair 4560 1040 east 40
+Chair 4560 880 east 25
+Chair 4560 1040 east 20
 Counter 4680 120 south 41
 Counter 4760 120 south 40
 Stove 4840 120 south 39
