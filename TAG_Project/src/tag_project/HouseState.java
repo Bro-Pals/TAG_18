@@ -499,7 +499,7 @@ public class HouseState extends GameState {
     private void initGUI() {
         GuiGroup main = new GuiGroup();
         
-        font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+        font = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 
         GuiImage biscuitIcon = new GuiImage(20, 20, 40, 40,
                 getAssetManager().getImage("biscuitIcon"));

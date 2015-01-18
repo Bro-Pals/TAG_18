@@ -42,7 +42,7 @@ public class TAGProject {
         ///Need to initialize data
         initData(runner);
         
-        runner.setState(new HouseState());
+        runner.setState(new MainMenuState());
         runner.loop();
     }
     
