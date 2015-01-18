@@ -104,13 +104,13 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     private void followPathToGetThere(float speed) {
         if (pathToGetThere == null || nodeOnPathOn >= pathToGetThere.size())
             return;
-        System.out.println("Going to follow our path now");
+       // System.out.println("Going to follow our path now");
         NavigationNode nodeOn = pathToGetThere.get(nodeOnPathOn);
         if (distanceBetween(nodeOn.getCenterX(), nodeOn.getCenterY()) < 15) {
             nodeOnPathOn++;
         } else {
             setVelocityTowards(nodeOn.getCenterX(), nodeOn.getCenterY(), speed);
-            System.out.println("Heading to the node on path numbered: " +nodeOnPathOn);
+            //System.out.println("Heading to the node on path numbered: " +nodeOnPathOn);
         }
     }
     
@@ -148,9 +148,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                 }
             }
         }
-        System.out.println("I actually made it this far");
+        //System.out.println("I actually made it this far");
         while (!openSet.isEmpty()) {
-            System.out.println("Running with an open set of size " + openSet.size());
+            //System.out.println("Running with an open set of size " + openSet.size());
             // find the node in the open set with the lowest f value
             NavigationNode lowestF = openSet.get(0);
             for (int i=1; i<openSet.size(); i++) {
@@ -162,7 +162,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                 return;
             }
             if (lowestF == end) {
-                System.out.println("Found a path!");
+                //System.out.println("Found a path!");
                 // build the path
                 pathToGetThere = new ArrayList<>();
                 nodeOnPathOn = 0; // restart this
@@ -174,9 +174,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     pathToGetThere.add(0, nodeOn);
                     nodeOn = nodeOn.getNavParent();
                 }
-                System.out.println("*******");
-                System.out.println("Got a path of " + pathToGetThere.size() + " nodes");
-                System.out.println("*******");
+                //System.out.println("*******");
+               // System.out.println("Got a path of " + pathToGetThere.size() + " nodes");
+               // System.out.println("*******");
                 return;
             }
                 
