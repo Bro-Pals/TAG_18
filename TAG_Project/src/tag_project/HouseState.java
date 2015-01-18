@@ -237,6 +237,7 @@ public class HouseState extends GameState {
         playerValues.biscuitsCollected++;
         biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
         gui.disable("tear");
+        playSoundEffect("collectBiscuit");
         world.getEntities().remove(biscuit);
     }
 

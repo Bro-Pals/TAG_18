@@ -51,6 +51,7 @@ public class TAGProject {
         }
         runner.setFps(FPS);
         ///Loaded the assets
+        runner.getAssetManager().loadSoundEffectsInDirectories("assets/soundEffects", true);
         runner.getAssetManager().loadImagesInDirectories("assets/img", true);
         ///Need to initialize data
         initData(runner);
