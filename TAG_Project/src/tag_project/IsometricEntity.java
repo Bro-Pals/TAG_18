@@ -305,9 +305,12 @@ public class IsometricEntity extends BlockEntity {
         //80 y -> +40y -70x
         //80 x -> +40y +70x
 
+        if (getParent() == null || getCamera() == null) // don't draw with no parent or camera
+            return;
+        
         if (drawnImage == null && !(this instanceof FurnitureEntity)) {
             rebuildDrawnImage();
-            System.out.println("drawImage is now " + drawnImage);
+            //System.out.println("drawImage is now " + drawnImage);
             return;
         }
         if (drawnImage == null) {

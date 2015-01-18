@@ -49,9 +49,9 @@ public class HouseState extends GameState {
      * Super special reference to the player (dog)
      */
     private AnimatedIsometricEntity dog, boy;
-    private float DOG_SPEED_DIAG = 28;
+    private float DOG_SPEED_DIAG = 24;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
-    private float BOY_SPEED = DOG_SPEED * 0.4f;
+    private float BOY_SPEED = DOG_SPEED * 0.2f;
     //How far do you need to be from a piece of furniture's center to tear it?
     private float TEAR_DISTANCE = 40;
     private FurnitureEntity couldTear = null;
@@ -196,6 +196,8 @@ public class HouseState extends GameState {
         initDog();
         initBoy();
         defaceIconImage = getAssetManager().getImage("defaceIcon");
+        getAssetManager().createHorizontialFlipCopy(
+                getAssetManager().getImage("swipeSprites"), "reverseSwipeSprites");
     }
 
     private void initHousePlan() {

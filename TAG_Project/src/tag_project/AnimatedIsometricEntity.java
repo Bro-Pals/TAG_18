@@ -6,6 +6,7 @@
 package tag_project;
 
 import bropals.lib.simplegame.animation.Animation;
+import bropals.lib.simplegame.animation.Track;
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.logger.ErrorLogger;
 import bropals.lib.simplegame.logger.InfoLogger;
@@ -50,9 +51,10 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         pathFindTimerOn--; // update the timer for path finding
         if (swingSprite != null) {
             if (swingSprite.getParent() == null) {
+                //System.out.println("swing sprite removed");
                 swingSprite = null;
-                swinging = false; // done swinging
             } else {
+                //InfoLogger.println("still swinging");
                 swingSprite.update();
             }
         }
@@ -365,13 +367,59 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     public void chase(IsometricEntity other, NavigationNode[][] nodes, float speed) {
         if (canSee(other)) {
             setVelocityTowards(other.getCenterX(), other.getCenterY(), speed);
-            if (distanceBetween(other) < 50) {
-                if (swinging) {
-                    
-                } else {
+            if (distanceBetween(other) < 85) {
+               // InfoLogger.println("SWINING BROOM");
+                // if you were swining and you finished swining
+                if (swinging && swingSprite == null) {
+                    swinging = false; 
+                    InfoLogger.println("Finished swinging");
+                    // if he is STILL near the dog then the dog hasn't escaped the swing
+                    if (distanceBetween(other) < 85) {
+                        InfoLogger.println("We have hit the dog");
+                    }
+                } else if (swinging == false) { // start swinging
+                    InfoLogger.println("Starting to swing");
+                    swinging = true;
                     Animation swingAnimation = new Animation();
-                    swingSprite = new AnimatedSprite(getParent(), getX(), getY(), 
-                            0, 0, swingAnimation, 12);
+                    BufferedImage[] imgs = new Track(
+                            getParent().getState().getAssetManager().getImage("swipeSprites"), 
+                            65, 33, 2).getImages();
+                    BufferedImage[] reverseImgs = new Track(
+                            getParent().getState().getAssetManager().getImage("reverseSwipeSprites"), 
+                            65, 33, 2).getImages(); 
+                    int swingAnimSpeed = 6;
+                    float ZValue = getZ();
+                    float renderX = getRenderCoordX();
+                    float renderY = getRenderCoordY();
+                    if (getFacing() == IsometricDirection.SOUTH) {
+                        swingAnimation.addTrack(new Track(new BufferedImage[]{
+                           imgs[0], imgs[1], imgs[2]
+                        }, swingAnimSpeed));
+                        ZValue+=4;
+                    } else if (getFacing() == IsometricDirection.NORTH) {
+                        swingAnimation.addTrack(new Track(new BufferedImage[]{
+                           imgs[3], imgs[4], imgs[5]
+                        }, swingAnimSpeed));
+                        ZValue-=4;
+                        renderX-=40;
+                        renderY-=20;
+                    } else if (getFacing() == IsometricDirection.EAST) {
+                        swingAnimation.addTrack(new Track(new BufferedImage[]{
+                           reverseImgs[3], reverseImgs[4], reverseImgs[5]
+                        }, swingAnimSpeed));
+                        ZValue-=4;
+                        renderX-=30;
+                    } else if (getFacing() == IsometricDirection.WEST) {
+                        swingAnimation.addTrack(new Track(new BufferedImage[]{
+                           reverseImgs[0], reverseImgs[1], reverseImgs[2]
+                        }, swingAnimSpeed));
+                        ZValue+=4;
+                        renderX-=30;
+                        renderY+=10;
+                    }
+                    swingAnimation.setTrack(0);
+                    swingSprite = new AnimatedSprite(getParent(), renderX, renderY, 
+                            1, 1, swingAnimation, 17, getZ());
                 }
             }
         } else {

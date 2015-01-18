@@ -7,8 +7,10 @@ package tag_project;
 
 import bropals.lib.simplegame.animation.Animation;
 import bropals.lib.simplegame.entity.GameWorld;
+import bropals.lib.simplegame.logger.InfoLogger;
 import bropals.lib.simplegame.util.Counter;
 import bropals.lib.simplegame.util.CounterFunction;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -33,7 +35,7 @@ public class AnimatedSprite extends IsometricEntity implements CounterFunction {
      * will loop endlessly
      */
     public AnimatedSprite(GameWorld parent, float x, float y, float width, float height, 
-            Animation anim, int framesDuration) {
+            Animation anim, int framesDuration, float initialZ) {
         super(parent, x, y, width, height, true, IsometricDirection.NORTH, 
                 null, null, null, null);
         setCollidable(false);
@@ -42,17 +44,35 @@ public class AnimatedSprite extends IsometricEntity implements CounterFunction {
         if (framesDuration < 0) {
             lifeCounter.setLooping(true);
         }
+        setZ(initialZ);
+        InfoLogger.println("The parent of this shiny new sprite is : " + getParent());
     }
     
     @Override
     public void update() {
         animation.update();
-        setNorth(animation.getCurrentImage());
+        lifeCounter.update();
     }
+    
 
+    @Override
+    public void render(Object graphicsObject) {
+        Graphics2D g = (Graphics2D)graphicsObject;
+        System.out.println("I HAVE RENDERED!");
+        if ( getParent() == null)
+            InfoLogger.println("Could not find the parent");
+           
+        if (getParent() != null && getCamera() != null) {
+            g.drawImage(animation.getCurrentImage(), 
+                    (int)(getX() - getCamera().getX()), 
+                    (int)(getY() - getCamera().getY()), null);
+        }
+    }
+ 
     
     @Override
     public void countFinished() {
+        InfoLogger.println("Killed the sprite");
         removeParent(); // remove self when time is up
     }
 
