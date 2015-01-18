@@ -48,7 +48,7 @@ public class BiscuitEntity extends IsometricEntity {
     @Override
     public void collideWith(BlockEntity other) {
         if (houseState.isTheDog(other)) {
-            houseState.biscuitCollected();
+            houseState.biscuitCollected(this);
             removeParent();
         }
     }    
@@ -56,6 +56,11 @@ public class BiscuitEntity extends IsometricEntity {
     @Override
     public Camera getCamera() {
         return houseState.getCamera();
+    }
+    
+    @Override
+    public GameWorld getParent() {
+        return houseState.getIsometricWorld();
     }
     
     

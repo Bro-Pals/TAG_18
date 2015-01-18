@@ -5,13 +5,13 @@
  */
 package tag_project.factory;
 
-import bropals.lib.simplegame.animation.Animation;
-import bropals.lib.simplegame.animation.Track;
 import bropals.lib.simplegame.io.AssetManager;
 import bropals.lib.simplegame.io.PropertiesReader;
 import bropals.lib.simplegame.logger.ErrorLogger;
 import bropals.lib.simplegame.logger.InfoLogger;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.HashMap;
 import tag_project.BiscuitEntity;
 import tag_project.DecorationEntity;
@@ -19,6 +19,7 @@ import tag_project.FurnitureEntity;
 import tag_project.HouseState;
 import tag_project.IsometricDirection;
 import tag_project.IsometricEntity;
+import tag_project.IsometricGameWorld;
 import tag_project.Size;
 
 /**
@@ -144,5 +145,20 @@ public class EntityFactory {
     public static DecorationEntity makeDecoration(AssetManager assetManager, float x, float y, float w, float h, String imageKey) {
         return new DecorationEntity(null, x, y, w, h, 
                         assetManager.getImage(imageKey));
+    }
+    
+    public static void saveBiscuitsFileWithWorld(IsometricGameWorld igw) {
+        try {
+            PrintStream ps = new PrintStream(new File("assets/data/biscuits.data"));
+            for (IsometricEntity ie : igw.getEntities()) {
+                if (ie instanceof BiscuitEntity) {
+                    ps.println("Biscuit " + ie.getX() + " " + ie.getY());
+                }
+            }
+            ps.flush();
+            ps.close();
+        } catch(IOException e) {
+            ErrorLogger.println("Error saving biscuits: " + e);
+        }
     }
 }

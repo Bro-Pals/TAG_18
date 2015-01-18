@@ -8,6 +8,7 @@ package tag_project;
 import bropals.lib.simplegame.animation.Animation;
 import bropals.lib.simplegame.animation.Track;
 import bropals.lib.simplegame.entity.BaseEntity;
+import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.entity.block.BlockEntity;
 import bropals.lib.simplegame.gui.Gui;
 import bropals.lib.simplegame.gui.GuiGroup;
@@ -23,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import tag_project.factory.EntityFactory;
 import tag_project.factory.HouseLoader;
 
 /**
@@ -224,10 +226,11 @@ public class HouseState extends GameState {
         furnitureTearManager = new FurnitureTearManager(tearBar, this);
     }
 
-    public void biscuitCollected() {
+    public void biscuitCollected(BiscuitEntity biscuit) {
         playerValues.biscuitsCollected++;
         biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
         gui.disable("tear");
+        world.getEntities().remove(biscuit);
     }
 
     public boolean isTheDog(BlockEntity blockEntity) {
@@ -518,6 +521,10 @@ public class HouseState extends GameState {
 
     }
 
+    private void placeBiscuit(float x, float y) {
+        BiscuitEntity be = new BiscuitEntity(world, this, x, y);
+    }
+    
     @Override
     public void key(KeyEvent ke, boolean pressed) {
         if (!developmentCameraControls) {
@@ -530,6 +537,13 @@ public class HouseState extends GameState {
             handleRenderSwitchKey(ke);
             handleTearKeyInput(ke);
             handleResetGameKey(ke);
+            handleSaveBiscuitsKey(ke);
+        }
+    }
+    
+    private void handleSaveBiscuitsKey(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_K) {
+            EntityFactory.saveBiscuitsFileWithWorld(world);
         }
     }
 
@@ -616,6 +630,9 @@ public class HouseState extends GameState {
     public void mouse(MouseEvent me, boolean pressed) {
         if (pressed) {
             gui.mouseInput(me.getX(), me.getY());
+            if (developmentCameraControls) {
+                placeBiscuit(me.getX()+camera.getX(), me.getY()+camera.getY());
+            }
         }
     }
 
@@ -639,5 +656,9 @@ public class HouseState extends GameState {
     public boolean hasWon() {
         return playerValues.biscuitsCollected == playerValues.biscuitsTotal &&
                playerValues.furnitureDestroyed == playerValues.furnitureTotal; 
+    }
+
+    public GameWorld getIsometricWorld() {
+        return world;
     }
 }
