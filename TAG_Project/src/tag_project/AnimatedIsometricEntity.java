@@ -27,6 +27,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             
     private final float Z_AFFECT_DISTANCE = 60;
     
+    private AnimatedSprite swingSprite;
+    private boolean swinging;
+    
     public AnimatedIsometricEntity(GameWorld parent, float x, float y, float width, 
             float height, boolean anchored, IsometricDirection facing, 
             BufferedImage north, BufferedImage south, BufferedImage east, 
@@ -37,12 +40,22 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         setFacing(IsometricDirection.NORTH);
         nodeOnPathOn = 0;
         pathFindTimerOn = 0;
+        swingSprite = null;
+        swinging = false;
     }
     
     @Override
     public void update() {
         animation.update();
         pathFindTimerOn--; // update the timer for path finding
+        if (swingSprite != null) {
+            if (swingSprite.getParent() == null) {
+                swingSprite = null;
+                swinging = false; // done swinging
+            } else {
+                swingSprite.update();
+            }
+        }
         if (getVelocity().getY() > 0 && getVelocity().getY() > getVelocity().getX()) {
             setFacing(IsometricDirection.SOUTH);   
         } else if (getVelocity().getY() < 0 && getVelocity().getY() < getVelocity().getX()) {
@@ -352,7 +365,14 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     public void chase(IsometricEntity other, NavigationNode[][] nodes, float speed) {
         if (canSee(other)) {
             setVelocityTowards(other.getCenterX(), other.getCenterY(), speed);
-            if (distanceBetween(other) < 150) {
+            if (distanceBetween(other) < 50) {
+                if (swinging) {
+                    
+                } else {
+                    Animation swingAnimation = new Animation();
+                    swingSprite = new AnimatedSprite(getParent(), getX(), getY(), 
+                            0, 0, swingAnimation, 12);
+                }
             }
         } else {
             pathfindTo(other, nodes, speed);
