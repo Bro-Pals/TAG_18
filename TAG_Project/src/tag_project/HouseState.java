@@ -51,7 +51,7 @@ public class HouseState extends GameState {
     private AnimatedIsometricEntity dog, boy;
     private float DOG_SPEED_DIAG = 24;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
-    private float BOY_SPEED = DOG_SPEED * 0.2f;
+    private float BOY_SPEED = DOG_SPEED * 0.32f;
     //How far do you need to be from a piece of furniture's center to tear it?
     private float TEAR_DISTANCE = 40;
     private FurnitureEntity couldTear = null;
@@ -207,7 +207,7 @@ public class HouseState extends GameState {
     }
 
     private void initNavigationMesh() {
-        int sizeOfNode = 120;
+        int sizeOfNode = 80;
         int worldWidth = 8640 / sizeOfNode; // in nodes
         int worldHeight = 3280 / sizeOfNode;
         navigationNodes = new NavigationNode[worldWidth][worldHeight];
@@ -215,7 +215,7 @@ public class HouseState extends GameState {
             for (int y = 0; y < worldHeight; y++) {
                 navigationNodes[x][y]
                         = new NavigationNode(world, (x * sizeOfNode) - 1360,
-                                (y * sizeOfNode), sizeOfNode, x, y);
+                                (y * sizeOfNode) , sizeOfNode, x, y);
             }
         }
         //System.out.println("Number of nodes: " + (worldWidth * worldHeight));
@@ -546,7 +546,7 @@ public class HouseState extends GameState {
             handleCloseKey(ke);
 //            handleDevelopmentCameraControls(ke);
 //            handleReloadLevelKey(ke);
-            handleRenderSwitchKey(ke);
+//            handleRenderSwitchKey(ke);
             handleTearKeyInput(ke);
 //            handleResetGameKey(ke);
 //            handleSaveBiscuitsKey(ke);
@@ -676,5 +676,9 @@ public class HouseState extends GameState {
 
     public GameWorld getIsometricWorld() {
         return world;
+    }
+
+    public PlayerValues getPlayerValues() {
+        return playerValues;
     }
 }

@@ -26,7 +26,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     private int nodeOnPathOn, pathFindTimerOn;
     private final int PATHFIND_TIME_LIMIT = 30; // once every 30 frames
             
-    private final float Z_AFFECT_DISTANCE = 60;
+    private final float Z_AFFECT_DISTANCE = 70;
     
     private AnimatedSprite swingSprite;
     private boolean swinging;
@@ -211,7 +211,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             return;
        // System.out.println("Going to follow our path now");
         NavigationNode nodeOn = pathToGetThere.get(nodeOnPathOn);
-        if (distanceBetween(nodeOn.getCenterX(), nodeOn.getCenterY()) < 15) {
+        if (distanceBetween(nodeOn.getCenterX(), nodeOn.getCenterY()) < 9) {
             nodeOnPathOn++;
         } else {
             setVelocityTowards(nodeOn.getCenterX(), nodeOn.getCenterY(), speed);
@@ -376,6 +376,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     // if he is STILL near the dog then the dog hasn't escaped the swing
                     if (distanceBetween(other) < 85) {
                         InfoLogger.println("We have hit the dog");
+                        PlayerValues pVals = ((HouseState)getParent().getState()).getPlayerValues();
+                        getParent().getState().getGameStateRunner().setState(
+                        new GameOverState(pVals.biscuitsCollected, pVals.furnitureDestroyed));
                     }
                 } else if (swinging == false) { // start swinging
                     InfoLogger.println("Starting to swing");

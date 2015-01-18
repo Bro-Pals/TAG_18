@@ -308,11 +308,6 @@ public class IsometricEntity extends BlockEntity {
         if (getParent() == null || getCamera() == null) // don't draw with no parent or camera
             return;
         
-        if (drawnImage == null && !(this instanceof FurnitureEntity)) {
-            rebuildDrawnImage();
-            //System.out.println("drawImage is now " + drawnImage);
-            return;
-        }
         if (drawnImage == null) {
             this.revalidateImage();
             drawnImage = using;

@@ -7,6 +7,7 @@ package tag_project;
 
 import bropals.lib.simplegame.GameStateRunner;
 import bropals.lib.simplegame.GameWindow;
+import java.awt.GraphicsEnvironment;
 import javax.swing.JOptionPane;
 import tag_project.factory.EntityFactory;
 import tag_project.factory.HouseLoader;
@@ -17,7 +18,7 @@ import tag_project.factory.HouseLoader;
  */
 public class TAGProject {
 
-    public static final String TITLE = "Gary Wenceworth XVIII wants to take revenge on his owner by defacing (eating) all the furniture in the house. The teenage son of his master is trying to stop him (he is gigantic compared to gary)";
+    public static final String TITLE = "Gary Wenceworth XVIII wants to take revenge on his owner by defacing all the furniture in the house.";
     public static final int FPS = 30;
     
     /**
@@ -33,9 +34,21 @@ public class TAGProject {
         } else {
             return;
         }
-        GameStateRunner runner = new GameStateRunner(
-                new GameWindow(TITLE, 
-                        800, 600, fs));
+        GameStateRunner runner = null;
+        GameWindow window = null;
+        try {
+            window = new GameWindow(TITLE, 
+                        800, 600, fs);
+            runner = new GameStateRunner(window);
+        } catch(Exception e) {
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(null);
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString(), 
+                    "An error has occurred", JOptionPane.ERROR_MESSAGE);
+            if (window != null)
+                window.destroy();
+            System.exit(0);
+            return;
+        }
         runner.setFps(FPS);
         ///Loaded the assets
         runner.getAssetManager().loadImagesInDirectories("assets/img", true);
