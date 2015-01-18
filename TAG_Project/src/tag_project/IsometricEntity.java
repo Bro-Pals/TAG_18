@@ -54,6 +54,15 @@ public class IsometricEntity extends BlockEntity {
         setFacing(facing);
     }
 
+    @Override
+    public void collideWith(BlockEntity other) {
+        if (!(other instanceof BiscuitEntity)) {
+            super.collideWith(other);
+        }
+    }
+    
+    
+
     /**
      * Gets the raw width of the furniture, unrotated.
      *

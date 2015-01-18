@@ -1,6 +1,6 @@
 name=ToyBox
 size=tall
-defaceable=true
+defaceable=false
 moveunderable=false
 width=160
 height=160
