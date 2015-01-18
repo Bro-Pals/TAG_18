@@ -201,7 +201,7 @@ public class HouseState extends GameState {
                             (y * sizeOfNode), sizeOfNode, x, y);
             }
         }
-        System.out.println("Number of nodes: " + (worldWidth * worldHeight));
+        //System.out.println("Number of nodes: " + (worldWidth * worldHeight));
     }
     
     private void initTearFeature() {
