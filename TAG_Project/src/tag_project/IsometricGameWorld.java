@@ -20,20 +20,38 @@ public class IsometricGameWorld extends GameWorld<IsometricEntity> {
 
     @Override
     public void addEntity(IsometricEntity entity) {
-       /*
-        if (!getEntities().isEmpty()) {
-            for (int i=getEntities().size()-1; i>=0; i--) {
-                if (getEntities().get(i).getY() >= entity.getY()) {
-                    getEntities().add(i, entity);
-                    return;
+        
+        if (entity instanceof FurnitureEntity) {
+            if (!getEntities().isEmpty()) {
+                for (int i=getEntities().size()-1; i > 0; i--) {
+                    // they MUST be at the front
+                    if (getEntities().get(i) instanceof DecorationEntity)
+                        continue;
+
+                    // only compare furniture with other furniture
+                    if (getEntities().get(i) instanceof FurnitureEntity &&
+                            !(entity instanceof FurnitureEntity))
+                        continue;
+                    
+                    float depthValue = getEntities().get(i).getDepthValue();
+                    if (depthValue >= entity.getDepthValue() &&
+                            getEntities().get(i-1).getDepthValue() <= entity.getDepthValue()) {
+                        if (entity.getY() == getEntities().get(i).getY()) {
+                            if (entity.getX() < getEntities().get(i).getX()) {
+                                getEntities().add(i-1, entity);
+                            } else {
+                                getEntities().add(i, entity);
+                            }
+                        } else {
+                            getEntities().add(i, entity);
+                        }
+                        return;
+                    }
                 }
             }
-            //should be at the back then
-            super.addEntity(entity);
-        } else {
-            super.addEntity(entity);
+            //go to back to draw last if it don't belong
+            //getEntities().add(entity);
         }
-        */
         
         //Temporary
         super.addEntity(entity);

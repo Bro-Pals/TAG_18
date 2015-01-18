@@ -45,8 +45,7 @@ public class HouseState extends GameState {
     private AnimatedIsometricEntity dog, boy;
     private float DOG_SPEED_DIAG = 28;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
-    private float BOY_SPEED_DIAG = DOG_SPEED_DIAG * 0.7f;
-    private float BOY_SPEED = BOY_SPEED_DIAG * (float)Math.sqrt(2);
+    private float BOY_SPEED = DOG_SPEED_DIAG * 0.9f;
     //How far do you need to be from a piece of furniture's center to tear it?
     private float TEAR_DISTANCE = 40;
     private FurnitureEntity couldTear = null;
@@ -55,6 +54,8 @@ public class HouseState extends GameState {
     private boolean developmentRendering = true;
     private final boolean developmentCameraControls = false;
 
+    private NavigationNode[] navigationNodes;
+    
     @Override
     public void update() {
         Point mp = getWindow().getMousePosition();
@@ -65,6 +66,7 @@ public class HouseState extends GameState {
             centerCameraOnDog();
             updateTearing();
             world.updateEntities();
+            boy.chase(dog, navigationNodes, BOY_SPEED); // boy chases the dog
             gui.update(mp.x, mp.y);
             if (hasWon()) {
                 win();
@@ -93,8 +95,22 @@ public class HouseState extends GameState {
     }
 
     private void drawInIsometricMode(Object graphicsObject) {
-        for (Object be : world.getEntities()) {
-            ((BaseEntity) be).render(graphicsObject);
+        for (int j=0; j<world.getEntities().size(); j++) {
+            IsometricEntity be = world.getEntities().get(j);
+            if (be == dog || be == boy) {
+                AnimatedIsometricEntity aie = (AnimatedIsometricEntity)be;
+                for (int i=0; i<world.getEntities().size()-1; i++) {
+                    IsometricEntity thing = (IsometricEntity)world.getEntities().get(i);
+                    IsometricEntity otherThing = (IsometricEntity)world.getEntities().get(i+1);
+                    
+                    if (thing.getDepthValue() < aie.getDepthValue()
+                            && otherThing.getDepthValue() > aie.getDepthValue()) {
+                        aie.render(graphicsObject);
+                    }
+                }
+            } else {
+                ((BaseEntity) be).render(graphicsObject);
+            }
         }
     }
 
@@ -122,6 +138,16 @@ public class HouseState extends GameState {
                     w, h);
             //g.fillRect(300, 300, 80, 80);
         }
+        
+        for (NavigationNode node : navigationNodes) {
+            if (node.getMoveCost() > 10) {
+                g.setColor(Color.RED);
+            } else {
+                g.setColor(Color.BLACK);
+            }
+            g.drawRect((int)(node.getX() - camera.getX()), (int)(node.getY() - camera.getY()),  
+                   (int)node.getWidth(), (int)node.getHeight());
+        }
     }
 
     @Override
@@ -132,6 +158,7 @@ public class HouseState extends GameState {
         movingRight = false;
         movingLeft = false;
         initHousePlan();
+        initNavigationMesh();
         camera = new Camera();
         gui = new Gui();
         initGUI();
@@ -146,6 +173,20 @@ public class HouseState extends GameState {
         world = getAssetManager().getAsset("The House", IsometricGameWorld.class);
     }
 
+    private void initNavigationMesh() {
+        int sizeOfNode = 80;
+        int worldWidth = 9000/sizeOfNode; // in nodes
+        int worldHeight = 9000 /sizeOfNode;
+        navigationNodes = new NavigationNode[worldWidth * worldHeight];
+        for (int x=0; x<worldWidth; x++) {
+            for (int y=0; y<worldHeight; y++) {
+                navigationNodes[(x * worldHeight) + y] = 
+                    new NavigationNode(world,(x * sizeOfNode) - 3000, 
+                            (y * sizeOfNode) - 3000, sizeOfNode);
+            }
+        }
+    }
+    
     private void initTearFeature() {
         GuiGroup tearGroup = new GuiGroup();
         GuiProgressBar tearBar = new GuiProgressBar(250, 440, 300, 40, 0, 0);
