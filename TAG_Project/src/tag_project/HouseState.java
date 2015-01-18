@@ -42,9 +42,11 @@ public class HouseState extends GameState {
     /**
      * Super special reference to the player (dog)
      */
-    private AnimatedIsometricEntity dog;
+    private AnimatedIsometricEntity dog, boy;
     private float DOG_SPEED_DIAG = 28;
     private float DOG_SPEED = DOG_SPEED_DIAG * (float) Math.sqrt(2);
+    private float BOY_SPEED_DIAG = DOG_SPEED_DIAG * 0.7f;
+    private float BOY_SPEED = BOY_SPEED_DIAG * (float)Math.sqrt(2);
     //How far do you need to be from a piece of furniture's center to tear it?
     private float TEAR_DISTANCE = 40;
     private FurnitureEntity couldTear = null;
@@ -135,6 +137,7 @@ public class HouseState extends GameState {
         initGUI();
         initTearFeature();
         initDog();
+        initBoy();
     }
 
     private void initHousePlan() {
@@ -245,12 +248,12 @@ public class HouseState extends GameState {
             dogImages[8], dogImages[9]}, 15);
         Track westStand = new Track(new BufferedImage[]{
             dogImagesReverse[10], dogImagesReverse[11]}, 15);
-
+        // running animations
         dogAnimation.addTrack(northMove); // 0
         dogAnimation.addTrack(southMove); // 1
         dogAnimation.addTrack(eastMove); // 2
         dogAnimation.addTrack(westMove); // 3
-
+        // standing animations
         dogAnimation.addTrack(northStand); // 4
         dogAnimation.addTrack(southStand); // 5
         dogAnimation.addTrack(eastStand); // 6
@@ -261,6 +264,49 @@ public class HouseState extends GameState {
                 null, null, null, null, dogAnimation);
     }
 
+    private void initBoy() {
+        Animation boyAnimation = new Animation();
+        BufferedImage[] boyImages = new Track(
+            getAssetManager().getImage("boySprites"), 139, 200).getImages();
+        getAssetManager().createHorizontialFlipCopy(
+                getAssetManager().getImage("boySprites"), "reverseBoySprites");
+        BufferedImage[] boyImagesReverse = new Track(
+                getAssetManager().getImage("reverseBoySprites"), 139, 200, 3).getImages();
+        
+        Track boyRunSouth = new Track(new BufferedImage[]{
+            boyImages[0], boyImages[1], boyImages[0], boyImages[2]
+        }, 3);
+        Track boyRunWest = new Track(new BufferedImage[]{
+            boyImagesReverse[2], boyImagesReverse[1], boyImagesReverse[2], boyImagesReverse[0]
+        }, 3);
+        
+        Track boyRunNorth = new Track(new BufferedImage[]{
+            boyImages[3], boyImages[4], boyImages[3], boyImages[5]
+        }, 3);
+        Track boyRunEast = new Track(new BufferedImage[]{
+            boyImagesReverse[5], boyImagesReverse[4], boyImagesReverse[5], boyImagesReverse[3]
+        }, 3);
+        // boy moving animatons
+        boyAnimation.addTrack(boyRunNorth);
+        boyAnimation.addTrack(boyRunSouth);
+        boyAnimation.addTrack(boyRunEast);
+        boyAnimation.addTrack(boyRunWest);
+        // boy standing animations
+        boyAnimation.addTrack(
+                new Track(new BufferedImage[]{boyImages[3]}, 20)); // stand north
+        boyAnimation.addTrack(
+                new Track(new BufferedImage[]{boyImages[0]}, 20)); // stand south
+        boyAnimation.addTrack(
+                new Track(new BufferedImage[]{boyImagesReverse[2]}, 20)); // stand west
+        boyAnimation.addTrack(
+                new Track(new BufferedImage[]{boyImagesReverse[5]}, 20)); // stand east
+        
+        // gotta change the position to be more fair
+        boy = new AnimatedIsometricEntity(world,
+                -900, 900, 80, 80, false, IsometricDirection.SOUTH,
+                null, null, null, null, boyAnimation);
+    }
+    
     private void centerCameraOnDog() {
         // move camera over the dog
         if (!developmentCameraControls) {
