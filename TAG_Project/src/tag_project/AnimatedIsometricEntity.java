@@ -8,9 +8,9 @@ package tag_project;
 import bropals.lib.simplegame.animation.Animation;
 import bropals.lib.simplegame.entity.GameWorld;
 import bropals.lib.simplegame.logger.ErrorLogger;
-import bropals.lib.simplegame.logger.InfoLogger;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,7 +29,6 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             BufferedImage north, BufferedImage south, BufferedImage east, 
             BufferedImage west, Animation anim) {
         super(parent, x, y, width, height, anchored, facing, north, south, east, west);
-        setZ(200);
         this.animation = anim; // the animation
         animation.setTrack(0);
         setFacing(IsometricDirection.NORTH);
@@ -98,7 +97,66 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     setWest(animation.getCurrentImage());
                 break;
         }
+        updateZValue();
         super.update();
+    }
+    
+    private void updateZValue() {
+        List<IsometricEntity> list = (List<IsometricEntity>)getParent().getEntities(); 
+        
+        setZ(50);
+    }
+    
+    /**
+     * If other is west of this entity
+     * @param ie
+     * @return 
+     */
+    private boolean westOf(IsometricEntity ie) {
+        return ie.getX() > getX()+getWidth();
+    }
+    
+    /**
+     * If other is east of the this entity
+     * @param ie
+     * @return 
+     */
+    private boolean eastOf(IsometricEntity ie) {
+        return ie.getX()+ie.getWidth() < getX();
+    }
+    
+    /**
+     * If other is north of this entity
+     * @param ie
+     * @return 
+     */
+    private boolean northOf(IsometricEntity ie) {
+        return ie.getY() < getY() + getHeight();
+    }
+    
+    /**
+     * If the other is south of this entity
+     * @param ie
+     * @return 
+     */
+    private boolean southOf(IsometricEntity ie) {
+        return ie.getY() + ie.getHeight() > getY();
+    }
+    
+    private float distanceFromTop(IsometricEntity ie) { 
+        return getY() - ie.getY() - ie.getHeight();
+    }
+    
+    private float distanceFromLeft(IsometricEntity ie) { 
+        return getX() - ie.getX() - ie.getWidth();
+    }
+    
+    private float distanceFromRight(IsometricEntity ie) { 
+        return getX() + getWidth() - ie.getX();
+    }
+    
+    private float distanceFromBottom(IsometricEntity ie) { 
+        return getY() + getHeight() - ie.getY();
     }
     
     private void followPathToGetThere(float speed) {

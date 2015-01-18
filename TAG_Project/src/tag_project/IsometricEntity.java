@@ -294,7 +294,7 @@ public class IsometricEntity extends BlockEntity {
             z = CAMERA_REFERENCE_LINE + (40 * (((getX() + getWidth())/ 80) + ((getY() + getHeight() )/ 80)));
         }
     }
-
+    
     @Override
     public void render(Object graphicsObj) {
         Graphics g = (Graphics) graphicsObj;

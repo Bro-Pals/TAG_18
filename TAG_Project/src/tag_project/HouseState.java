@@ -74,6 +74,7 @@ public class HouseState extends GameState {
             if (hasWon()) {
                 win();
             }
+            InfoLogger.println("" + dog.getZ());
         }
     }
 
@@ -98,17 +99,28 @@ public class HouseState extends GameState {
     }
 
     private void drawInIsometricMode(Object graphicsObject) {
+        boolean drewDog = false, drewBoy = false;
         for (int j=0; j<world.getEntities().size(); j++) {
             IsometricEntity be = world.getEntities().get(j);
-            be.calcRenderCoords();
-            if (be == dog || be == boy) {
-                AnimatedIsometricEntity aie = (AnimatedIsometricEntity)be;
-                
-                aie.render(graphicsObject);
-                
-            } else {
-                ((BaseEntity) be).render(graphicsObject);
+            if ( be == dog || be == boy) {
+                continue; //Don't draw them in this loop
             }
+            be.calcRenderCoords();
+            if (!drewDog) {
+                if (!dog.behind(be)) {
+                    dog.calcRenderCoords();
+                    dog.render(graphicsObject);
+                    drewDog = true;
+                }
+            }
+            if (!drewBoy) {
+                if (!boy.behind(be)) {
+                    boy.calcRenderCoords();
+                    boy.render(graphicsObject);
+                    drewBoy = true;
+                }
+            }
+            ((BaseEntity) be).render(graphicsObject);
         }
     }
 
