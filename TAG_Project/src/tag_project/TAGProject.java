@@ -8,6 +8,7 @@ package tag_project;
 import bropals.lib.simplegame.GameStateRunner;
 import bropals.lib.simplegame.GameWindow;
 import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import javax.swing.JOptionPane;
 import tag_project.factory.EntityFactory;
 import tag_project.factory.HouseLoader;
@@ -53,6 +54,7 @@ public class TAGProject {
         ///Loaded the assets
         runner.getAssetManager().loadSoundEffectsInDirectories("assets/soundEffects", true);
         runner.getAssetManager().loadImagesInDirectories("assets/img", true);
+        window.setIcon(runner.getAssetManager().getAsset("crappyIcon", BufferedImage.class));
         ///Need to initialize data
         initData(runner);
         
