@@ -280,6 +280,7 @@ public class HouseState extends GameState {
                 }
             } else if (!movingDown && !movingUp) {
                 dog.getVelocity().setY(0);
+                footstep.getRaw().stop();
             }
             if (movingRight && !movingLeft) {
                 if (dog.getVelocity().getY() == 0) {
@@ -706,5 +707,9 @@ public class HouseState extends GameState {
 
     public PlayerValues getPlayerValues() {
         return playerValues;
+    }
+
+    public boolean isTearing() {
+        return furnitureTearManager.isTearing();
     }
 }

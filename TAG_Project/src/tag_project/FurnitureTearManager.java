@@ -40,11 +40,13 @@ public class FurnitureTearManager implements CounterFunction {
     public void interruptTearing() {
         tearing = null;
         guiTearBar.resetProgress();
+        houseState.getAssetManager().getSoundEffect("rippingToShreds").getRaw().stop();
     }
     
     public void startTearing(FurnitureEntity tear) {
         tearing = tear;
         tearCounter.reset();
+        houseState.getAssetManager().getSoundEffect("rippingToShreds").play();
     }
     
     public boolean isTearing() {

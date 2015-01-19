@@ -69,6 +69,10 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         }
         boolean notMoving = getVelocity().getX() == 0 && 
                 getVelocity().getY() == 0;
+        HouseState hs = (HouseState)getParent().getState();
+        if (hs.isTheDog(this) && hs.isTearing()) {
+            animation.setTrack(8);
+        }
         switch(getFacing()) {
             case NORTH: // animation track 0
                 if (notMoving) {
