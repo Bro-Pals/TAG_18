@@ -356,13 +356,13 @@ public class IsometricEntity extends BlockEntity {
         }
         g.drawImage(drawnImage, imagePosX, imagePosY, null);
 
-        g.setColor(Color.RED);
-        int cornerPosX = (int) (renderCoordX - getCamera().getX()); // render coord local (0, 0) (NOT image coordinate)
-        int cornerPosY = (int) (renderCoordY - getCamera().getY());
+        //g.setColor(Color.RED);
+        //int cornerPosX = (int) (renderCoordX - getCamera().getX()); // render coord local (0, 0) (NOT image coordinate)
+        //int cornerPosY = (int) (renderCoordY - getCamera().getY());
         // draw the renderCoord local (0, 0) point
-        g.fillRect(cornerPosX, cornerPosY, 6, 6);
+        //g.fillRect(cornerPosX, cornerPosY, 6, 6);
         // display it's world coordinates
-        g.drawString("(" + getX() + ", " + getY() + ", " + getZ() + ")", cornerPosX + 10, cornerPosY);
+        //g.drawString("(" + getX() + ", " + getY() + ", " + getZ() + ")", cornerPosX + 10, cornerPosY);
 
         /*
          // draw a box around it
