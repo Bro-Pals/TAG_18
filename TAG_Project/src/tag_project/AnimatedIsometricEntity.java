@@ -73,11 +73,11 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         if (hs.isTheDog(this) && hs.isTearing()) {
             if (animation.getCurrentTrackIndex() != 8) {
                 animation.setTrack(8);
-                setNorth(animation.getCurrentImage());
-                setSouth(animation.getCurrentImage());
-                setWest(animation.getCurrentImage());
-                setEast(animation.getCurrentImage());
             }
+            setNorth(animation.getCurrentImage());
+            setSouth(animation.getCurrentImage());
+            setWest(animation.getCurrentImage());
+            setEast(animation.getCurrentImage());
         } else {
             switch (getFacing()) {
                 case NORTH: // animation track 0
