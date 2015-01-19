@@ -30,7 +30,7 @@ public class MusicPlayer implements LineListener {
     public MusicPlayer() {
         try {
             AudioInputStream musicStream = AudioSystem.getAudioInputStream(
-                    new File("assets/music/music.wav"));
+                    new File("assets/bad-street-food.wav"));
             af = musicStream.getFormat();
             music = AudioSystem.getSourceDataLine(af);
             music.open(af);
