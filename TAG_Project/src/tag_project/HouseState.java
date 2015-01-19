@@ -16,6 +16,7 @@ import bropals.lib.simplegame.gui.GuiImage;
 import bropals.lib.simplegame.gui.GuiProgressBar;
 import bropals.lib.simplegame.gui.GuiText;
 import bropals.lib.simplegame.logger.InfoLogger;
+import bropals.lib.simplegame.sound.SoundEffect;
 import bropals.lib.simplegame.state.GameState;
 import java.awt.Color;
 import java.awt.Font;
@@ -25,6 +26,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import tag_project.factory.EntityFactory;
 import tag_project.factory.HouseLoader;
 
@@ -44,6 +48,7 @@ public class HouseState extends GameState {
     private FurnitureTearManager furnitureTearManager;
     private BufferedImage defaceIconImage;
     private Font font;
+    private SoundEffect footstep;
     
     /**
      * Super special reference to the player (dog)
@@ -198,6 +203,11 @@ public class HouseState extends GameState {
         defaceIconImage = getAssetManager().getImage("defaceIcon");
         getAssetManager().createHorizontialFlipCopy(
                 getAssetManager().getImage("swipeSprites"), "reverseSwipeSprites");
+        initSoundEffects();
+    }
+    
+    private void initSoundEffects() {
+        footstep = getAssetManager().getSoundEffect("footstep");
     }
 
     private void initHousePlan() {
@@ -237,6 +247,7 @@ public class HouseState extends GameState {
         playerValues.biscuitsCollected++;
         biscuits.setText("" + playerValues.biscuitsCollected + " / " + playerValues.biscuitsTotal);
         gui.disable("tear");
+        playSoundEffect("collectBiscuit");
         world.getEntities().remove(biscuit);
     }
 
@@ -254,14 +265,18 @@ public class HouseState extends GameState {
             if (movingUp && !movingDown) {
                 if (dog.getVelocity().getX() == 0) {
                     dog.getVelocity().setY(-DOG_SPEED);
+                    tryFootstepPlay();
                 } else {
                     dog.getVelocity().setY(-DOG_SPEED_DIAG);
+                    tryFootstepPlay();
                 }
             } else if (movingDown && !movingUp) {
                 if (dog.getVelocity().getX() == 0) {
                     dog.getVelocity().setY(DOG_SPEED);
+                    tryFootstepPlay();
                 } else {
                     dog.getVelocity().setY(DOG_SPEED_DIAG);
+                    tryFootstepPlay();
                 }
             } else if (!movingDown && !movingUp) {
                 dog.getVelocity().setY(0);
@@ -269,18 +284,28 @@ public class HouseState extends GameState {
             if (movingRight && !movingLeft) {
                 if (dog.getVelocity().getY() == 0) {
                     dog.getVelocity().setX(-DOG_SPEED);
+                    tryFootstepPlay();
                 } else {
                     dog.getVelocity().setX(-DOG_SPEED_DIAG);
+                    tryFootstepPlay();
                 }
             } else if (movingLeft && !movingRight) {
                 if (dog.getVelocity().getY() == 0) {
                     dog.getVelocity().setX(DOG_SPEED);
+                    tryFootstepPlay();
                 } else {
                     dog.getVelocity().setX(DOG_SPEED_DIAG);
+                    tryFootstepPlay();
                 }
             } else if (!movingRight && !movingLeft) {
                 dog.getVelocity().setX(0);
             }
+        }
+    }
+    
+    private void tryFootstepPlay() {
+        if (!footstep.getRaw().isRunning()) {
+            footstep.play();
         }
     }
 
@@ -477,6 +502,7 @@ public class HouseState extends GameState {
             if (ke.getKeyCode() == KeyEvent.VK_X) {
                 furnitureTearManager.startTearing(couldTear);
                 gui.enable("tear");
+                getAssetManager().getSoundEffect("walking").getRaw().stop();
             }
         }
     }
