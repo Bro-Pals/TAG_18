@@ -415,6 +415,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     }
                 } else if (swinging == false) { // start swinging
                     InfoLogger.println("Starting to swing");
+                    getParent().getState().playSoundEffect("whoosh");
                     swinging = true;
                     Animation swingAnimation = new Animation();
                     BufferedImage[] imgs = new Track(
