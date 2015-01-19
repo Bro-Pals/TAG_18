@@ -361,7 +361,10 @@ public class HouseState extends GameState {
         dogAnimation.addTrack(southStand); // 5
         dogAnimation.addTrack(eastStand); // 6
         dogAnimation.addTrack(westStand); // 7
-
+        
+        Track smokeAnim = new Track(getAssetManager().getImage("smokeSprite"), 139, 200, 5);
+        dogAnimation.addTrack(smokeAnim);
+        
         dog = new AnimatedIsometricEntity(world,
                 -900, 1160, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, dogAnimation);
