@@ -25,15 +25,15 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     private ArrayList<NavigationNode> pathToGetThere;
     private int nodeOnPathOn, pathFindTimerOn;
     private final int PATHFIND_TIME_LIMIT = 30; // once every 30 frames
-            
+
     private final float Z_AFFECT_DISTANCE = 70;
-    
+
     private AnimatedSprite swingSprite;
     private boolean swinging;
-    
-    public AnimatedIsometricEntity(GameWorld parent, float x, float y, float width, 
-            float height, boolean anchored, IsometricDirection facing, 
-            BufferedImage north, BufferedImage south, BufferedImage east, 
+
+    public AnimatedIsometricEntity(GameWorld parent, float x, float y, float width,
+            float height, boolean anchored, IsometricDirection facing,
+            BufferedImage north, BufferedImage south, BufferedImage east,
             BufferedImage west, Animation anim) {
         super(parent, x, y, width, height, anchored, facing, north, south, east, west);
         this.animation = anim; // the animation
@@ -44,7 +44,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         swingSprite = null;
         swinging = false;
     }
-    
+
     @Override
     public void update() {
         animation.update();
@@ -59,7 +59,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             }
         }
         if (getVelocity().getY() > 0 && getVelocity().getY() > getVelocity().getX()) {
-            setFacing(IsometricDirection.SOUTH);   
+            setFacing(IsometricDirection.SOUTH);
         } else if (getVelocity().getY() < 0 && getVelocity().getY() < getVelocity().getX()) {
             setFacing(IsometricDirection.NORTH);
         } else if (getVelocity().getX() > 0 && getVelocity().getY() < getVelocity().getX()) {
@@ -67,149 +67,176 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         } else if (getVelocity().getX() < 0 && getVelocity().getY() > getVelocity().getX()) {
             setFacing(IsometricDirection.EAST);
         }
-        boolean notMoving = getVelocity().getX() == 0 && 
-                getVelocity().getY() == 0;
-        switch(getFacing()) {
-            case NORTH: // animation track 0
-                if (notMoving) {
-                    if (animation.getCurrentTrackIndex() != 4)
-                        animation.setTrack(4); // change to the north animaton
-                } else {
-                    if (animation.getCurrentTrackIndex() != 0)
-                        animation.setTrack(0); // change to the north animaton
-                }
-                if (getNorth() != animation.getCurrentImage())
-                    setNorth(animation.getCurrentImage());
-                break;
-            case SOUTH: // animation track 1 (0 for now)
-                if (notMoving) {
-                    if (animation.getCurrentTrackIndex() != 5)
-                        animation.setTrack(5);
-                } else {
-                    if (animation.getCurrentTrackIndex() != 1)
-                        animation.setTrack(1);
-                }
-                if (getSouth() != animation.getCurrentImage())
-                    setSouth(animation.getCurrentImage());
-                break;
-            case EAST: // animation track 2
-                if (notMoving) {
-                    if (animation.getCurrentTrackIndex() != 6)
-                        animation.setTrack(6);
-                } else {
-                    if (animation.getCurrentTrackIndex() != 2)
-                        animation.setTrack(2);
-                }
-                if (getEast() != animation.getCurrentImage())
-                    setEast(animation.getCurrentImage());
-                break;
-            case WEST: // animation track 3
-                if (notMoving) {
-                    if (animation.getCurrentTrackIndex() != 7)
-                        animation.setTrack(7);
-                } else {
-                    if (animation.getCurrentTrackIndex() != 3)
-                        animation.setTrack(3);
-                }
-                if (getWest() != animation.getCurrentImage())
-                    setWest(animation.getCurrentImage());
-                break;
+        boolean notMoving = getVelocity().getX() == 0
+                && getVelocity().getY() == 0;
+        HouseState hs = (HouseState) getParent().getState();
+        if (hs.isTheDog(this) && hs.isTearing()) {
+            if (animation.getCurrentTrackIndex() != 8) {
+                animation.setTrack(8);
+                setNorth(animation.getCurrentImage());
+                setSouth(animation.getCurrentImage());
+                setWest(animation.getCurrentImage());
+                setEast(animation.getCurrentImage());
+            }
+        } else {
+            switch (getFacing()) {
+                case NORTH: // animation track 0
+                    if (notMoving) {
+                        if (animation.getCurrentTrackIndex() != 4) {
+                            animation.setTrack(4); // change to the north animaton
+                        }
+                    } else {
+                        if (animation.getCurrentTrackIndex() != 0) {
+                            animation.setTrack(0); // change to the north animaton
+                        }
+                    }
+                    if (getNorth() != animation.getCurrentImage()) {
+                        setNorth(animation.getCurrentImage());
+                    }
+                    break;
+                case SOUTH: // animation track 1 (0 for now)
+                    if (notMoving) {
+                        if (animation.getCurrentTrackIndex() != 5) {
+                            animation.setTrack(5);
+                        }
+                    } else {
+                        if (animation.getCurrentTrackIndex() != 1) {
+                            animation.setTrack(1);
+                        }
+                    }
+                    if (getSouth() != animation.getCurrentImage()) {
+                        setSouth(animation.getCurrentImage());
+                    }
+                    break;
+                case EAST: // animation track 2
+                    if (notMoving) {
+                        if (animation.getCurrentTrackIndex() != 6) {
+                            animation.setTrack(6);
+                        }
+                    } else {
+                        if (animation.getCurrentTrackIndex() != 2) {
+                            animation.setTrack(2);
+                        }
+                    }
+                    if (getEast() != animation.getCurrentImage()) {
+                        setEast(animation.getCurrentImage());
+                    }
+                    break;
+                case WEST: // animation track 3
+                    if (notMoving) {
+                        if (animation.getCurrentTrackIndex() != 7) {
+                            animation.setTrack(7);
+                        }
+                    } else {
+                        if (animation.getCurrentTrackIndex() != 3) {
+                            animation.setTrack(3);
+                        }
+                    }
+                    if (getWest() != animation.getCurrentImage()) {
+                        setWest(animation.getCurrentImage());
+                    }
+                    break;
+            }
         }
         updateZValue();
         super.update();
     }
-    
+
     private void updateZValue() {
-        List<IsometricEntity> list = (List<IsometricEntity>)getParent().getEntities(); 
+        List<IsometricEntity> list = (List<IsometricEntity>) getParent().getEntities();
         for (IsometricEntity ie : list) {
-            if ( ie instanceof DecorationEntity || ie instanceof AnimatedIsometricEntity || ie instanceof BiscuitEntity) {
+            if (ie instanceof DecorationEntity || ie instanceof AnimatedIsometricEntity || ie instanceof BiscuitEntity) {
                 continue;
             }
             //Find something that is west of (positive X) from the dog
             float dis = 9999;
-            if (rangeCheck( (dis = westOfDis(ie)) ) && inYRange(ie)) {
-                setZ(ie.getZ()+1);
-            } else if (rangeCheck( (dis = eastOfDis(ie)) ) && inYRange(ie)) {
-                setZ(ie.getZ()-1);
-            }
-            else if (rangeCheck( (dis = southOfDis(ie))) && inXRange(ie)) {
-                setZ(ie.getZ()-1);
-            } else if (rangeCheck( (dis = northOfDis(ie))) && inXRange(ie)) {
-                setZ(ie.getZ()+1);
+            if (rangeCheck((dis = westOfDis(ie))) && inYRange(ie)) {
+                setZ(ie.getZ() + 1);
+            } else if (rangeCheck((dis = eastOfDis(ie))) && inYRange(ie)) {
+                setZ(ie.getZ() - 1);
+            } else if (rangeCheck((dis = southOfDis(ie))) && inXRange(ie)) {
+                setZ(ie.getZ() - 1);
+            } else if (rangeCheck((dis = northOfDis(ie))) && inXRange(ie)) {
+                setZ(ie.getZ() + 1);
             }
         }
     }
-    
+
     private boolean inYRange(IsometricEntity ie) {
-        return getY()+getHeight() > ie.getY() && getY() < ie.getY()+ie.getHeight();
+        return getY() + getHeight() > ie.getY() && getY() < ie.getY() + ie.getHeight();
     }
-    
+
     private boolean inXRange(IsometricEntity ie) {
-        return getX()+getWidth() > ie.getX() && getX() < ie.getX()+ie.getWidth();
+        return getX() + getWidth() > ie.getX() && getX() < ie.getX() + ie.getWidth();
     }
-    
+
     private float westOfDis(IsometricEntity ie) {
         return ie.getX() - getX() - getWidth();
     }
-    
+
     /**
      * In range
+     *
      * @param ie
-     * @return 
+     * @return
      */
     private boolean rangeCheck(float dis) {
         return dis >= 0 && dis < Z_AFFECT_DISTANCE;
     }
-    
+
     private float eastOfDis(IsometricEntity ie) {
         return getX() - ie.getX() - ie.getWidth();
     }
-    
+
     private float southOfDis(IsometricEntity ie) {
-        return ie.getY()+ie.getHeight()-getY();
-    }   
-    
+        return ie.getY() + ie.getHeight() - getY();
+    }
+
     private float northOfDis(IsometricEntity ie) {
-        return getY()+getHeight()-ie.getY();
-    }  
+        return getY() + getHeight() - ie.getY();
+    }
+
     /**
      * If other is north of this entity
+     *
      * @param ie
-     * @return 
+     * @return
      */
     private boolean northOf(IsometricEntity ie) {
         return ie.getY() < getY() + getHeight();
     }
-    
+
     /**
      * If the other is south of this entity
+     *
      * @param ie
-     * @return 
+     * @return
      */
     private boolean southOf(IsometricEntity ie) {
         return ie.getY() + ie.getHeight() > getY();
     }
-    
-    private float distanceFromTop(IsometricEntity ie) { 
+
+    private float distanceFromTop(IsometricEntity ie) {
         return getY() - ie.getY() - ie.getHeight();
     }
-    
-    private float distanceFromLeft(IsometricEntity ie) { 
+
+    private float distanceFromLeft(IsometricEntity ie) {
         return getX() - ie.getX() - ie.getWidth();
     }
-    
-    private float distanceFromRight(IsometricEntity ie) { 
+
+    private float distanceFromRight(IsometricEntity ie) {
         return getX() + getWidth() - ie.getX();
     }
-    
-    private float distanceFromBottom(IsometricEntity ie) { 
+
+    private float distanceFromBottom(IsometricEntity ie) {
         return getY() + getHeight() - ie.getY();
     }
-    
+
     private void followPathToGetThere(float speed) {
-        if (pathToGetThere == null || nodeOnPathOn >= pathToGetThere.size())
+        if (pathToGetThere == null || nodeOnPathOn >= pathToGetThere.size()) {
             return;
-       // System.out.println("Going to follow our path now");
+        }
+        // System.out.println("Going to follow our path now");
         NavigationNode nodeOn = pathToGetThere.get(nodeOnPathOn);
         if (distanceBetween(nodeOn.getCenterX(), nodeOn.getCenterY()) < 9) {
             nodeOnPathOn++;
@@ -218,9 +245,10 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             //System.out.println("Heading to the node on path numbered: " +nodeOnPathOn);
         }
     }
-    
+
     /**
      * The A* algorithm. I used the wikipedia page for the algorithm to help me.
+     *
      * @param end The goal node
      * @param start The starting node
      * @param nodes The array of all the nodes
@@ -240,15 +268,15 @@ public class AnimatedIsometricEntity extends IsometricEntity {
         start.setNavParent(null);
         start.setgVal(0); // 0 movement to reach the starting node
         ArrayList<NavigationNode> closedSet = new ArrayList<>();
-        for (int i=0; i<nodes.length; i++) {
-            for (int j=0; j<nodes[i].length; j++) {
+        for (int i = 0; i < nodes.length; i++) {
+            for (int j = 0; j < nodes[i].length; j++) {
                 if (nodes[i][j] != start) {
                     if (nodes[i][j] == null) {
                         ErrorLogger.println("The node at (" + i + ", " + j + ") was null");
                         continue;
                     }
-                     // set estimated distance to reach the goal from this node
-                    nodes[i][j].sethVal(Math.abs(end.getXGrid() - i) 
+                    // set estimated distance to reach the goal from this node
+                    nodes[i][j].sethVal(Math.abs(end.getXGrid() - i)
                             + Math.abs(end.getYGrid() - j));
                 }
             }
@@ -258,7 +286,7 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             //System.out.println("Running with an open set of size " + openSet.size());
             // find the node in the open set with the lowest f value
             NavigationNode lowestF = openSet.get(0);
-            for (int i=1; i<openSet.size(); i++) {
+            for (int i = 1; i < openSet.size(); i++) {
                 if (openSet.get(i).getfVal() < lowestF.getfVal()) {
                     lowestF = openSet.get(i);
                 }
@@ -280,49 +308,52 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     nodeOn = nodeOn.getNavParent();
                 }
                 //System.out.println("*******");
-               // System.out.println("Got a path of " + pathToGetThere.size() + " nodes");
-               // System.out.println("*******");
+                // System.out.println("Got a path of " + pathToGetThere.size() + " nodes");
+                // System.out.println("*******");
                 return;
             }
-                
+
             openSet.remove(lowestF);
             closedSet.add(lowestF); // so we don't check this guy again
             int[][] neighborOffsets = new int[][]{{1, 0}, {-1, 0}, {0, 1},
-                 {0, -1}}; //{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-            for (int i=0; i<4; i++) {
+            {0, -1}}; //{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+            for (int i = 0; i < 4; i++) {
                 int xCoord = lowestF.getXGrid() + neighborOffsets[i][0];
                 int yCoord = lowestF.getYGrid() + neighborOffsets[i][1];
-                if (xCoord >= 0 && xCoord < nodes.length &&
-                        yCoord >= 0 && yCoord < nodes[xCoord].length) {
+                if (xCoord >= 0 && xCoord < nodes.length
+                        && yCoord >= 0 && yCoord < nodes[xCoord].length) {
                     NavigationNode neighbor = nodes[xCoord][yCoord];
                     if (closedSet.contains(neighbor)) // no need to check again
+                    {
                         continue;
+                    }
                     // set how many moves it takes to get to this node
                     //float increaseMoveBy = //i > 3 ? neighbor.getMoveCost() * 
-                            //(float)Math.sqrt(2) : neighbor.getMoveCost(); // more distance for diagnols
+                    //(float)Math.sqrt(2) : neighbor.getMoveCost(); // more distance for diagnols
                     float tenativeGVal = lowestF.getgVal() + neighbor.getMoveCost();
-                    
+
                     if (!openSet.contains(neighbor) || tenativeGVal < neighbor.getgVal()) {
                         neighbor.setgVal(tenativeGVal);
                         neighbor.setNavParent(lowestF);
-                        if (!openSet.contains(neighbor))
+                        if (!openSet.contains(neighbor)) {
                             openSet.add(neighbor);
+                        }
                     }
                 }
             }
-            
+
         }
-        
+
     }
-    
+
     private void pathfindTo(IsometricEntity other, NavigationNode[][] nodes, float speed) {
         NavigationNode findGoal = null;
         NavigationNode yourNode = null;
         // find the nodes
-        for (int x=0; x<nodes.length; x++) {
-            for (int y=0; y<nodes[x].length; y++) {
+        for (int x = 0; x < nodes.length; x++) {
+            for (int y = 0; y < nodes[x].length; y++) {
                 NavigationNode thisNode = nodes[x][y];
-                
+
                 if (thisNode.handleCollide(other)) {
                     findGoal = thisNode;
                 }
@@ -330,8 +361,9 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     yourNode = thisNode;
                 }
                 // all done searching now
-                if (findGoal != null && yourNode != null)
+                if (findGoal != null && yourNode != null) {
                     break;
+                }
             }
         }
         if (findGoal == null || yourNode == null) {
@@ -339,89 +371,90 @@ public class AnimatedIsometricEntity extends IsometricEntity {
                     + " in the navigation nodes array");
             return;
         }
-        
+
         // don't need to recalculate if we already have that as the goal
         if (goal == findGoal) {
             followPathToGetThere(speed);
             return;
         }
         goal = findGoal; // new goal
-        
+
         // time for some A* pathfinding
         calculatePath(goal, yourNode, nodes);
         followPathToGetThere(speed);
     }
-    
+
     /**
-     * Chase another entity (the dog). If it can see the other entity, it will 
-     * head straight towards them. Otherwise, it will pathfind and follow 
-     * the path to where the other entity is. If the other entity is
-     * in sight and close enough, this entity will attack the other entity.
-     * 
+     * Chase another entity (the dog). If it can see the other entity, it will
+     * head straight towards them. Otherwise, it will pathfind and follow the
+     * path to where the other entity is. If the other entity is in sight and
+     * close enough, this entity will attack the other entity.
+     *
      * The boy should have this called on him in the update loop
+     *
      * @param other The other entity (should be the dog)
      * @param nodes The navigation nodes to use to pathfind if it
-     * @param speed The speed to chase the dog at
-     * doesn't have line of sight of the other entity.
+     * @param speed The speed to chase the dog at doesn't have line of sight of
+     * the other entity.
      */
     public void chase(IsometricEntity other, NavigationNode[][] nodes, float speed) {
         if (canSee(other)) {
             setVelocityTowards(other.getCenterX(), other.getCenterY(), speed);
             if (distanceBetween(other) < 85) {
-               // InfoLogger.println("SWINING BROOM");
+                // InfoLogger.println("SWINING BROOM");
                 // if you were swining and you finished swining
                 if (swinging && swingSprite == null) {
-                    swinging = false; 
+                    swinging = false;
                     InfoLogger.println("Finished swinging");
                     // if he is STILL near the dog then the dog hasn't escaped the swing
                     if (distanceBetween(other) < 85) {
                         InfoLogger.println("We have hit the dog");
-                        PlayerValues pVals = ((HouseState)getParent().getState()).getPlayerValues();
+                        PlayerValues pVals = ((HouseState) getParent().getState()).getPlayerValues();
                         getParent().getState().getGameStateRunner().setState(
-                        new GameOverState(pVals.biscuitsCollected, pVals.furnitureDestroyed));
+                                new GameOverState(pVals.biscuitsCollected, pVals.furnitureDestroyed));
                     }
                 } else if (swinging == false) { // start swinging
                     InfoLogger.println("Starting to swing");
                     swinging = true;
                     Animation swingAnimation = new Animation();
                     BufferedImage[] imgs = new Track(
-                            getParent().getState().getAssetManager().getImage("swipeSprites"), 
+                            getParent().getState().getAssetManager().getImage("swipeSprites"),
                             65, 33, 2).getImages();
                     BufferedImage[] reverseImgs = new Track(
-                            getParent().getState().getAssetManager().getImage("reverseSwipeSprites"), 
-                            65, 33, 2).getImages(); 
+                            getParent().getState().getAssetManager().getImage("reverseSwipeSprites"),
+                            65, 33, 2).getImages();
                     int swingAnimSpeed = 6;
                     float ZValue = getZ();
                     float renderX = getRenderCoordX();
                     float renderY = getRenderCoordY();
                     if (getFacing() == IsometricDirection.SOUTH) {
                         swingAnimation.addTrack(new Track(new BufferedImage[]{
-                           imgs[0], imgs[1], imgs[2]
+                            imgs[0], imgs[1], imgs[2]
                         }, swingAnimSpeed));
-                        ZValue+=4;
+                        ZValue += 4;
                     } else if (getFacing() == IsometricDirection.NORTH) {
                         swingAnimation.addTrack(new Track(new BufferedImage[]{
-                           imgs[3], imgs[4], imgs[5]
+                            imgs[3], imgs[4], imgs[5]
                         }, swingAnimSpeed));
-                        ZValue-=4;
-                        renderX-=40;
-                        renderY-=20;
+                        ZValue -= 4;
+                        renderX -= 40;
+                        renderY -= 20;
                     } else if (getFacing() == IsometricDirection.EAST) {
                         swingAnimation.addTrack(new Track(new BufferedImage[]{
-                           reverseImgs[3], reverseImgs[4], reverseImgs[5]
+                            reverseImgs[3], reverseImgs[4], reverseImgs[5]
                         }, swingAnimSpeed));
-                        ZValue-=4;
-                        renderX-=30;
+                        ZValue -= 4;
+                        renderX -= 30;
                     } else if (getFacing() == IsometricDirection.WEST) {
                         swingAnimation.addTrack(new Track(new BufferedImage[]{
-                           reverseImgs[0], reverseImgs[1], reverseImgs[2]
+                            reverseImgs[0], reverseImgs[1], reverseImgs[2]
                         }, swingAnimSpeed));
-                        ZValue+=4;
-                        renderX-=30;
-                        renderY+=10;
+                        ZValue += 4;
+                        renderX -= 30;
+                        renderY += 10;
                     }
                     swingAnimation.setTrack(0);
-                    swingSprite = new AnimatedSprite(getParent(), renderX, renderY, 
+                    swingSprite = new AnimatedSprite(getParent(), renderX, renderY,
                             1, 1, swingAnimation, 17, getZ());
                 }
             }
@@ -429,18 +462,22 @@ public class AnimatedIsometricEntity extends IsometricEntity {
             pathfindTo(other, nodes, speed);
         }
     }
-    
+
     /**
-     * Gets the distance between this and a given entity. Measured from their centers
+     * Gets the distance between this and a given entity. Measured from their
+     * centers
+     *
      * @param other The given entity
      * @return The distance between this and a given entity from their centers
      */
     public float distanceBetween(IsometricEntity other) {
         return distanceBetween(other.getCenterX(), other.getCenterY());
     }
-    
+
     /**
-     * Gets the distance between this and a given point. Measured from the center
+     * Gets the distance between this and a given point. Measured from the
+     * center
+     *
      * @param x The x position
      * @param y The y position
      * @return The distance between this entity's center and the given point
@@ -448,31 +485,34 @@ public class AnimatedIsometricEntity extends IsometricEntity {
     public float distanceBetween(float x, float y) {
         float diffX = x - getCenterX();
         float diffY = y - getCenterY();
-        return (float)Math.sqrt((diffX*diffX)+(diffY*diffY));
+        return (float) Math.sqrt((diffX * diffX) + (diffY * diffY));
     }
-    
+
     public boolean canSee(IsometricEntity other) {
-        if (getParent()==null) {
+        if (getParent() == null) {
             return false;
         }
-        for (int i=0; i<getParent().getEntities().size(); i++) {
+        for (int i = 0; i < getParent().getEntities().size(); i++) {
             if (getParent().getEntities().get(i) instanceof IsometricEntity) {
-                IsometricEntity isoent = (IsometricEntity)getParent().getEntities().get(i);
+                IsometricEntity isoent = (IsometricEntity) getParent().getEntities().get(i);
                 if (isoent == this || isoent == other) // don't check yourself
+                {
                     continue;
-                
-                if (isoent instanceof DecorationEntity || isoent instanceof BiscuitEntity)
+                }
+
+                if (isoent instanceof DecorationEntity || isoent instanceof BiscuitEntity) {
                     continue;
-                
-                if (isoent.toRect().intersectsLine((int)getCenterX(), (int)getCenterY(), 
-                        (int)other.getCenterX(), (int)other.getCenterY())) {
+                }
+
+                if (isoent.toRect().intersectsLine((int) getCenterX(), (int) getCenterY(),
+                        (int) other.getCenterX(), (int) other.getCenterY())) {
                     return false;
                 }
             }
         }
         return true;
     }
-    
+
     public ArrayList<NavigationNode> getPath() {
         return pathToGetThere;
     }
