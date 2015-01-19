@@ -10,7 +10,8 @@ import bropals.lib.simplegame.GameWindow;
 import bropals.lib.simplegame.logger.InfoLogger;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.swing.JOptionPane;
 import tag_project.factory.EntityFactory;
 import tag_project.factory.HouseLoader;
@@ -23,6 +24,8 @@ public class TAGProject {
 
     public static final String TITLE = "Gary Wenceworth XVIII wants to take revenge on his owner by defacing all the furniture in the house.";
     public static final int FPS = 30;
+    
+    public static GameStateRunner runner;
     
     /**
      * @param args the command line arguments
@@ -37,7 +40,7 @@ public class TAGProject {
         } else {
             return;
         }
-        GameStateRunner runner = null;
+        runner = null;
         GameWindow window = null;
         try {
             window = new GameWindow(TITLE, 
@@ -52,14 +55,25 @@ public class TAGProject {
             System.exit(0);
             return;
         }
-        InfoLogger.setSilent(true);
+        InfoLogger.setSilent(false);
         runner.setFps(FPS);
         ///Loaded the assets
         runner.getAssetManager().loadSoundEffectsInDirectories("assets/soundEffects", true);
+        runner.getAssetManager().loadSoundEffect("assets/bad-street-food.wav", "music");
         runner.getAssetManager().loadImagesInDirectories("assets/img", true);
         window.setIcon(runner.getAssetManager().getAsset("crappyIcon", BufferedImage.class));
         ///Need to initialize data
         initData(runner);
+        
+        runner.getAssetManager().getSoundEffect("music").getRaw().addLineListener(new LineListener() {
+            @Override
+            public void update(LineEvent event) {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    runner.getAssetManager().getSoundEffect("music").play();
+                }
+            }
+        });
+        runner.getAssetManager().getSoundEffect("music").play();
         
         runner.setState(new MainMenuState());
         runner.loop();
