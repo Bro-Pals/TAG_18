@@ -43,6 +43,7 @@ public class GameOverState extends GameState {
 
     @Override
     public void onEnter() {
+        playSoundEffect("dogSad");
         gui = new GuiGroup();
         font = new Font(Font.SANS_SERIF, Font.BOLD, 32);
         gui.addElement(new GuiImage(0, 0, 800, 600, getImage("gameOverBackground")));

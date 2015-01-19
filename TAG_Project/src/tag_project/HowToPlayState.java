@@ -25,7 +25,7 @@ public class HowToPlayState extends GameState {
     private GuiGroup gui;
     private Animation spaniel;
     private Animation boy;
-    
+
     @Override
     public void update() {
         gui.update(getWindow().getMousePosition().x, getWindow().getMousePosition().y);
@@ -35,7 +35,7 @@ public class HowToPlayState extends GameState {
 
     @Override
     public void render(Object graphicsObj) {
-        Graphics2D g = (Graphics2D)graphicsObj;
+        Graphics2D g = (Graphics2D) graphicsObj;
         gui.render(g);
         g.drawImage(spaniel.getCurrentImage(), 140, 74, null);
         g.drawImage(boy.getCurrentImage(), 125, 375, null);
@@ -45,22 +45,23 @@ public class HowToPlayState extends GameState {
     public void onEnter() {
         gui = new GuiGroup();
         gui.addElement(new GuiImage(0, 0, 800, 600, getAssetManager().getImage("howToPlayBackground")));
-        gui.addElement(new GuiButton(400, 450, 323, 145, 
-        getAssetManager().getImage("playDown"), getAssetManager().getImage("playUp"),
+        gui.addElement(new GuiButton(400, 450, 323, 145,
+                getAssetManager().getImage("playDown"), getAssetManager().getImage("playUp"),
                 getAssetManager().getImage("playDown"),
                 new GuiButtonAction() {
                     @Override
                     public void onButtonPress() {
+                        getAssetManager().getSoundEffect("click").play();
                         getGameStateRunner().setState(new HouseState());
                     }
                 }));
-        
+
         spaniel = new Animation();
         Track t = new Track(getImage("menuSpaniel"), 139, 190);
         t.setFramesBetweenImages(23);
         spaniel.addTrack(t);
         spaniel.setTrack(0);
-        
+
         boy = new Animation();
         Track t2 = new Track(getImage("boyMenu"), 139, 190);
         t2.setFramesBetweenImages(5);
@@ -82,5 +83,5 @@ public class HowToPlayState extends GameState {
             gui.mouseInput(mouse.getX(), mouse.getY());
         }
     }
-    
+
 }

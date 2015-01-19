@@ -49,6 +49,7 @@ public class MainMenuState extends GameState {
                 new GuiButtonAction() {
                     @Override
                     public void onButtonPress() {
+                        getAssetManager().getSoundEffect("click").play();
                         getGameStateRunner().setState(new HowToPlayState());
                     }
                 }));
@@ -58,6 +59,7 @@ public class MainMenuState extends GameState {
                 new GuiButtonAction() {
                     @Override
                     public void onButtonPress() {
+                        getAssetManager().getSoundEffect("click").play();
                         getWindow().requestToClose();
                     }
                 }));
