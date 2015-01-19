@@ -58,7 +58,7 @@ public class AnimatedSprite extends IsometricEntity implements CounterFunction {
     @Override
     public void render(Object graphicsObject) {
         Graphics2D g = (Graphics2D)graphicsObject;
-        System.out.println("I HAVE RENDERED!");
+//        System.out.println("I HAVE RENDERED!");
         if ( getParent() == null)
             InfoLogger.println("Could not find the parent");
            

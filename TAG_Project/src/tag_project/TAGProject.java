@@ -7,8 +7,10 @@ package tag_project;
 
 import bropals.lib.simplegame.GameStateRunner;
 import bropals.lib.simplegame.GameWindow;
+import bropals.lib.simplegame.logger.InfoLogger;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import javax.swing.JOptionPane;
 import tag_project.factory.EntityFactory;
 import tag_project.factory.HouseLoader;
@@ -19,7 +21,7 @@ import tag_project.factory.HouseLoader;
  */
 public class TAGProject {
 
-    public static final String TITLE = "Gary Wenceworth XIIV wants to take revenge on his owner by defacing all the furniture in the house.";
+    public static final String TITLE = "Gary Wenceworth XVIII wants to take revenge on his owner by defacing all the furniture in the house.";
     public static final int FPS = 30;
     
     /**
@@ -50,6 +52,7 @@ public class TAGProject {
             System.exit(0);
             return;
         }
+        InfoLogger.setSilent(true);
         runner.setFps(FPS);
         ///Loaded the assets
         runner.getAssetManager().loadSoundEffectsInDirectories("assets/soundEffects", true);

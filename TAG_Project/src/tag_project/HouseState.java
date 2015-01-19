@@ -409,7 +409,7 @@ public class HouseState extends GameState {
 
         // gotta change the position to be more fair
         boy = new AnimatedIsometricEntity(world,
-                -900, 900, 80, 80, false, IsometricDirection.SOUTH,
+                4240, 2900, 80, 80, false, IsometricDirection.SOUTH,
                 null, null, null, null, boyAnimation);
     }
 
@@ -696,7 +696,7 @@ public class HouseState extends GameState {
     }
 
     public void win() {
-        InfoLogger.println("YOU WIN");
+        getGameStateRunner().setState(new WinState());
     }
 
     public boolean hasWon() {
